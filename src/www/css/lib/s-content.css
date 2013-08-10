@@ -1,0 +1,227 @@
+#content {margin-top: 30px; height: 480px; border-top: 1px solid #4d6d00;}
+#content .scene {height: 480px; position: relative; overflow: hidden;}
+
+
+#content h1 {font-size: 24px; line-height: 1em; padding: 0 50px 15px; text-transform: uppercase;}
+#content h2 {font-size: 20px; line-height: 1em; padding: 0 50px 20px;}
+#content h3 {font-size: 16px; line-height: 1em; padding: 0 50px 15px;}
+#content h4 {font-size: 14px; line-height: 1em; padding: 0 50px 15px;}
+#content h5 {font-size: 14px; line-height: 1em; padding: 0 50px 15px;}
+#content p {font-size: 12px; line-height: 1.2em; padding: 0 50px 15px;}
+
+
+#content h1 a,
+#content h1 span,
+#content h2 a,
+#content h2 span,
+#content h3 a,
+#content h3 span,
+#content h4 a,
+#content h4 span,
+#content h5 a,
+#content h5 span,
+#content p a,
+#content p span,
+#content li a,
+#content li span,
+#content dd a,
+#content dd span {font-size: inherit; color: inherit; line-height: inherit;}
+
+#content h1 a,
+#content h2 a,
+#content h3 a,
+#content h4 a,
+#content h5 a {text-decoration: none;}
+
+#content ul {padding: 0 50px 15px;}
+#content li {font-size: 12px;}
+
+#content dl {padding: 0 50px 15px;}
+#content dt {font-size: 12px; font-weight: bold;}
+#content dd {font-size: 14px; padding: 0 0 10px; text-transform: uppercase;}
+
+
+#content .scene .text {position: absolute; top: 0px; left: 0px; width: 280px; height: 435px; padding: 40px 50px 5px; background: #4d6d00; /* url(/img/bg_alpha_tile.png) repeat top left*/;}
+#content .scene .text h1, 
+#content .scene .text h2, 
+#content .scene .text h3, 
+#content .scene .text h4, 
+#content .scene .text h5, 
+#content .scene .text p,
+#content .scene .text ul,
+#content .scene .text dl {padding-left: 0; padding-right: 0;}
+#content .scene .text a {text-decoration: underline;}
+
+#content .scene .actions {position: absolute; left: 0; bottom: 30px;}
+#content .scene .actions li.back {font-size: 14px; text-transform: uppercase; background: transparent url(/img/gx_back.png) no-repeat 0 2px; padding: 0 0 0 20px;}
+
+
+
+/* FRONT */
+.front #content .scene .videoplayer {}
+.front #content .scene video {width: 960px; height: 480px;}
+
+
+/* NEWS */
+.news #content .scene {background: transparent url(/img/bg_tile.png) repeat top left;}
+.news #content .scene div.news {padding: 10px 0; height: 460px; overflow: auto;}
+.news #content .scene div.news ul {overflow: hidden;}
+.news #content .scene div.news li {position: relative; margin: 10px 0; background-color: #202020; height: 90px; overflow: hidden; cursor: pointer;}
+.news #content .scene div.news li:hover {background-color: #414141;}
+.news #content .scene div.news h2 {font-size: 24px; padding-left: 215px; text-transform: uppercase;}
+.news #content .scene div.news .info {padding: 10px 15px 5px 215px;}
+.news #content .scene div.news .published {font-size: 11px; text-transform: uppercase;}
+.news #content .scene div.news img {position: absolute; left: 0px; top: 0px;}
+.news #content .scene div.news .text {padding: 10px 15px 15px 215px; height: auto; position: static; width: auto; background: none;}
+.news #content .scene div.news .text p {font-size: 14px;}
+.news #content .scene div.news .text dl {font-size: 0;}
+.news #content .scene div.news .text dt {display: inline-block; vertical-align: top; width: 140px;}
+.news #content .scene div.news .text dd {display: inline-block; vertical-align: top; width: 470px; padding: 0 0 5px;}
+.news #content .scene div.news .text .actions {position: static; padding: 0;}
+.news #content .scene div.news .text .actions li {height: auto; font-size: 14px; text-transform: uppercase; background: transparent url(/img/gx_next.png) no-repeat 0 3px; padding: 0 0 0 20px;}
+
+
+/* POSTERS */
+#content .scene ul.posters {font-size: 0; padding: 0 0 0 0px;}
+#content .scene ul.posters li {width: 240px; height: 320px; padding: 0; margin: 10px 20px 20px 50px; display: inline-block; vertical-align: top; background-color: transparent; background-position: 0 0; background-repeat: no-repeat; cursor: pointer;}
+#content .scene ul.posters li h2 {text-indent: -9999px; overflow: hidden; height: 320px; background: transparent url(/img/bg_bn_play_medium.png) no-repeat center center;}
+
+/* VIDEO LIST */
+#content .scene ul.videos {font-size: 0; padding-right: 0;}
+#content .scene ul.videos li {background-repeat: no-repeat; background-color: transparent; background-position: left top; margin: 0 10px 10px 0; width: 233px; display: inline-block; vertical-align: top; font-size: 12px; line-height: 1em; background-color: #202020; cursor: pointer;}
+#content .scene ul.videos li:hover {background-color: #414141;}
+#content .scene ul.videos li a {display: block; padding: 8px 10px 0 98px; height: 32px; background: transparent url(/img/bg_bn_play_small.png) no-repeat 33px 10px;}
+#content .scene ul.videos li a:hover {text-decoration: none;}
+
+/* AUDIO LIST */
+#content .scene ul.audio {padding-right: 10px; padding-left: 25px; font-size: 0;}
+#content .scene ul.audio li {padding: 3px 0 5px 25px; width: 235px; background-position: 0 100px; background-repeat: no-repeat; background-color: transparent; background-image: url(/img/bg_bn_play_small.png); cursor: pointer; display: inline-block; vertical-align: top;
+	position: relative;
+}
+#content .scene ul.audio li:hover {background-position: 0 0;}
+#content .scene ul.audio li:hover a {text-decoration: none;}
+#content .scene ul.audio li.playing,
+#content .scene ul.audio li.playing:hover {background-position: 0 -100px;}
+
+#content .scene .audioplayer audio {height: 5px; width: 5px; background: red;}
+#content .scene .audioplayer {height: 5px; width: 5px; position: absolute; top: 0; left: 0px; background: green;}
+
+
+/* SUBNAVIGATION */
+#content .scene .subnavigation {padding: 0; font-size: 0;}
+#content .scene .subnavigation li {display: inline-block; vertical-align: top; width: 285px;}
+#content .scene .subnavigation li h2 {}
+#content .scene .subnavigation li p {font-size: 13px; padding-bottom: 20px;}
+#content .scene .subnavigation .actions {position: static;}
+#content .scene .subnavigation .actions li {font-size: 14px; text-transform: uppercase; background: transparent url(/img/gx_next.png) no-repeat 0 3px; padding: 0 0 0 20px;}
+
+
+
+/* FILMS */
+.film #content .scene {background: transparent url(/img/bg_tile.png) repeat top left;}
+.film #content .scene div.films {height: 470px; overflow: auto; padding-bottom: 10px;}
+.film #content .scene div.films h1 {padding-top: 40px;}
+
+
+/* TV */
+.tv #content .scene {background: transparent url(/img/bg_tile.png) repeat top left;}
+.tv #content .scene div.tv {height: 470px; overflow: auto; padding-bottom: 10px;}
+.tv #content .scene div.tv h1 {padding-top: 40px;}
+
+
+/* VIDEO */
+.video #content .scene {background: transparent url(/img/bg_tile.png) repeat top left;}
+.video #content .scene div.video {padding: 80px 0 0 380px; font-size: 0; text-align: center;}
+.video #content .scene div.text {padding-top: 25px; height: 450px;}
+.video #content .scene div.text .info {padding: 0 0 2px;}
+.video #content .scene div.text .published {font-size: 11px; text-transform: uppercase;}
+.video #content .scene div.text .actions {display: none;}
+.video #content .scene div.video .videoplayer {display: inline-block; vertical-align: top; width: 512px; height: 288px; background: #000000; position: relative;}
+.video #content .scene div.video .videoplayer video {width: 512px; height: 288px;}
+.video #content .scene div.video .videoplayer .controls {width: 512px; height: 288px; position: absolute; top: 0px; left: 0; background: transparent url(/img/bg_bn_play.png) no-repeat center center; cursor: pointer;}
+.video #content .scene div.video .videoplayer.playing .controls {background: transparent url(/img/bg_bn_pause.png) no-repeat center center;}
+.video #content .scene div.video .videoplayer .controls .zoom {position: absolute; right: 10px; top: 10px; background: transparent url(/img/bg_bn_fullscreen.png) no-repeat left 0; width: 32px; height: 32px; display: none;}
+.video #content .scene div.video .videoplayer.playing .controls .zoom {display: block;}
+#fullscreen {width: 100%; height: 100%; position: absolute; top: 0; left: 0; background: #000000;}
+#fullscreen div {height: 100px; width: 200px; position: absolute; left: 50%; margin-left: -100px; top: 50%; margin-top: -50px;}
+#fullscreen h1 {text-align: center; font-size: 50px;}
+#fullscreen p {text-align: center; color: #666666; text-transform: uppercase;}
+
+
+/* MUSIC */
+.music #content .scene {background: transparent url(/img/bg_tile.png) repeat top left;}
+.music #content .scene div.music {padding: 80px 0 0 380px; font-size: 0;}
+.music #content .scene div.music.examples {height: 400px; overflow: auto;}
+.music #content .scene div.music.available {height: 400px; overflow: auto;}
+.music #content .scene div.music.available .category {display: inline-block; vertical-align: top; width: 285px;}
+
+
+/* COMMERCIALS */
+.commercial #content .scene {background: transparent url(/img/bg_tile.png) repeat top left;}
+.commercial #content .scene div.commercials {padding: 80px 0 0 380px; height: 400px; overflow: auto;}
+
+
+/* RADIO */
+.radio #content .scene {background: transparent url(/img/bg_tile.png) repeat top left;}
+.radio #content .scene div.radio {padding: 80px 0 0 380px; font-size: 0; height: 400px; overflow: auto;}
+
+
+/* ABOUT */
+.about #content .scene {background: transparent url(/img/bg_tile.png) repeat top left;}
+.about #content .scene div.about {padding: 80px 0 0 380px; font-size: 0;}
+.about #content .scene div.text .contact {padding-top: 20px;}
+.about #content .scene div.text .contact h2 {font-size: 20px; text-transform: uppercase;}
+.about #content .scene div.text .contact a {text-decoration: none;}
+
+
+/* PEOPLE */
+.people #content .scene {background: transparent url(/img/bg_tile.png) repeat top left;}
+.people #content .scene div.people {padding: 80px 0 0 380px; font-size: 0;}
+.people #content .scene div.columns {font-size: 0; padding: 0;}
+.people #content .scene div.column {display: inline-block; vertical-align: top; width: 140px; padding: 0;}
+.people #content .scene div.group h2 {text-transform: uppercase; font-size: 14px; padding: 0 0 7px;}
+.people #content .scene div.group ul {padding: 0 0 25px;}
+.people #content .scene div.group ul li a {text-decoration: none;}
+.people #content .scene div.group ul li.selected a {font-weight: bold; padding-left: 10px;}
+.people #content .scene div.people div.person {padding: 0 50px;}
+.people #content .scene div.people div.person div.profile {padding: 0 0 0 252px; height: 270px; width: 220px; background-position: 0 0; background-repeat: no-repeat;}
+.people #content .scene div.people div.person h1 {text-transform: uppercase; padding: 0 0 5px; font-size: 16px;}
+.people #content .scene div.people div.person .role {padding: 0 0 20px; font-size: 13px;}
+.people #content .scene div.people div.person .email {padding: 0 0 20px; font-size: 13px;}
+.people #content .scene div.people div.person .email a {font-size: 13px; text-decoration: none;}
+.people #content .scene div.people div.person .description {padding: 0;}
+.people #content .scene div.people div.person .description p {padding-left: 0; padding-right: 0;}
+
+
+
+/* PERSON */
+.people #content .scene div.person {padding: 80px 0 0 380px; font-size: 0;}
+.people #content .scene div.profile {padding: 0 50px 0 302px; height: 270px; width: 228px; background-position: 50px 0; background-repeat: no-repeat;}
+.people #content .scene div.person h1 {text-transform: uppercase; padding: 0 0 5px; font-size: 16px;}
+.people #content .scene div.person .role {padding: 0 0 20px; font-size: 13px;}
+.people #content .scene div.person .email {padding: 0 0 20px; font-size: 13px;}
+.people #content .scene div.person .email a {font-size: 13px;}
+.people #content .scene div.person .description {padding: 0;}
+.people #content .scene div.person .description p {padding-left: 0; padding-right: 0;}
+
+
+/* TOUR */
+.tour #content .scene {background: transparent url(/img/bg_tile.png) repeat top left;}
+.tour #content .scene .text .actions {position: static; padding-top: 20px;}
+.tour #content .scene .text .actions li {font-size: 14px; text-transform: uppercase; background: transparent url(/img/gx_next.png) no-repeat 0 3px; padding: 0 0 0 20px; margin-bottom: 20px; cursor: pointer;}
+.tour #content .scene .text .actions li.selected {margin-left: 20px;}
+.tour #content .scene .text .actions li.selected a {font-weight: bold;}
+.tour #content .scene .text .actions li a {text-decoration: none;}
+.tour #content .scene .text .actions li:hover a {text-decoration: underline;}
+
+.tour #content .scene #cphtour {display: none;}
+.tour #content .scene #svendborgtour {display: none;}
+.tour #content .scene #aarhustour {display: none;}
+
+.tour #content .scene div.tour {padding: 80px 0 0 380px; font-size: 0; overflow: auto; height: 400px;}
+.tour #content .scene .tour ul {font-size: 0; padding-right: 0; padding-left: 30px;}
+.tour #content .scene .tour ul li {display: inline-block; vertical-align: top; background-size: 100% 100%; background-repeat: no-repeat; background-position: center center; margin: 0 0 20px 20px; width: 230px; height: 115px; background-color: transparent; cursor: pointer;}
+
+.tour #content .scene .large {position: absolute; top: 0; left: 0; z-index: 500; width: 960px; height: 480px;}
+.tour #content .scene .large ul {font-size: 0; padding: 0; width: 960px; height: 480px;}
+.tour #content .scene .large ul li {width: 960px; height: 480px; position: absolute; top: 0; left: 0; background-size: 100% 100%; background-repeat: no-repeat; background-position: center center; background-color: transparent; cursor: pointer;}

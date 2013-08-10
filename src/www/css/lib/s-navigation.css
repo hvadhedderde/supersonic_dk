@@ -1,0 +1,8 @@
+#navigation {}
+#navigation ul {white-space: nowrap; text-align: center; list-style: none; border-bottom: 1px solid #4d6d00; border-top: 1px solid #4d6d00; height: 34px;}
+#navigation li {display: inline-block;}
+#navigation li a {padding: 10px 20px; font-size: 12px; text-transform: uppercase; text-decoration: none; font-weight: bold; display: block;}
+#navigation li:hover,
+#navigation li.selected {background: #4d6d00;}
+#navigation li:hover a,
+#navigation li.selected a {color: #ffffff;}

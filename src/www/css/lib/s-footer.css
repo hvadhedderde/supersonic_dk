@@ -1,0 +1,14 @@
+#footer {font-size: 0; padding: 35px 0 35px;}
+#footer .vcard {width: 320px; padding: 65px 0 0; text-align: center; display: inline-block; vertical-align: top;}
+#footer .vcard * {color: #666666; text-transform: uppercase; font-size: 12px;}
+
+#footer .vcard.cph {background: transparent url(/img/logo_supersonic-cph.jpg) no-repeat center top;}
+#footer .vcard.svendborg {background: transparent url(/img/logo_supersonic-svendborg.jpg) no-repeat center top;}
+#footer .vcard.aarhus {background: transparent url(/img/logo_supersonic-aarhus.jpg) no-repeat center top;}
+
+/*#footer .vcard .street-address,*/
+#footer .vcard .city,
+#footer .vcard .country-name {display: inline-block;}
+
+#footer .vcard .org,
+#footer .vcard .geo {display: none;}

@@ -1,0 +1,2 @@
+.video #content .scene div.video .videoplayer.active .controls {display: none;}
+#content .scene ul.audio li.playing:hover {background-position: 0 0;}
