@@ -11,24 +11,19 @@ $action = $page->access();
 $IC = new Item();
 $items = $IC->getItems(array("itemtype" => "news"));
 
+$page->template("admin.header.php");
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-	<!-- (c) & (p) think.dk 2011 //-->
-	<!-- All material protected by copyrightlaws, as if you didnt know //-->
-	<title>News</title>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-</head>
+<h1>News list</h1>
 
-<body>
-
-<h1>News</h1>
+<ul class="actions">
+	<li class="new"><a href="/temp/news_new">New news</a></li>
+</ul>
 
 <ul>
 <?php foreach($items as $item) { 
 	$item = $IC->getCompleteItem($item["id"]);
+	$item["tags"] = $IC->getTags($item["id"]);
 	?>
 	<li>
 		<a href="/temp/news_edit/<?= $item["id"] ?>"><?= $item["name"] ?></a>

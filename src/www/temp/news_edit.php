@@ -10,22 +10,12 @@ $action = $page->access();
 
 $IC = new Item();
 $item = $IC->getCompleteItem($action[0]);
-
 $item["tags"] = $IC->getTags($action[0]);
+
+$page->template("admin.header.php");
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-	<!-- (c) & (p) think.dk 2011 //-->
-	<!-- All material protected by copyrightlaws, as if you didnt know //-->
-	<title>News</title>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-</head>
-
-<body>
-
-<h1>News</h1>
+<h1>Edit news</h1>
 <form action="/cms/update/<?= $action[0] ?>" method="post" enctype="multipart/form-data">
 
 	<div class="field">

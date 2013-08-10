@@ -11,11 +11,14 @@ $action = $page->access();
 $IC = new Item();
 $items = $IC->getItems(array("itemtype" => "video"));
 
-
 $page->template("admin.header.php");
 ?>
 
 <h1>Video list</h1>
+<ul class="actions">
+	<li class="new"><a href="/temp/video_new">New video</a></li>
+</ul>
+
 <ul>
 <?php foreach($items as $item) { 
 	$item = $IC->getCompleteItem($item["id"]);

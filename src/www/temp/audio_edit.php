@@ -13,7 +13,6 @@ $item = $IC->getCompleteItem($action[0]);
 $item["tags"] = $IC->getTags($action[0]);
 
 $page->template("admin.header.php");
-
 ?>
 
 	<script type="text/javascript">
@@ -39,7 +38,7 @@ $page->template("admin.header.php");
 		}
 	</script>
 
-<h1>Audio Edit</h1>
+<h1>Edit audio</h1>
 <form action="/cms/update/<?= $action[0] ?>" method="post" enctype="multipart/form-data">
 
 	<div class="field">

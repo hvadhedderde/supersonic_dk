@@ -12,18 +12,8 @@ $TC = new Tag();
 
 $tags = $TC->getTags();
 
+$page->template("admin.header.php");
 ?>
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-	<!-- (c) & (p) think.dk 2011 //-->
-	<!-- All material protected by copyrightlaws, as if you didnt know //-->
-	<title>Tags</title>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-</head>
-
-<body>
 
 <h1>Tags</h1>
 

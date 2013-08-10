@@ -13,11 +13,16 @@ $items = $IC->getItems(array("itemtype" => "audio"));
 
 $page->template("admin.header.php");
 ?>
+
 <h1>Audio list</h1>
+<ul class="actions">
+	<li class="new"><a href="/temp/audio_new">New audio</a></li>
+</ul>
 
 <ul>
 <?php foreach($items as $item) { 
 	$item = $IC->getCompleteItem($item["id"]);
+	$item["tags"] = $IC->getTags($item["id"]);
 	?>
 	<li>
 		<a href="/temp/audio_edit/<?= $item["id"] ?>"><?= $item["name"] ?></a>

@@ -1,13 +1,16 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-	<!-- (c) & (p) think.dk 2011 //-->
-	<!-- All material protected by copyrightlaws, as if you didnt know //-->
-	<title>People</title>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-</head>
+<?php
+$access_item = false;
+if(isset($read_access) && $read_access) {
+	return;
+}
 
-<body>
+include_once("../../config/config.php");
+
+$action = $page->access();
+
+$page->template("admin.header.php");
+?>
+
 
 <form action="/cms/save/person" method="post" enctype="multipart/form-data">
 
