@@ -32,6 +32,7 @@ include_once("class/system/filesystem.class.php");
 include_once("class/system/validator.class.php");
 
 include_once("class/items/item.class.php");
+include_once("class/items/tag.class.php");
 
 //include_once("class/system/security.class.php");
 //include_once("class/system/performance.class.php");

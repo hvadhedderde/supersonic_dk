@@ -95,10 +95,12 @@ class TypeVideo {
 
 //			print "INSERT INTO ".$this->db." VALUES(DEFAULT, $item_id, '$name', '$description')<br>";
 			if($query->sql("INSERT INTO ".$this->db." VALUES(DEFAULT, $item_id, '$name', '$description')")) {
+				message()->addMessage("Video item saved");
 				return true;
 			}
 		}
 
+		message()->addMessage("Video item could not be saved", array("type" => "error"));
 		return false;
 	}
 

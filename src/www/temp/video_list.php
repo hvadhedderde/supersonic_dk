@@ -29,8 +29,23 @@ $items = $IC->getItems(array("itemtype" => "video"));
 <ul>
 <?php foreach($items as $item) { 
 	$item = $IC->getCompleteItem($item["id"]);
+	print_r($item);
 	?>
-	<li><a href="/temp/video_edit/<?= $item["id"] ?>"><?= $item["name"] ?></a> - <?= $item["status"] ?> - <a href="/cms/delete/<?= $item["id"] ?>">delete</a></li>
+	<li>
+		<a href="/temp/video_edit/<?= $item["id"] ?>"><?= $item["name"] ?></a>
+		<?
+		print_r($item["tags"]);
+		if($item["tags"]) {
+			
+		}	
+		?>
+		<ul class="tags">
+		</ul>
+		<ul class="actions">
+			<li class="delete"><a href="/cms/delete/<?= $item["id"] ?>">delete</a></li>
+			<li class="status"><?= ($item["status"] ? ('<a href="/cms/disable/'.$item["id"].'">disable</a>') : '<a href="/cms/enable/'.$item["id"].'">enable</a>') ?></li>
+		</ul>
+	</li>
 <? } ?>
 </ul>
 

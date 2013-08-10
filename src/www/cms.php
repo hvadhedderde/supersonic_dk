@@ -23,13 +23,19 @@ $action = $page->access();
 if(isset($action) && count($action) > 1 && $action[0] == "save") {
 
 	$IC = new Item();
-	if($IC->saveItem()) {
-		
+	$id = $IC->saveItem();
+	if($id) {
+		$item = $IC->getCompleteItem($id);
+		$item = array_merge($item, message()->getMessages());
+
+		print json_encode($item);
 	}
 	else {
-
+		print json_encode(message()->getMessages());
 	}
 
+	message()->resetMessages();
+	exit();
 }
 else if(isset($action) && count($action) > 1 && $action[0] == "update") {
 
@@ -52,6 +58,24 @@ else if(isset($action) && count($action) > 1 && $action[0] == "delete") {
 
 	}
 
+}
+else if(isset($action) && count($action) > 1 && $action[0] == "enable") {
+
+	$IC = new Item();
+	$IC->enableItem($action[1]);
+	print json_encode(message()->getMessages());
+
+	message()->resetMessages();
+	exit();
+}
+else if(isset($action) && count($action) > 1 && $action[0] == "disable") {
+
+	$IC = new Item();
+	$IC->disableItem($action[1]);
+	print json_encode(message()->getMessages());
+
+	message()->resetMessages();
+	exit();
 }
 else if(isset($action) && count($action) > 2 && $action[0] == "tags" && $action[1] == "add") {
 
