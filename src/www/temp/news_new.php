@@ -3,13 +3,18 @@
 <head>
 	<!-- (c) & (p) think.dk 2011 //-->
 	<!-- All material protected by copyrightlaws, as if you didnt know //-->
-	<title>Audio</title>
+	<title>News</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
 
 <body>
 
-<form action="/cms/save/audio" method="post" enctype="multipart/form-data">
+<form action="/cms/save/news" method="post" enctype="multipart/form-data">
+
+	<div class="field">
+		<label>Published at</label>
+		<input type="text" name="published_at" />
+	</div>
 
 	<div class="field">
 		<label>Name</label>
@@ -17,13 +22,13 @@
 	</div>
 
 	<div class="field">
-		<label>Description</label>
-		<textarea name="description"></textarea>
+		<label>Text</label>
+		<textarea name="text"></textarea>
 	</div>
 
 	<div class="field">
-		<label>File</label>
-		<input type="file" name="files[]" />
+		<label>Image</label>
+		<input type="file" name="files[]" multiple="multiple" />
 	</div>
 
 	<div class="field">
@@ -47,5 +52,4 @@
 
 </form>
 
-</body>
-</html>
+<? $page->template("admin.footer.php") ?>

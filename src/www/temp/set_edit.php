@@ -62,6 +62,4 @@ $item["tags"] = $IC->getTags($action[0]);
 
 </form>
 
-
-</body>
-</html>
+<? $page->template("admin.footer.php") ?>

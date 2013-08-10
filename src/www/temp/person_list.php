@@ -30,10 +30,23 @@ $items = $IC->getItems(array("itemtype" => "person"));
 <?php foreach($items as $item) { 
 	$item = $IC->getCompleteItem($item["id"]);
 	?>
-	<li><a href="/temp/person_edit/<?= $item["id"] ?>"><?= $item["name"] ?></a> - <?= $item["status"] ?> - <a href="/cms/delete/<?= $item["id"] ?>">delete</a></li>
+	<li>
+		<a href="/temp/person_edit/<?= $item["id"] ?>"><?= $item["name"] ?></a>
+		<?
+		if($item["tags"]) {
+			print '<ul class="tags">';
+			foreach($item["tags"] as $tag) {
+				print '<li>'.$tag["context"].":".$tag["value"].'</li>';
+			}
+			print '</ul>';
+		}	
+		?>
+		<ul class="actions">
+			<li class="delete"><a href="/cms/delete/<?= $item["id"] ?>">delete</a></li>
+			<li class="status"><?= ($item["status"] ? ('<a href="/cms/disable/'.$item["id"].'">disable</a>') : '<a href="/cms/enable/'.$item["id"].'">enable</a>') ?></li>
+		</ul>
+	</li>
 <? } ?>
 </ul>
 
-
-</body>
-</html>
+<? $page->template("admin.footer.php") ?>

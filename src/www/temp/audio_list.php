@@ -11,29 +11,33 @@ $action = $page->access();
 $IC = new Item();
 $items = $IC->getItems(array("itemtype" => "audio"));
 
+$page->template("admin.header.php");
 ?>
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-	<!-- (c) & (p) think.dk 2011 //-->
-	<!-- All material protected by copyrightlaws, as if you didnt know //-->
-	<title>Audio</title>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-</head>
-
-<body>
-
-<h1>Audio</h1>
+<h1>Audio list</h1>
 
 <ul>
 <?php foreach($items as $item) { 
 	$item = $IC->getCompleteItem($item["id"]);
 	?>
-	<li><a href="/temp/audio_edit/<?= $item["id"] ?>"><?= $item["name"] ?></a> - <?= $item["status"] ?> - <a href="/cms/delete/<?= $item["id"] ?>">delete</a></li>
+	<li>
+		<a href="/temp/audio_edit/<?= $item["id"] ?>"><?= $item["name"] ?></a>
+		
+		<?
+		if($item["tags"]) {
+			print '<ul class="tags">';
+			foreach($item["tags"] as $tag) {
+				print '<li>'.$tag["context"].":".$tag["value"].'</li>';
+			}
+			print '</ul>';
+		}	
+		?>
+		<ul class="actions">
+			<li class="delete"><a href="/cms/delete/<?= $item["id"] ?>">delete</a></li>
+			<li class="status"><?= ($item["status"] ? ('<a href="/cms/disable/'.$item["id"].'">disable</a>') : '<a href="/cms/enable/'.$item["id"].'">enable</a>') ?></li>
+		</ul>
+
+	</li>
 <? } ?>
 </ul>
 
-
-</body>
-</html>
+<? $page->template("admin.footer.php") ?>

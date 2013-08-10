@@ -10,17 +10,11 @@ $action = $page->access();
 
 $IC = new Item();
 $item = $IC->getCompleteItem($action[0]);
-
 $item["tags"] = $IC->getTags($action[0]);
-?>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-	<!-- (c) & (p) think.dk 2011 //-->
-	<!-- All material protected by copyrightlaws, as if you didnt know //-->
-	<title>Audio</title>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+$page->template("admin.header.php");
+
+?>
 
 	<script type="text/javascript">
 		function toTitleCase(str) {
@@ -45,11 +39,7 @@ $item["tags"] = $IC->getTags($action[0]);
 		}
 	</script>
 
-</head>
-
-<body>
-
-<h1>Audio</h1>
+<h1>Audio Edit</h1>
 <form action="/cms/update/<?= $action[0] ?>" method="post" enctype="multipart/form-data">
 
 	<div class="field">
@@ -101,6 +91,4 @@ $item["tags"] = $IC->getTags($action[0]);
 
 </form>
 
-
-</body>
-</html>
+<? $page->template("admin.footer.php") ?>

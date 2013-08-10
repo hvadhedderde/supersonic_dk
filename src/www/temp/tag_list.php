@@ -35,6 +35,4 @@ $tags = $TC->getTags();
 <? } ?>
 </ul>
 
-
-</body>
-</html>
+<? $page->template("admin.footer.php") ?>

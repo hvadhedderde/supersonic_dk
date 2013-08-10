@@ -3,32 +3,17 @@
 <head>
 	<!-- (c) & (p) think.dk 2011 //-->
 	<!-- All material protected by copyrightlaws, as if you didnt know //-->
-	<title>Text</title>
+	<title>Set</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
 
 <body>
 
-<form action="/cms/save/video" method="post" enctype="multipart/form-data">
-
-	<div class="field">
-		<label>Published at</label>
-		<input type="text" name="published_at" />
-	</div>
+<form action="/cms/save/set" method="post">
 
 	<div class="field">
 		<label>Name</label>
 		<input type="text" name="name" />
-	</div>
-
-	<div class="field">
-		<label>Description</label>
-		<textarea name="description"></textarea>
-	</div>
-
-	<div class="field">
-		<label>Files</label>
-		<input type="file" name="files[]" multiple="multiple" />
 	</div>
 
 	<div class="field">
@@ -52,5 +37,4 @@
 
 </form>
 
-</body>
-</html>
+<? $page->template("admin.footer.php") ?>
