@@ -13,22 +13,13 @@
 	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 	<meta name="MSSmartTagsPreventParsing" content="true" />
 	<meta http-equiv="imagetoolbar" content="no" />
-<?
-print "dev:".Session::value("dev").";";
-
- if(Session::value("dev")) { ?>
+<? if(Session::value("dev")) { ?>
 	<link type="text/css" rel="stylesheet" media="all" href="/css/lib/seg_<?= $this->segment() ?>_include.css" />
 	<script type="text/javascript" src="/js/lib/seg_<?= $this->segment() ?>_include.js"></script>
 <? } else { ?>
 	<link type="text/css" rel="stylesheet" media="all" href="/css/seg_<?= $this->segment() ?>.css" />
 	<script type="text/javascript" src="/js/seg_<?= $this->segment() ?>.js"></script>
 <? } ?>
-
-<? if(Session::value("user")) { ?>
-	<link type="text/css" rel="stylesheet" media="all" href="/css/admin/lib/seg_<?= $this->segment() ?>_include.css" />
-	<script type="text/javascript" src="/js/admin/lib/seg_<?= $this->segment() ?>_include.js"></script>
-<? } ?>
-
 </head>
 
 <body<?= HTML::attribute("class", $this->bodyClass()) ?>>
