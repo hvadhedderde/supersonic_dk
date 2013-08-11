@@ -17,7 +17,7 @@
 							$image = "/img/missing_240x320.png";
 						} ?>
 						<li style="background-image: url(<?= $image ?>);">
-							<a href="/video/<?= $item["sindex"] ?>"><?= $item["name"] ?></a>
+							<h2><a href="/video/<?= $item["sindex"] ?>"><?= $item["name"] ?></a></h2>
 						</li>
 			<?		}
 				} ?>
