@@ -9,7 +9,7 @@ include_once($_SERVER["LOCAL_PATH"]."/config/config.php");
 $action = $page->access();
 
 $IC = new Item();
-$items = $IC->getItems(array("itemtype" => "video"));
+$items = $IC->getItems(array("itemtype" => "video", "order" => "sindex"));
 
 $page->template("admin.header.php");
 ?>
