@@ -9,7 +9,7 @@ include_once("../../config/config.php");
 $action = $page->access();
 
 $IC = new Item();
-$items = $IC->getItems(array("itemtype" => "audio"));
+$items = $IC->getItems(array("itemtype" => "audio", "order" => "sindex"));
 
 $page->template("admin.header.php");
 ?>
