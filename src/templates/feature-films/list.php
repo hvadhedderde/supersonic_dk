@@ -3,36 +3,27 @@
 
 		<h1>Feature Films</h1>
 		<ul class="posters">
-			<li style="background-image: url(/img/poster_max_pinlig_3.jpg);">
-				<h2><a href="/video/max_pinlig_3">Max Pinlig 3</a></h2>
+		<?php
+			$IC = new Item();
+			$items = $IC->getItems(array("status" => 1, "tags" => "category:Feature films"));
+			if($items) {
+				foreach($items as $item) {
+					$item = $IC->getCompleteItem($item["id"]);
+	
+					if(file_exists(PRIVATE_FILE_PATH."/".$item["id"]."/thumbnail")) {
+						$image = "/images/".$item["id"]."/thumbnail/240x.jpg";
+					}
+					else {
+						$image = "/img/missing_240x320.png";
+					}
+			?>
+			<li style="background-image: url(<?= $image ?>);">
+				<h2><a href="/video/<?= $item["sindex"] ?>"><?= $item["name"] ?></a></h2>
 			</li>
-			<li style="background-image: url(/img/poster_far_til_fire_til_soes.jpg);">
-				<h2><a href="/video/far_til_fire_til_soes">Far til Fire - Til søs</a></h2>
-			</li>
-			<li style="background-image: url(/img/poster_avalon.jpg);">
-				<h2><a href="/video/avalon">Avalon</a></h2>
-			</li>
-			<li style="background-image: url(/img/poster_kyss_mig.jpg);">
-				<h2><a href="/video/kyss_mig">Kyss Mig</a></h2>
-			</li>
-			<li style="background-image: url(/img/poster_simon_och_ekarna.jpg);">
-				<h2><a href="/video/simon_och_ekarna">Simon och Ekarna</a></h2>
-			</li>
-			<li style="background-image: url(/img/poster_far_til_fire_tilbage_til_naturen.jpg);">
-				<h2><a href="/video/far_til_fire_tilbage_til_naturen">Far til Fire - Tilbage til naturen</a></h2>
-			</li>
-			<li style="background-image: url(/img/poster_max_pinlig_2.jpg);">
-				<h2><a href="/video/max_pinlig_2">Max Pinlig 2</a></h2>
-			</li>
-			<li style="background-image: url(/img/poster_no_right_turn.jpg);">
-				<h2><a href="/video/no_right_turn">No Right Turn</a></h2>
-			</li>
-			<li style="background-image: url(/img/poster_broderskab.jpg);">
-				<h2><a href="/video/broderskab">Broderskab</a></h2>
-			</li>
-			<li style="background-image: url(/img/poster_jungledyret_hugo_3.jpg);">
-				<h2><a href="/video/jungledyret_hugo_3">Jungledyret Hugo 3</a></h2>
-			</li>
+			<?
+				}
+			} 
+		?>
 		</ul>
 	</div>
 </div>

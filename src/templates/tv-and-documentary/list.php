@@ -5,7 +5,7 @@
 		<ul class="posters">
 		<?php
 			$IC = new Item();
-			$items = $IC->getItems(array("status" => 1, "tags" => "category:Tv & Docs", "order" => "sindex"));
+			$items = $IC->getItems(array("status" => 1, "tags" => "category:Tv & Docs"));
 			if($items) {
 				foreach($items as $item) {
 					$item = $IC->getCompleteItem($item["id"]);
