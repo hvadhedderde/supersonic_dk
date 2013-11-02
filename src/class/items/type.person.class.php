@@ -17,23 +17,25 @@ class TypePerson {
 	* Init, set varnames, validation rules
 	*/
 	function __construct() {
+
+		$this->db = SITE_DB.".item_person";
 		// itemtype database
-		$this->db = UT_ITE_PER;
+//		$this->db = UT_ITE_PER;
 
 		// image size
 		$this->image_w = 232;
 		$this->image_h = 270;
 
-		$this->validator = new Validator($this);
+//		$this->validator = new Validator($this);
 
 		$this->varnames["nickname"] = "Short name";
-		$this->validator->rule("nickname", "txt");
+//		$this->validator->rule("nickname", "txt");
 
 		$this->varnames["name"] = "Name";
-		$this->validator->rule("name", "txt");
+//		$this->validator->rule("name", "txt");
 
 		$this->varnames["email"] = "Email";
-		$this->validator->rule("email", "email", "Invalid email");
+//		$this->validator->rule("email", "email", "Invalid email");
 //		$this->validator->rule("email", "unik", "Email is not unique", $this->db);
 
 		$this->varnames["title"] = "Title";
@@ -46,7 +48,7 @@ class TypePerson {
 		$this->varnames["files"] = "Image (".$this->image_w."x".$this->image_h."):";
 //		$this->validator->rule("image", "image");
 
-		$this->vars = getVars($this->varnames);
+//		$this->vars = getVars($this->varnames);
 	}
 
 

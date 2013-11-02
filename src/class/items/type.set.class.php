@@ -18,16 +18,17 @@ class TypeSet {
 	*/
 	function __construct() {
 		// initiate helpers before calling View construct
-		$this->validator = new Validator($this);
+//		$this->validator = new Validator($this);
 
-		$this->db = UT_ITE_SET;
+		$this->db = SITE_DB.".item_set";
+//		$this->db = UT_ITE_SET;
 
 		$this->varnames["name"] = "Name";
-		$this->validator->rule("name", "unik", "Name exists!", $this->db);
+//		$this->validator->rule("name", "unik", "Name exists!", $this->db);
 
 		$this->varnames["text"] = "Frontpage text";
 
-		$this->vars = getVars($this->varnames);
+//		$this->vars = getVars($this->varnames);
 	}
 
 

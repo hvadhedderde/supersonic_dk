@@ -18,7 +18,8 @@ class TypeVideo {
 	*/
 	function __construct() {
 
-		$this->db = UT_ITE_VID;
+		$this->db = SITE_DB.".item_video";
+//		$this->db = UT_ITE_VID;
 
 //		$this->default_thumb_width = 88;
 //		$this->default_thumb_height = 40;
@@ -26,10 +27,10 @@ class TypeVideo {
 //		$this->default_clip_width = 500;
 //		$this->default_clip_height = 280;
 
-		$this->validator = new Validator($this);
+//		$this->validator = new Validator($this);
 
 		$this->varnames["name"] = "Name";
-		$this->validator->rule("name", "unik", "Name exists!", $this->db);
+//		$this->validator->rule("name", "unik", "Name exists!", $this->db);
 
 		$this->varnames["description"] = "Description";
 
@@ -49,7 +50,7 @@ class TypeVideo {
 		// $this->varnames["clip_height"] = "Clip height (Default: ".$this->default_clip_height.")";
 		// $this->validator->rule("clip_height", "num");
 
-		$this->vars = getVars($this->varnames);
+//		$this->vars = getVars($this->varnames);
 
 	}
 

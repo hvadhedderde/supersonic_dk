@@ -18,20 +18,24 @@ class TypeNews {
 	*/
 	function __construct() {
 
-		$this->db = UT_ITE_NEW;
+		$this->db = SITE_DB.".item_news";
+		
+		//$this->db = UT_ITE_NEW;
 
 		$this->image_w = 200;
 		$this->image_h = 90;
 
-		$this->validator = new Validator($this);
+//		$this->validator = new Validator($this);
 		$this->varnames["name"] = "Headline";
-		$this->validator->rule("name", "unik", "Headline exists!", $this->db);
+//		$this->validator->rule("name", "unik", "Headline exists!", $this->db);
 		$this->varnames["text"] = "Text";
 //		$this->varnames["status"] = "Status";
 //		$this->varnames["published_at"] = "Release date";
 		$this->varnames["image"] = "Image file (".$this->image_w."x".$this->image_h."):";
 
-		$this->vars = getVars($this->varnames);
+//		$this->vars = getPostedVars($this->varnames);
+
+//		parent::__construct();
 	}
 
 

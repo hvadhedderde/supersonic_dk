@@ -18,9 +18,10 @@ class TypeImage {
 	* Init, set varnames, validation rules
 	*/
 	function __construct() {
-		$this->validator = new Validator($this);
-
-		$this->db = UT_ITE_IMA;
+//		$this->validator = new Validator($this);
+		
+//		$this->db = UT_ITE_IMA;
+		$this->db = SITE_DB.".item_image";
 //		$this->db_tag = UT_ITE_ITE_TAG;
 
 //		$this->file_path = LOCAL_PATH."/library/frontpages/";
@@ -33,7 +34,7 @@ class TypeImage {
 		// $this->varnames["tags"] = "Tags";
 		$this->varnames["files"] = "Image";
 
-		$this->vars = getVars($this->varnames);
+//		$this->vars = getVars($this->varnames);
 	}
 
 

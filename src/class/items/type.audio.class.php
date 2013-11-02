@@ -18,13 +18,15 @@ class TypeAudio {
 	*/
 	function __construct() {
 
-		$this->db = UT_ITE_AUD;
+
+		$this->db = SITE_DB.".item_audio";
+//		$this->db = UT_ITE_AUD;
 
 //		$this->file_path = LOCAL_PATH."/library/radio/";
 
-		$this->validator = new Validator($this);
+//		$this->validator = new Validator($this);
 		$this->varnames["name"] = "Name";
-		$this->validator->rule("name", "unik", "Name exists!", $this->db);
+//		$this->validator->rule("name", "unik", "Name exists!", $this->db);
 
 		$this->varnames["description"] = "Additional info";
 
@@ -34,7 +36,7 @@ class TypeAudio {
 
 		$this->varnames["files"] = "Sound file:";
 
-		$this->vars = getVars($this->varnames);
+//		$this->vars = getVars($this->varnames);
 	}
 
 

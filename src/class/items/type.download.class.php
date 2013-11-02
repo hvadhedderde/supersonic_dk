@@ -18,18 +18,19 @@ class TypeDownload {
 	*/
 	function __construct() {
 
-		$this->db = UT_ITE_DOW;
+		$this->db = SITE_DB.".item_download";
+//		$this->db = UT_ITE_DOW;
 
-		$this->validator = new Validator($this);
+//		$this->validator = new Validator($this);
 		$this->varnames["name"] = "Name";
-		$this->validator->rule("name", "unik", "Name exists!", $this->db);
+//		$this->validator->rule("name", "unik", "Name exists!", $this->db);
 
 		// $this->varnames["release_date"] = "Release date";
 		// $this->varnames["status"] = "Status";
 
 		$this->varnames["files"] = "File:";
 
-		$this->vars = getVars($this->varnames);
+//		$this->vars = getVars($this->varnames);
 	}
 
 
