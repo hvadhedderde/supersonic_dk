@@ -15,7 +15,7 @@
 			<ul class="actions">
 				<li><a href="#cphtour">CPH</a></li>
 				<li><a href="#svendborgtour">Svendborg</a></li>
-				<li><a href="#aarhustour">Aarhus</a></li>
+				<!--li><a href="#aarhustour">Aarhus</a></li-->
 			</ul>
 		</div>
 		<? } 
@@ -48,11 +48,11 @@
 			<li style="background-image: url(/img/tour/svendborg/07.jpg);"></li>
 		</ul>
 
-		<ul id="aarhustour">
+		<!--ul id="aarhustour">
 			<li style="background-image: url(/img/tour/aarhus/01.jpg);"></li>
 			<li style="background-image: url(/img/tour/aarhus/02.jpg);"></li>
 			<li style="background-image: url(/img/tour/aarhus/03.jpg);"></li>
-		</ul>
+		</ul-->
 
 	</div>
 

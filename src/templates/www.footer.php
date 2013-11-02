@@ -50,7 +50,7 @@ function menuItem($title, $url) {
 			</div>
 			<div class="tel" itemprop="telephone"><a href="callto:+4533116030">+45 33 11 60 30</a></div>
 		</div>
-		<div class="vcard company aarhus" itemscope itemtype="http://schema.org/Organization">
+		<!--div class="vcard company aarhus" itemscope itemtype="http://schema.org/Organization">
 			<div class="name fn org" itemprop="name">Supersonic ÅRHUS</div>
 			<div class="adr" itemprop="address" itemscope itemtype="http://schema.org/PostalAddress">
 				<div class="street-address" itemprop="streetAddress">Jægergårdsgade 152, Bygning 03-F</div>
@@ -59,7 +59,7 @@ function menuItem($title, $url) {
 				<div class="geo" itemprop="geo" itemscope itemtype="http://schema.org/GeoCoordinates">&phi; <span class="latitude" itemprop="latitude">56,146921</span>°; &lambda; <span class="longitude" itemprop="longitude">10,20978</span>°</div>
 			</div>
 			<div class="tel" itemprop="telephone"><a href="callto:+4533116030">+45 33 11 60 30</a></div>
-		</div>
+		</div-->
 	</div>
 
 </div>

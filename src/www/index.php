@@ -4,7 +4,7 @@ if(isset($read_access) && $read_access) {
 	return;
 }
 
-include_once($_SERVER["LOCAL_PATH"]."/config/config.php");
+include_once($_SERVER["LOCAL_PATH"]."/config/init.php");
 
 
 $page->bodyClass("front");
