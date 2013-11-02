@@ -7,6 +7,6 @@
 [submodule "submodules/wtf-css-merger"]
 	path = submodules/wtf-css-merger
 	url = https://github.com/hvadhedderde/wtf-css-merger.git
-[submodule "janitor"]
-	path = janitor
-	url = https://github.com/parentnode/janitor
+[submodule "submodules/janitor"]
+	path = submodules/janitor
+	url = https://github.com/parentnode/janitor.git
