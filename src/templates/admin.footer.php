@@ -2,13 +2,19 @@
 
 	<div id="navigation">
 		<ul>
-			<li><a href="/temp/news_list">News list</a></li>
-			<li><a href="/temp/audio_list">Audio list</a></li>
-			<li><a href="/temp/video_list">Video list</a></li>
-			<li><a href="/temp/text_list">Text list</a></li>
-			<li><a href="/temp/person_list">People list</a></li>
-			<li><a href="/temp/set_list">Set list</a></li>
-			<li><a href="/temp/tag_list">Tag list</a></li>
+			<li><a href="/admin/news/list">News</a></li>
+			<li><a href="/admin/audio/list">Audio</a></li>
+			<li><a href="/admin/video/list">Video</a></li>
+			<li><a href="/admin/text/list">Text</a></li>
+			<li><a href="/admin/person/list">People</a></li>
+			<li><a href="/admin/set/list">Set</a></li>
+			<li><a href="/admin/tag/list">Tag</a></li>
+		</ul>
+	</div>
+
+	<div id="footer">
+		<ul class="servicenavigation">
+			<li class="copyright">Janitor, JES, WhatTheFramework, Martin Kæstel Nielsen - Copyright 2013</li>
 		</ul>
 	</div>
 
