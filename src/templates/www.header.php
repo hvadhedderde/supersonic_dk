@@ -8,9 +8,9 @@
 	<meta name="language" content="<?= $this->language() ?>" />
 	<meta name="keywords" content="" />
 	<meta name="description" content="<?= $this->pageDescription() ?>" />
-	<meta name="viewport" content="width=1024" />
+	<meta name="viewport" content="initial-scale=1" />
 	<meta name="apple-mobile-web-app-capable" content="yes" />
-	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+	<meta name="apple-mobile-web-app-status-bar-style" content="black" />
 	<meta name="MSSmartTagsPreventParsing" content="true" />
 	<meta http-equiv="imagetoolbar" content="no" />
 <? if(Session::value("dev")) { ?>
@@ -28,7 +28,6 @@
 	<div id="header">
 		<ul class="servicenavigation">
 			<li class="keynav front"><a href="/">Frontpage</a></li>
-			<li class="keynav help"><a href="/help">Help</a></li>
 			<li class="keynav navigation nofollow"><a href="#navigation" rel="nofollow">Navigation</a></li>
 		</ul>
 	</div>
