@@ -7,11 +7,7 @@
 /**
 * TypeText, extends views
 */
-class TypeText {
-
-	public $varnames;
-	public $vars;
-	private $validator;
+class TypeText extends Model {
 
 	/**
 	* Init, set varnames, validation rules
@@ -20,85 +16,42 @@ class TypeText {
 
 		// itemtype database
 		$this->db = SITE_DB.".item_text";
-//		$this->db = UT_ITE_TEX;
 
+		// Published
+		$this->addToModel("published_at", array(
+			"type" => "datetime",
+			"label" => "Publish date (yyyy-mm-dd hh:mm:ss)",
+			"pattern" => "^[\d]{4}-[\d]{2}-[\d]{2}[0-9\-\/ \:]*$",
+			"hint_message" => "Date to publish news post on site. Until this date news post will remain hidden on site. Leave empty for instant publication", 
+			"error_message" => "Date must be of format (yyyy-mm-dd hh:mm:ss)"
+		));
 
-		// initiate helpers before calling View construct
-//		$this->validator = new Validator($this);
+		// Name
+		$this->addToModel("name", array(
+			"type" => "string",
+			"label" => "Name",
+			"required" => true,
+			"unique" => $this->db,
+			"hint_message" => "Audio name", 
+			"error_message" => "Audio name must be unique"
+		));
 
-		$this->varnames["name"] = "Name";
-//		$this->validator->rule("name", "unik", "Name exists!", $this->db);
+		// text
+		$this->addToModel("text", array(
+			"type" => "text",
+			"label" => "News post",
+			"hint_message" => "Write content of news post"
+		));
 
-		$this->varnames["text"] = "Text";
+		// Tags
+		$this->addToModel("tags", array(
+			"type" => "tags",
+			"label" => "Add tag",
+			"hint_message" => "Start typing to get suggestions"
+		));
 
+		parent::__construct();
 	}
-
-
-
-	// get item type details
-	function get($id) {
-		$query = new Query();
-		if($query->sql("SELECT * FROM ".$this->db." WHERE item_id = $id")) {
-			$item = array();
-			$item["name"] = $query->result(0, "name");
-			$item["text"] = $query->result(0, "text");
-
-			return $item;
-		}
-		else {
-			return false;
-		}
-	}
-
-
-
-	// CMS SECTION
-
-
-	// save item type - based on posted values
-	function save($item_id) {
-		$this->vars = getVars($this->varnames);
-
-		// does values validate
-		if($this->validator->validateAll()) {
-			$query = new Query();
-
-			$name = $this->vars["name"];
-			$text = $this->vars["text"];
-
-//			print "INSERT INTO ".$this->db." VALUES(DEFAULT, $item_id, '$name', '$text')<br>";
-			if($query->sql("INSERT INTO ".$this->db." VALUES(DEFAULT, $item_id, '$name', '$text')")) {
-				return true;
-			}
-		}
-
-		return false;
-	}
-
-	// update item type - based on posted values
-	function update($item_id) {
-
-		$this->vars = getVars($this->varnames);
-
-		// does values validate
-		// change validator to handle individdual validation with message collection
-
-//		if($this->validator->validateAll()) {
-			$query = new Query();
-
-			$name = $this->vars["name"];
-			$text = $this->vars["text"];
-
-//			print "INSERT INTO ".$this->db." VALUES(DEFAULT, $item_id, '$name', '$text')<br>";
-			if($query->sql("UPDATE ".$this->db." SET name='$name', text='$text' WHERE item_id = $item_id")) {
-				return true;
-			}
-//		}
-
-		return false;
-	}
-
-
 }
 
 ?>

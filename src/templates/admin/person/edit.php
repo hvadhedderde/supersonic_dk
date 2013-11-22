@@ -3,16 +3,16 @@
 $action = $this->actions();
 
 $IC = new Item();
-$model = $IC->typeObject("news");
+$model = $IC->typeObject("person");
 
 $item = $IC->getCompleteItem($action[1]);
 $item_id = $item["id"];
 ?>
 <div class="scene defaultEdit">
-	<h1>Edit news</h1>
+	<h1>Edit person</h1>
 
 	<ul class="actions">a
-		<li class="cancel"><a href="/admin/news/list" class="button">Back</a></li>
+		<li class="cancel"><a href="/admin/person/list" class="button">Back</a></li>
 	</ul>
 
 	<div class="item">
@@ -21,11 +21,14 @@ $item_id = $item["id"];
 			<fieldset>
 				<?= $model->input("published_at", array("value" => $item["published_at"])) ?>
 				<?= $model->input("name", array("value" => $item["name"])) ?>
-				<?= $model->input("text", array("class" => "autoexpand", "value" => $item["text"])) ?>
+				<?= $model->input("nickname", array("value" => $item["nickname"])) ?>
+				<?= $model->input("title", array("value" => $item["title"])) ?>
+				<?= $model->input("email", array("value" => $item["email"])) ?>
+				<?= $model->input("description", array("class" => "autoexpand", "value" => $item["description"])) ?>
 			</fieldset>
 
 			<ul class="actions">
-				<li class="cancel"><a href="/admin/news/list" class="button key:esc">Back</a></li>
+				<li class="cancel"><a href="/admin/person/list" class="button key:esc">Back</a></li>
 				<li class="save"><input type="submit" value="Update" class="button primary key:s" /></li>
 			</ul>
 

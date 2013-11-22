@@ -1,0 +1,35 @@
+<?php
+
+$action = $this->actions();
+
+$IC = new Item();
+$model = $IC->typeObject("person");
+
+?>
+<div class="scene defaultNew">
+	<h1>New person</h1>
+
+	<ul class="actions">
+		<li class="cancel"><a href="/admin/person/list" class="button">Back</a></li>
+	</ul>
+
+	<form action="/admin/cms/save/person" class="i:formDefaultNew labelstyle:inject" method="post" enctype="multipart/form-data">
+
+		<fieldset>
+			<?= $model->input("published_at") ?>
+			<?= $model->input("name") ?>
+			<?= $model->input("nickname") ?>
+			<?= $model->input("title") ?>
+			<?= $model->input("email") ?>
+			<?= $model->input("description", array("class" => "autoexpand")) ?>
+		</fieldset>
+
+		<ul class="actions">
+			<li class="cancel"><a href="/admin/person/list" class="button">Back</a></li>
+			<li class="save"><input type="submit" value="Save" class="button primary" /></li>
+		</ul>
+
+	</form>
+
+</div>
+

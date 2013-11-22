@@ -3,13 +3,13 @@
 $action = $this->actions();
 
 $IC = new Item();
-$all_items = $IC->getItems(array("itemtype" => "news", "order" => "status DESC"));
+$all_items = $IC->getItems(array("itemtype" => "text", "order" => "status DESC"));
 ?>
-<div class="scene i:defaultList defaultList newsList">
-	<h1>News</h1>
+<div class="scene i:defaultList defaultList textList">
+	<h1>Texts</h1>
 
 	<ul class="actions">
-		<li class="new"><a href="/admin/news/new" class="button primary">Create news post</a></li>
+		<li class="new"><a href="/admin/text/new" class="button primary">Create new text</a></li>
 	</ul>
 
 	<div class="all_items">
@@ -30,7 +30,7 @@ $all_items = $IC->getItems(array("itemtype" => "news", "order" => "status DESC")
 <?				endif; ?>
 
 				<ul class="actions">
-					<li class="edit"><a href="/admin/news/edit/<?= $item["id"] ?>" class="button">Edit</a></li>
+					<li class="edit"><a href="/admin/text/edit/<?= $item["id"] ?>" class="button">Edit</a></li>
 					<li class="delete">
 						<form action="/admin/cms/delete/<?= $item["id"] ?>" class="i:formDefaultDelete" method="post" enctype="multipart/form-data">
 							<input type="submit" value="Delete" class="button delete" />
@@ -46,7 +46,7 @@ $all_items = $IC->getItems(array("itemtype" => "news", "order" => "status DESC")
 <?			endforeach; ?>
 		</ul>
 <?		else: ?>
-		<p>No news items.</p>
+		<p>No text items.</p>
 <?		endif; ?>
 	</div>
 

@@ -3,13 +3,13 @@
 $action = $this->actions();
 
 $IC = new Item();
-$all_items = $IC->getItems(array("itemtype" => "news", "order" => "status DESC"));
+$all_items = $IC->getItems(array("itemtype" => "person", "order" => "status DESC"));
 ?>
-<div class="scene i:defaultList defaultList newsList">
-	<h1>News</h1>
+<div class="scene i:defaultList defaultList personList">
+	<h1>People</h1>
 
 	<ul class="actions">
-		<li class="new"><a href="/admin/news/new" class="button primary">Create news post</a></li>
+		<li class="new"><a href="/admin/person/new" class="button primary">Create new person</a></li>
 	</ul>
 
 	<div class="all_items">
@@ -17,9 +17,9 @@ $all_items = $IC->getItems(array("itemtype" => "news", "order" => "status DESC")
 		<ul class="items taggable">
 <?			foreach($all_items as $item): 
 				$item = $IC->getCompleteItem($item["id"]); ?>
-			<li class="item item_id:<?= $item["id"] ?> image:<?= $item["files"] ?> width:160">
+			<li class="item item_id:<?= $item["id"] ?> image:<?= $item["files"] ?> width:100">
 				<h3><?= $item["name"] ?></h3>
-				<div class="description"><?= $item["text"] ?></div>
+				<div class="description"><?= $item["description"] ?></div>
 
 <?				if($item["tags"]): ?>
 				<ul class="tags">
@@ -30,7 +30,7 @@ $all_items = $IC->getItems(array("itemtype" => "news", "order" => "status DESC")
 <?				endif; ?>
 
 				<ul class="actions">
-					<li class="edit"><a href="/admin/news/edit/<?= $item["id"] ?>" class="button">Edit</a></li>
+					<li class="edit"><a href="/admin/person/edit/<?= $item["id"] ?>" class="button">Edit</a></li>
 					<li class="delete">
 						<form action="/admin/cms/delete/<?= $item["id"] ?>" class="i:formDefaultDelete" method="post" enctype="multipart/form-data">
 							<input type="submit" value="Delete" class="button delete" />
@@ -46,7 +46,7 @@ $all_items = $IC->getItems(array("itemtype" => "news", "order" => "status DESC")
 <?			endforeach; ?>
 		</ul>
 <?		else: ?>
-		<p>No news items.</p>
+		<p>No people.</p>
 <?		endif; ?>
 	</div>
 
