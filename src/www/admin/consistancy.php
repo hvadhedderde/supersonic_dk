@@ -24,9 +24,10 @@ $query = new Query();
 
 // move posters
 $videos = $IC->getItems(array("itemtype" => "video"));
-print_r($videos);
+//print_r($videos);
 foreach($videos as $video) {
 	if($video["id"] >= 560 && $video["id"] >= 573) {
+		print "check for move".$video["id"]."<br>"
 		if(file_exists(PRIVATE_FILE_PATH."/".$video["id"]."/thumbnail/jpg")) {
 			FileSystem::makeDirRecursively(PRIVATE_FILE_PATH."/".$video["id"]."/poster");
 			copy(PRIVATE_FILE_PATH."/".$video["id"]."/thumbnail/jpg", PRIVATE_FILE_PATH."/".$video["id"]."/poster/jpg");
