@@ -11,6 +11,9 @@
 /* PERSON LIST */
 #content .personList ul.items > li {min-height: 100px; background-repeat: no-repeat; background-position: left top; background-color: transparent; padding-left: 100px;}
 
+/* VIDEO LIST */
+#content .videoList ul.items > li {min-height: 100px; background-repeat: no-repeat; background-position: left top; background-color: transparent; padding-left: 177px;}
+
 
 /* NAVIGATION */
 body.news #navigation .news a,

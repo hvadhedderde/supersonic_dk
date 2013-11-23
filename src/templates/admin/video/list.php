@@ -18,7 +18,7 @@ $all_items = $IC->getItems(array("itemtype" => $itemtype, "order" => "status DES
 		<ul class="items taggable">
 <?			foreach($all_items as $item): 
 				$item = $IC->getCompleteItem($item["id"]); ?>
-			<li class="item item_id:<?= $item["id"] ?> image:<?= $item["files"] ?> width:100 height:116">
+			<li class="item item_id:<?= $item["id"] ?> image:<?= $item["screendump"] ?> variant:screendump width:177 height:100">
 				<h3><?= $item["name"] ?></h3>
 				<div class="description"><?= $item["description"] ?></div>
 

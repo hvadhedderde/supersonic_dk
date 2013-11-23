@@ -4329,17 +4329,18 @@ Util.Objects["defaultList"] = new function() {
 			scene.list.scene = scene;
 			for(i = 0; node = scene.nodes[i]; i++) {
 				node._item_id = u.cv(node, "item_id");
+				node._variant = u.cv(node, "variant");
 				node._image = u.cv(node, "image");
 				node._width = u.cv(node, "width");
 				node._height = u.cv(node, "height");
 				if(node._image && node._width && node._height) {
-					u.as(node, "backgroundImage", "url(/images/"+node._item_id+"/"+node._width+"x"+node._height+"."+node._image+")");
+					u.as(node, "backgroundImage", "url(/images/"+node._item_id+"/"+(node._variant ? node._variant+"/" : "")+node._width+"x"+node._height+"."+node._image+")");
 				}
 				else if(node._image && node._width) {
-					u.as(node, "backgroundImage", "url(/images/"+node._item_id+"/"+node._width+"x."+node._image+")");
+					u.as(node, "backgroundImage", "url(/images/"+node._item_id+"/"+(node._variant ? node._variant+"/" : "")+node._width+"x."+node._image+")");
 				}
 				else if(node._image && node._height) {
-					u.as(node, "backgroundImage", "url(/images/"+node._item_id+"/x"+node._height+"."+node._image+")");
+					u.as(node, "backgroundImage", "url(/images/"+node._item_id+"/x"+(node._variant ? node._variant+"/" : "")+node._height+"."+node._image+")");
 				}
 				node._audio = u.cv(node, "audio");
 				if(node._audio) {
