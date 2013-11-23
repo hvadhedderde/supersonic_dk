@@ -15,17 +15,17 @@ $IC = new Item();
 $query = new Query();
 
 // delete images
-$images = $IC->getItems(array("itemtype" => "image"));
-foreach($images as $image) {
-	$IC->deleteItem($image["id"]);
-//	print "delete image:".$image["id"]."<br>";
-}
+// $images = $IC->getItems(array("itemtype" => "image"));
+// foreach($images as $image) {
+// 	$IC->deleteItem($image["id"]);
+// //	print "delete image:".$image["id"]."<br>";
+// }
 //print_r($images);
 
 // move posters
 $videos = $IC->getItems(array("itemtype" => "video"));
 foreach($videos as $video) {
-	if($video["id"] >= 560) {
+	if($video["id"] >= 560 && $video["id"] >= 573) {
 		if(file_exists(PRIVATE_FILE_PATH."/".$video["id"]."/thumbnail/jpg")) {
 			FileSystem::makeDirRecursively(PRIVATE_FILE_PATH."/".$video["id"]."/poster");
 			copy(PRIVATE_FILE_PATH."/".$video["id"]."/thumbnail/jpg", PRIVATE_FILE_PATH."/".$video["id"]."/poster/jpg");
@@ -51,6 +51,9 @@ foreach($videos as $video) {
 	if(file_exists(PRIVATE_FILE_PATH."/".$video["id"]."/thumbnail/jpg")) {
 		$query->sql("UPDATE supersonic_dk.item_video SET thumbnail = 'jpg' WHERE item_id = ".$video["id"]);
 	}
+	else if(file_exists(PRIVATE_FILE_PATH."/".$video["id"]."/thumbnail/png")) {
+		$query->sql("UPDATE supersonic_dk.item_video SET thumbnail = 'png' WHERE item_id = ".$video["id"]);
+	}
 	else {
 		$query->sql("UPDATE supersonic_dk.item_video SET thumbnail = '' WHERE item_id = ".$video["id"]);
 	}
@@ -58,12 +61,18 @@ foreach($videos as $video) {
 	if(file_exists(PRIVATE_FILE_PATH."/".$video["id"]."/poster/jpg")) {
 		$query->sql("UPDATE supersonic_dk.item_video SET poster = 'jpg' WHERE item_id = ".$video["id"]);
 	}
+	else if(file_exists(PRIVATE_FILE_PATH."/".$video["id"]."/poster/png")) {
+		$query->sql("UPDATE supersonic_dk.item_video SET poster = 'png' WHERE item_id = ".$video["id"]);
+	}
 	else {
 		$query->sql("UPDATE supersonic_dk.item_video SET poster = '' WHERE item_id = ".$video["id"]);
 	}
 
 	if(file_exists(PRIVATE_FILE_PATH."/".$video["id"]."/screendump/jpg")) {
 		$query->sql("UPDATE supersonic_dk.item_video SET screendump = 'jpg' WHERE item_id = ".$video["id"]);
+	}
+	else if(file_exists(PRIVATE_FILE_PATH."/".$video["id"]."/screendump/png")) {
+		$query->sql("UPDATE supersonic_dk.item_video SET screendump = 'png' WHERE item_id = ".$video["id"]);
 	}
 	else {
 		$query->sql("UPDATE supersonic_dk.item_video SET screendump = '' WHERE item_id = ".$video["id"]);
@@ -112,6 +121,135 @@ foreach($news as $new) {
 }
 //print_r($news);
 
+// $sets = $IC->getItems(array("itemtype" => "set"));
+// foreach($sets as $set) {
+// 	$IC->deleteItem($set["id"]);
+// }
+// //print_r($news);
+
+
+
+// check file consitancy
+$items = $IC->getItems();
+foreach($items as $item) {
+//	print $item["id"]."<br>";
+	if($item["itemtype"] == "set" || $item["itemtype"] == "image") {
+		$IC->deleteItem($item["id"]);
+	}
+	else {
+		$item = $IC->getCompleteItem($item["id"]);
+		if($item["itemtype"] == "video") {
+			if($item["thumbnail"]) {
+				if(!file_exists(PRIVATE_FILE_PATH."/".$item["id"]."/thumbnail/".$item["thumbnail"])) {
+					print "missing thumbnail file: ".$item["thumbnail"]."<br>";
+				}
+			}
+			if($item["poster"]) {
+				if(!file_exists(PRIVATE_FILE_PATH."/".$item["id"]."/poster/".$item["poster"])) {
+					print "missing poster file: ".$item["poster"]."<br>";
+				}
+			}
+			if($item["screendump"]) {
+				if(!file_exists(PRIVATE_FILE_PATH."/".$item["id"]."/screendump/".$item["screendump"])) {
+					print "missing screendump file: ".$item["screendump"]."<br>";
+				}
+			}
+			if($item["video"]) {
+				if(!file_exists(PRIVATE_FILE_PATH."/".$item["id"]."/video/".$item["video"])) {
+					print "missing video file: ".$item["video"]."<br>";
+				}
+			}
+		
+		}
+		else if(isset($item["files"])) {
+			if(!file_exists(PRIVATE_FILE_PATH."/".$item["id"]."/".$item["files"])) {
+				print "missing file<br>";
+			}
+		}
+	}
+
+}
+
+print "check filesystem<br>";
+
+$query = new Query();
+$files = FileSystem::files(PRIVATE_FILE_PATH);
+
+//print_r($files);
+foreach($files as $file) {
+//	print $file."<br>";
+
+	preg_match("/\/([0-9]+)/", str_replace(PRIVATE_FILE_PATH, "", $file), $matches);
+//	print_r($matches);
+// 
+	if(count($matches)) {
+
+		if($matches[1] !== "0") {
+// 
+//			print $file."<br>";
+
+			if($query->sql("SELECT id, itemtype, status FROM ".UT_ITEMS." WHERE id = ".$matches[1])) {
+
+				$id = $query->result(0, "id");
+				$itemtype = $query->result(0, "itemtype");
+				$status = $query->result(0, "status");
+
+	//			print $itemtype."<br>";
+
+				if($itemtype == "video") {
+
+					$query->sql("SELECT thumbnail,poster,screendump,video FROM supersonic_dk.item_".$itemtype." WHERE item_id = ".$matches[1]);
+					if(preg_match("/thumbnail/", $file)) {
+						$thumbnail = $query->result(0, "thumbnail");
+						if(str_replace(PRIVATE_FILE_PATH."/".$matches[1]."/thumbnail/".$thumbnail, "", $file) != "") {
+							print "wrong thumbnail filetype:".$thumbnail.", ".$matches[1].", ".$file."<br>";
+						}
+					}
+					if(preg_match("/poster/", $file)) {
+						$poster = $query->result(0, "poster");
+						if(str_replace(PRIVATE_FILE_PATH."/".$matches[1]."/poster/".$poster, "", $file) != "") {
+							print "wrong poster filetype:".$poster.", ".$matches[1].", ".$file."<br>";
+						}
+					}
+					if(preg_match("/screendump/", $file)) {
+						$screendump = $query->result(0, "screendump");
+						if(str_replace(PRIVATE_FILE_PATH."/".$matches[1]."/screendump/".$screendump, "", $file) != "") {
+							print "wrong screendump filetype:".$screendump.", ".$matches[1].", ".$file."<br>";
+						}
+					}
+					if(preg_match("/video/", $file)) {
+						$video = $query->result(0, "video");
+						if(str_replace(PRIVATE_FILE_PATH."/".$matches[1]."/video/".$video, "", $file) != "") {
+							print "wrong video filetype:".$video.", ".$matches[1].", ".$file."<br>";
+						}
+					}
+				}
+				else if($itemtype == "text") {
+					print "text with image???<br>";
+				}
+				// type with files
+				else {
+					$query->sql("SELECT files FROM supersonic_dk.item_".$itemtype." WHERE item_id = ".$matches[1]);
+					$file_type = $query->result(0, "files");
+					if(str_replace(PRIVATE_FILE_PATH."/".$matches[1]."/".$file_type, "", $file) != "") {
+						print "wrong filetype:".$file_type."<br>";
+					}
+				}
+
+			}
+			// item not found
+			else {
+// 			print_r($matches);
+				print "ITEM NOT FOUND: " . $matches[1] . ", " . $file . " - DELETED<br>";
+				// delete
+				FileSystem::removeDirRecursively(PRIVATE_FILE_PATH."/".$matches[1]);
+			}
+		}
+	}
+	else {
+		print "unidentified object:" . $file . "<br>";
+	}
+}
 
 
 ?>

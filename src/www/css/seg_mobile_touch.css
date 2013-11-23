@@ -211,3 +211,8 @@ input, textarea {outline: none;}
 .tour #content .scene .large ul {font-size: 0; padding: 0; width: 960px; height: 480px;}
 .tour #content .scene .large ul li {width: 960px; height: 480px; position: absolute; top: 0; left: 0; background-size: 100% 100%; background-repeat: no-repeat; background-position: center center; background-color: transparent; cursor: pointer;}
 
+
+/*s-content-tablet.css*/
+.video #content .scene div.video .videoplayer.active .controls {display: none;}
+#content .scene ul.audio li.playing:hover {background-position: 0 0;}
+

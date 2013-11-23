@@ -211,12 +211,12 @@ h3 {font-size: 1.25rem;}
 #content .scene.tagEdit ul.tag_items dt {display: none;}
 #content .scene.tagEdit ul.tag_items dd.name {font-weight: bold; padding: 0 15px 0 0;}
 #content .scene.tagEdit ul.tag_items dd.itemtype:after {content: "/";}
-#notifications {z-index: 1001; position: fixed; left: 50%; margin-left: -150px; width: 300px; top: 0; text-align: center;
+#notifications {z-index: 1001; position: fixed; right: 0; top: 0; text-align: center;
 	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#D7D7D7), to(#B0B0B0));
 	background: -webkit-linear-gradient(top, #D7D7D7, #B0B0B0);
 	background: -moz-linear-gradient(top, #D7D7D7, #B0B0B0);
 }
-#notifications div {padding: 10px 25px; text-decoration: none; width: auto; display: inline-block; height: auto; cursor: pointer;}
+#notifications div {padding: 10px 25px; text-decoration: none; width: auto; display: block; height: auto; cursor: pointer;}
 #notifications .notice {color: #333333; font-weight: bold; text-shadow: -1px 1px 1px #dedede; box-shadow: 1px 1px 3px #dedede; border-left: 1px solid #dedede; border-bottom: 1px solid #dedede; border-right: 1px solid #dedede;
 }
 #notifications .error {color: #df0000;}
