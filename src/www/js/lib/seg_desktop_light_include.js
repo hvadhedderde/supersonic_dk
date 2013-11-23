@@ -18,7 +18,7 @@ document.write('<script type="text/javascript" src="/js/lib/desktop/i-audio.js">
 document.write('<script type="text/javascript" src="/js/lib/desktop/i-posters.js"></script>');
 document.write('<script type="text/javascript" src="/js/lib/desktop/i-videos.js"></script>');
 document.write('<script type="text/javascript" src="/js/lib/desktop/i-people.js"></script>');
-document.write('<script type="text/javascript" src="/js/lib/desktop/i-tour-desktop_light.js"></script>');
+document.write('<script type="text/javascript" src="/js/lib/desktop_light/i-tour-desktop_light.js"></script>');
 
 document.write('<script type="text/javascript" src="/js/lib/ga.js"></script>');
 document.write('<script type="text/javascript" src="/js/jes/src/u-googleanalytics.js"></script>');

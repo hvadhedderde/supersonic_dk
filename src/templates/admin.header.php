@@ -28,7 +28,7 @@
 <div id="page" class="i:page">
 	<div id="header">
 		<ul class="servicenavigation">
-			<li class="keynav front"><a href="/temp">Frontpage</a></li>
+			<li class="keynav front"><a href="/admin">Supersonic Admin</a></li>
 		</ul>
 	</div>
 

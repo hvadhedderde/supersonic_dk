@@ -70,7 +70,7 @@ class TypePerson extends Model {
 		// Files
 		$this->addToModel("files", array(
 			"type" => "files",
-			"label" => "Add image here",
+			"label" => "Drag image here",
 			"allowed_formats" => "png,jpg",
 			"allowed_proportions" => "232/270",
 			"hint_message" => "Add profile image. Use png or jpg.",

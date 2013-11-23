@@ -61,7 +61,8 @@ $item_id = $item["id"];
 
 	<h2>Audio</h2>
 	<div class="media">
-		<form action="/admin/cms/update/<?= $item_id ?>" class="i:formAddImages labelstyle:inject" method="post" enctype="multipart/form-data">
+		<p>Audio must be mp3.</p>
+		<form action="/admin/cms/update/<?= $item_id ?>" class="i:formAddMedia labelstyle:inject" method="post" enctype="multipart/form-data">
 			<fieldset>
 				<?= $model->input("files") ?>
 			</fieldset>
@@ -73,11 +74,14 @@ $item_id = $item["id"];
 		</form>
 
 		<ul class="media">
+			<li class="audio<?= $item["files"] ? " i:audio" : "" ?>">
+				<h4>Audio</h4>
 <?		if($item["files"]): ?>
-			<li class="audio i:audio"><a href="/audios/<?= $item_id ?>/128.<?= $item["files"] ?>">Audio</a></li>
+				<a href="/audios/<?= $item_id ?>/128.<?= $item["files"] ?>">Audio</a>
 <?		else: ?>
-			<li class="audio">No audio file</li>
+				<img src="/images/0/missing/50x50.png">
 <?		endif; ?>
+			</li>
 		</ul>
 
 	</div>

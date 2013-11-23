@@ -12,11 +12,12 @@ include_once("class/system/output.class.php");
 $action = $page->actions();
 
 $IC = new Item();
-$model = $IC->typeObject("text");
+$itemtype = "text";
+$model = $IC->typeObject($itemtype);
 $output = new Output();
 
 
-$page->bodyClass("text");
+$page->bodyClass($itemtype);
 $page->pageTitle("Texts");
 
 
@@ -37,7 +38,7 @@ if(is_array($action) && count($action)) {
 	if(count($action) == 1 && $action[0] == "list") {
 
 		$page->header(array("type" => "admin"));
-		$page->template("admin/text/list.php");
+		$page->template("admin/".$itemtype."/list.php");
 		$page->footer(array("type" => "admin"));
 		exit();
 
@@ -46,7 +47,7 @@ if(is_array($action) && count($action)) {
 	else if(count($action) == 1 && $action[0] == "new") {
 
 		$page->header(array("type" => "admin"));
-		$page->template("admin/text/new.php");
+		$page->template("admin/".$itemtype."/new.php");
 		$page->footer(array("type" => "admin"));
 		exit();
 
@@ -55,7 +56,7 @@ if(is_array($action) && count($action)) {
 	else if(count($action) == 2 && $action[0] == "edit") {
 	
 		$page->header(array("type" => "admin"));
-		$page->template("admin/text/edit.php");
+		$page->template("admin/".$itemtype."/edit.php");
 		$page->footer(array("type" => "admin"));
 		exit();
 	

@@ -2618,21 +2618,40 @@ Util.audioPlayer = function(node) {
 	return player;
 }
 /*beta-u-video.js*/
-Util.videoPlayer = function(node) {
+Util.videoPlayer = function(_options) {
 	var player;
-	if(node) {
-		player = u.ae(node, "div", {"class":"videoplayer"});
-	}
-	else {
 		player = document.createElement("div");
 		u.ac(player, "videoplayer");
-	}
 	player.ff_skip = 2;
 	player.rw_skip = 2;
+	player._default_playpause = false;
+	player._default_zoom = false;
+	player._default_volume = false;
+	player._default_search = false;
+	if(typeof(_options) == "object") {
+		var argument;
+		for(argument in _options) {
+			switch(argument) {
+				case "playpause"	: player._default_playpause		= _options[argument]; break;
+			}
+		}
+	}
 	player.flash = false;
 	player.video = u.ae(player, "video");
 	if(typeof(player.video.play) == "function") {
-		player.load = function(src) {
+		player.load = function(src, _options) {
+			player._controls_playpause = player._default_playpause;
+			player._controls_zoom = player._default_zoom;
+			player._controls_volume = player._default_volume;
+			player._controls_search = player._default_search;
+			if(typeof(_options) == "object") {
+				var argument;
+				for(argument in _options) {
+					switch(argument) {
+						case "playpause"	: player._controls_playpause	= _options[argument]; break;
+					}
+				}
+			}
 			this.setup();
 			if(this.className.match("/playing/")) {
 				this.stop();
@@ -2651,8 +2670,17 @@ Util.videoPlayer = function(node) {
 				this.video.play();
 			}
 		}
-		player.loadAndPlay = function(src, position) {
-			this.load(src);
+		player.loadAndPlay = function(src, _options) {
+			var position = 0;
+			if(typeof(_options) == "object") {
+				var argument;
+				for(argument in _options) {
+					switch(argument) {
+						case "position"		: position		= _options[argument]; break;
+					}
+				}
+			}
+			this.load(src, _options);
 			this.play(position);
 		}
 		player.pause = function() {
@@ -2691,6 +2719,7 @@ Util.videoPlayer = function(node) {
 			}
 			this.video = u.ie(this, "video");
 			this.video.player = this;
+			this.setControls();
 			this.currentTime = 0;
 			this.duration = 0;
 			this.videoLoaded = false;
@@ -2770,6 +2799,7 @@ Util.videoPlayer = function(node) {
 		player = u.videoPlayerFallback(player);
 	}
 	player.correctSource = function(src) {
+		src = src.replace(/\?[^$]+/, "");
 		src = src.replace(/\.m4v|\.mp4|\.webm|\.ogv|\.3gp|\.mov/, "");
 		if(this.flash) {
 			return src+".mp4";
@@ -2785,6 +2815,60 @@ Util.videoPlayer = function(node) {
 		}
 		else {
 			return src+".mov";
+		}
+	}
+	player.setControls = function() {
+		if(this.showControls) {
+			u.e.removeEvent(this, "mousemove", this.showControls);
+		}
+		if(this._controls_playpause || this._controls_zoom || this._controls_volume || this._controls_search) {
+			if(!this.controls) {
+				this.controls = u.ae(this, "div", {"class":"controls"});
+				this.hideControls = function() {
+					this.t_controls = u.t.resetTimer(this.t_controls);
+					u.a.transition(this.controls, "all 0.3s ease-out");
+					u.a.setOpacity(this.controls, 0);
+				}
+				this.showControls = function() {
+					if(this.t_controls) {
+						this.t_controls = u.t.resetTimer(this.t_controls);
+					}
+					else {
+						u.a.transition(this.controls, "all 0.5s ease-out");
+						u.a.setOpacity(this.controls, 1);
+					}
+					this.t_controls = u.t.setTimer(this, this.hideControls, 1500);
+				}
+			}
+			else {
+				u.as(this.controls, "display", "block");
+			}
+			if(this._controls_playpause) {
+				if(!this.controls.playpause) {
+					this.controls.playpause = u.ae(this.controls, "a", {"class":"playpause"});
+					this.controls.playpause.player = this;
+					u.e.click(this.controls.playpause);
+					this.controls.playpause.clicked = function(event) {
+						this.player.togglePlay();
+					}
+				}
+				else {
+					u.as(this.controls.playpause, "display", "block");
+				}
+			}
+			else if(this.controls.playpause) {
+				u.as(this.controls.playpause, "display", "none");
+			}
+			if(this._controls_zoom && !this.controls.zoom) {}
+			else if(this.controls.zoom) {}
+			if(this._controls_volume && !this.controls.volume) {}
+			else if(this.controls.volume) {}
+			if(this._controls_search && !this.controls.search) {}
+			else if(this.controls.search) {}
+			u.e.addEvent(this, "mousemove", this.showControls);
+		}
+		else if(this.controls) {
+			u.as(this.controls, "display", "none");
 		}
 	}
 	return player;
@@ -2868,6 +2952,8 @@ Util.Objects["newslist"] = new function() {
 Util.Objects["video"] = new function() {
 	this.init = function(scene) {
 		var video = u.qs(".video", scene);
+		scene._item_id = u.cv(video, "item_id");
+		scene._screendump = u.cv(video, "screendump");
 		var page = u.qs("#page");
 		if(!page.videoplayer) {
 			page.videoplayer = u.videoPlayer();
@@ -2953,6 +3039,9 @@ Util.Objects["video"] = new function() {
 			}
 		}
 		u.ae(video, page.videoplayer);
+		if(scene._screendump) {
+			u.as(page.videoplayer, "backgroundImage", "url(/images/"+scene._item_id+"/screendump/512x288."+scene._screendump+")");
+		}
 	}
 }
 /*i-audio.js*/
@@ -3191,31 +3280,23 @@ Util.Objects["tour"] = new function() {
 }
 /*ga.js*/
 u.ga_account = 'UA-28549711-1';
-
+u.ga_domain = "supersonic.dk";
 /*u-googleanalytics.js*/
 if(u.ga_account) {
-	var _gaq = _gaq || [];
-	_gaq.push(['_setAccount', u.ga_account]);
-	_gaq.push(['_trackPageview']);
-	(function() {
-		var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-		ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-		var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-	})();
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', u.ga_account, u.ga_domain);
+    ga('send', 'pageview');
 	u.stats = new function() {
 		this.pageView = function(url) {
-			_gaq.push(['_trackPageview', url]);
+			ga('send', 'pageview', url);
 		}
 		this.event = function(node, action, label) {
-			_gaq.push(['_trackEvent', location.href.replace(document.location.protocol + "//" + document.domain, ""), action, (label ? label : this.nodeSnippet(node))]);
+			ga('_trackEvent', location.href.replace(document.location.protocol + "//" + document.domain, ""), action, (label ? label : this.nodeSnippet(node)));
 		}
 		this.customVar = function(slot, name, value, scope) {
-			_gaq.push(['_setCustomVar',
-			      slot,		// This custom var is set to slot #1.  Required parameter.
-			      name,		// The name of the custom variable.  Required parameter.
-			      value,	// The value of the custom variable.  Required parameter.
-			      scope		// Sets the scope to visitor-level.  Optional parameter.
-			 ]);
 		}
 		this.nodeSnippet = function(e) {
 			if(e.textContent != undefined) {

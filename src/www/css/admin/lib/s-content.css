@@ -1,12 +1,5 @@
 #content .scene {}
 
-#content .front h1 {padding-bottom: 74px; border-bottom: 1px solid #dedede;}
-
-/*#content .scene.defaultNew > form {padding-top: 20px; margin: 0; width: auto;}
-
-#content .scene.defaultEdit div > form {margin: 0; width: auto;}
-*/
-
 /* NEWS LIST */
 #content .newsList ul.items > li {min-height: 100px; background-repeat: no-repeat; background-position: left top; background-color: transparent; padding-left: 160px;}
 
@@ -18,9 +11,13 @@
 /* PERSON LIST */
 #content .personList ul.items > li {min-height: 100px; background-repeat: no-repeat; background-position: left top; background-color: transparent; padding-left: 100px;}
 
-/* SORTABLE LIST */
-#content .defaultList .sortable li.item h2 {padding-left: 60px;}
-#content .defaultList li.item div.drag {width: 30px; height: 30px; position: absolute; top: 8px; left: 20px; background: transparent url(/img/admin/bg_icons.png) no-repeat 10px -445px; cursor: move;}
 
+/* NAVIGATION */
+body.news #navigation .news a,
+body.audio #navigation .audio a,
+body.video #navigation .video a,
+body.person #navigation .person a,
+body.text #navigation .text a,
+body.tags #navigation .tags a {padding-left: 35px; color: #ffffff;}
 
 

@@ -42,8 +42,7 @@ class TypeNews extends Model {
 		// Files
 		$this->addToModel("files", array(
 			"type" => "files",
-			"label" => "Add images here",
-			"max" => 6,
+			"label" => "Drag image here",
 			"allowed_formats" => "png,jpg,mp4",
 			"allowed_proportions" => "200/90",
 			"hint_message" => "Add news images/videos here. Use png or jpg, mp4 or mov.",

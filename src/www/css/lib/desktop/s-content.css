@@ -41,7 +41,7 @@
 #content dd {font-size: 14px; padding: 0 0 10px; text-transform: uppercase;}
 
 
-#content .scene .text {position: absolute; top: 0px; left: 0px; width: 280px; height: 435px; padding: 40px 50px 5px; background: #4d6d00; /* url(/img/bg_alpha_tile.png) repeat top left*/;}
+#content .scene .text {position: absolute; top: 0px; left: 0px; width: 280px; height: 435px; padding: 40px 50px 5px; background: #4d6d00;}
 #content .scene .text h1, 
 #content .scene .text h2, 
 #content .scene .text h3, 

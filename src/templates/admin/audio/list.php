@@ -10,7 +10,7 @@ $all_items = $IC->getItems(array("itemtype" => $itemtype, "order" => "status DES
 	<h1>Audio</h1>
 
 	<ul class="actions">
-		<li class="new"><a href="/admin/<?= $itemtype ?>/new" class="button primary">Create audio post</a></li>
+		<li class="new"><a href="/admin/<?= $itemtype ?>/new" class="button primary">Create new <?= $itemtype ?></a></li>
 	</ul>
 
 	<div class="all_items">

@@ -3,7 +3,7 @@
 $action = $this->actions();
 
 $IC = new Item();
-$itemtype = "text";
+$itemtype = "person";
 $all_items = $IC->getItems(array("itemtype" => $itemtype, "order" => "status DESC"));
 ?>
 <div class="scene i:defaultList defaultList <?= $itemtype ?>List">

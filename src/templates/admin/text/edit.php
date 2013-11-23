@@ -13,7 +13,7 @@ $item_id = $item["id"];
 	<h1>Edit <?= $itemtype ?></h1>
 
 	<ul class="actions">
-		<li class="cancel"><a href="/admin/ <?= $itemtype ?>Edit/list" class="button">Back</a></li>
+		<li class="cancel"><a href="/admin/<?= $itemtype ?>/list" class="button">Back</a></li>
 	</ul>
 
 	<div class="item">
@@ -26,7 +26,7 @@ $item_id = $item["id"];
 			</fieldset>
 
 			<ul class="actions">
-				<li class="cancel"><a href="/admin/ <?= $itemtype ?>Edit/list" class="button key:esc">Back</a></li>
+				<li class="cancel"><a href="/admin/<?= $itemtype ?>/list" class="button key:esc">Back</a></li>
 				<li class="save"><input type="submit" value="Update" class="button primary key:s" /></li>
 			</ul>
 

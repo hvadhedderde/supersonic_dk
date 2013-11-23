@@ -32,15 +32,15 @@ class TypeText extends Model {
 			"label" => "Name",
 			"required" => true,
 			"unique" => $this->db,
-			"hint_message" => "Audio name", 
-			"error_message" => "Audio name must be unique"
+			"hint_message" => "Internal text reference name", 
+			"error_message" => "Text reference name must be unique"
 		));
 
 		// text
 		$this->addToModel("text", array(
 			"type" => "text",
-			"label" => "News post",
-			"hint_message" => "Write content of news post"
+			"label" => "HTML formatted text",
+			"hint_message" => "Write the text you want to show somewhere on the site"
 		));
 
 		// Tags

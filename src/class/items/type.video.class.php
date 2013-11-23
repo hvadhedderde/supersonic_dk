@@ -46,10 +46,9 @@ class TypeVideo extends Model {
 		// Files
 		$this->addToModel("files", array(
 			"type" => "files",
-			"label" => "Add images here",
-			"max" => 6,
+			"label" => "Drag media files here",
+			"max" => 4,
 			"allowed_formats" => "png,jpg,mp4",
-			"allowed_proportions" => "1/1,",
 			"hint_message" => "Add news images/videos here. Use png or jpg, mp4 or mov.",
 			"error_message" => "Image does not fit requirements."
 		));

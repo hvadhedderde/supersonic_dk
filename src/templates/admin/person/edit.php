@@ -13,7 +13,7 @@ $item_id = $item["id"];
 	<h1>Edit <?= $itemtype ?></h1>
 
 	<ul class="actions">a
-		<li class="cancel"><a href="/admin/<?= $item_id ?>/list" class="button">Back</a></li>
+		<li class="cancel"><a href="/admin/<?= $itemtype ?>/list" class="button">Back</a></li>
 	</ul>
 
 	<div class="item">
@@ -64,7 +64,8 @@ $item_id = $item["id"];
 
 	<h2>Image</h2>
 	<div class="media">
-		<form action="/admin/cms/update/<?= $item_id ?>" class="i:formAddImages labelstyle:inject" method="post" enctype="multipart/form-data">
+		<p>Image must be 232x270 pixels, jpg or png.</p>
+		<form action="/admin/cms/update/<?= $item_id ?>" class="i:formAddMedia labelstyle:inject" method="post" enctype="multipart/form-data">
 			<fieldset>
 				<?= $model->input("files") ?>
 			</fieldset>

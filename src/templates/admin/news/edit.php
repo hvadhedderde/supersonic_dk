@@ -59,9 +59,10 @@ $item_id = $item["id"];
 		</ul>
 	</div>
 
-	<h2>Images</h2>
+	<h2>Image</h2>
 	<div class="media">
-		<form action="/admin/cms/update/<?= $item_id ?>" class="i:formAddImages labelstyle:inject" method="post" enctype="multipart/form-data">
+		<p>Image must be 200x90 pixels, jpg or png.</p>
+		<form action="/admin/cms/update/<?= $item_id ?>" class="i:formAddMedia labelstyle:inject" method="post" enctype="multipart/form-data">
 			<fieldset>
 				<?= $model->input("files") ?>
 			</fieldset>

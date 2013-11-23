@@ -45,7 +45,7 @@ class TypeAudio extends Model {
 		// Files
 		$this->addToModel("files", array(
 			"type" => "files",
-			"label" => "Add audiofile here",
+			"label" => "Drag audiofile here",
 			"max" => 6,
 			"allowed_formats" => "mp3",
 			"hint_message" => "Add audio file here. Use mp3.",

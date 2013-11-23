@@ -79,7 +79,7 @@ input, textarea {outline: none;}
 #content dl {padding: 0 50px 15px;}
 #content dt {font-size: 12px; font-weight: bold;}
 #content dd {font-size: 14px; padding: 0 0 10px; text-transform: uppercase;}
-#content .scene .text {position: absolute; top: 0px; left: 0px; width: 280px; height: 435px; padding: 40px 50px 5px; background: #4d6d00; ;}
+#content .scene .text {position: absolute; top: 0px; left: 0px; width: 280px; height: 435px; padding: 40px 50px 5px; background: #4d6d00;}
 #content .scene .text h1, 
 #content .scene .text h2, 
 #content .scene .text h3, 
@@ -117,7 +117,8 @@ input, textarea {outline: none;}
 #content .scene ul.videos li:hover {background-color: #414141;}
 #content .scene ul.videos li a {display: block; padding: 8px 10px 0 98px; height: 32px; background: transparent url(/img/bg_bn_play_small.png) no-repeat 33px 10px;}
 #content .scene ul.videos li a:hover {text-decoration: none;}
-#content .scene ul.audio {padding-right: 10px; padding-left: 25px; font-size: 0;}
+#content .scene .listen {font-size: 0;}
+#content .scene ul.audio {padding-right: 10px; padding-left: 25px; font-size: 0; width: 255px; display: inline-block; vertical-align: top;}
 #content .scene ul.audio li {padding: 3px 0 5px 25px; width: 235px; background-position: 0 100px; background-repeat: no-repeat; background-color: transparent; background-image: url(/img/bg_bn_play_small.png); cursor: pointer; display: inline-block; vertical-align: top;
 	position: relative;
 }

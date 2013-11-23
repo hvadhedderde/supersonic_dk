@@ -61,7 +61,8 @@ $item_id = $item["id"];
 
 	<h2>Media</h2>
 	<div class="media">
-		<form action="/admin/cms/update/<?= $item_id ?>" class="i:formAddImages labelstyle:inject" method="post" enctype="multipart/form-data">
+		<p>Thumbnail 88x40, Screendump 512x288, Poster 240x320, Video 512x288.</p>
+		<form action="/admin/cms/update/<?= $item_id ?>" class="i:formAddMedia labelstyle:inject" method="post" enctype="multipart/form-data">
 			<fieldset>
 				<?= $model->input("files") ?>
 			</fieldset>
@@ -100,7 +101,7 @@ $item_id = $item["id"];
 <?		endif; ?>
 			</li>
 
-			<li class="video">
+			<li class="video<?= $item["video"] ? " i:video" : "" ?>">
 				<h4>video</h4>
 <?		if($item["video"]): ?>
 				<a href="/videos/<?= $item["id"] ?>/video/x100.<?= $item["video"] ?>">video</a>
