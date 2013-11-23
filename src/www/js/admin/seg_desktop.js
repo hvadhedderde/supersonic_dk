@@ -4636,7 +4636,7 @@ Util.Objects["defaultTags"] = new function() {
 									alert(response.cms_message[0]);
 								}
 							}
-							u.request(this, "/admin/cms/update/"+this.tagList.item_id, {"method":"post", "params":"tags="+this._context+":"+this._value});
+							u.request(this, "/admin/cms/update/"+this.tagList.item_id, {"method":"post", "params":"tags="+this._id});
 						}
 					}
 				}
