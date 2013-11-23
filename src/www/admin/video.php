@@ -12,13 +12,13 @@ include_once("class/system/output.class.php");
 $action = $page->actions();
 
 $IC = new Item();
-$itemtype = "person";
+$itemtype = "video";
 $model = $IC->typeObject($itemtype);
 $output = new Output();
 
 
 $page->bodyClass($itemtype);
-$page->pageTitle("Person");
+$page->pageTitle("Videos");
 
 
 if(is_array($action) && count($action)) {

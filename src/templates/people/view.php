@@ -11,7 +11,7 @@
 			if($item) {
 //				$item = array_merge($item, $IC->TypeObject($item["itemtype"])->get($item["id"]));
 		?>
-		<div class="profile" style="background-image: url(/images/<?= $item["id"] ?>/232x270.jpg);">
+		<div class="profile" style="background-image: url(/images/<?= $item["id"] ?>/232x270.<?= $item["files"] ?>);">
 
 			<h1><?= $item["name"] ?></h1>
 			<div class="role"><?= $item["title"] ?></div>

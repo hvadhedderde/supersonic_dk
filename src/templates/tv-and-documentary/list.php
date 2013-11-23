@@ -10,11 +10,11 @@
 				foreach($items as $item) {
 					$item = $IC->getCompleteItem($item["id"]);
 		
-					if(file_exists(PRIVATE_FILE_PATH."/".$item["id"]."/thumbnail")) {
-						$image = "/images/".$item["id"]."/thumbnail/240x.jpg";
+					if(file_exists(PRIVATE_FILE_PATH."/".$item["id"]."/poster/".$item["poster"])) {
+						$image = "/images/".$item["id"]."/poster/240x.".$item["poster"];
 					}
 					else {
-						$image = "/img/missing_240x320.png";
+						$image = "/images/0/missing/240x320.png";
 					}
 			?>
 			<li style="background-image: url(<?= $image ?>);">

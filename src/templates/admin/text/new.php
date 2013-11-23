@@ -3,17 +3,18 @@
 $action = $this->actions();
 
 $IC = new Item();
-$model = $IC->typeObject("text");
+$itemtype = "text";
+$model = $IC->typeObject($itemtype);
 
 ?>
 <div class="scene defaultNew">
-	<h1>New text</h1>
+	<h1>New <?= $itemtype ?></h1>
 
 	<ul class="actions">
-		<li class="cancel"><a href="/admin/text/list" class="button">Back</a></li>
+		<li class="cancel"><a href="/admin/<?= $itemtype ?>/list" class="button">Back</a></li>
 	</ul>
 
-	<form action="/admin/cms/save/text" class="i:formDefaultNew labelstyle:inject" method="post" enctype="multipart/form-data">
+	<form action="/admin/cms/save/<?= $itemtype ?>" class="i:formDefaultNew labelstyle:inject" method="post" enctype="multipart/form-data">
 
 		<fieldset>
 			<?= $model->input("published_at") ?>
@@ -22,7 +23,7 @@ $model = $IC->typeObject("text");
 		</fieldset>
 
 		<ul class="actions">
-			<li class="cancel"><a href="/admin/text/list" class="button">Back</a></li>
+			<li class="cancel"><a href="/admin/<?= $itemtype ?>/list" class="button">Back</a></li>
 			<li class="save"><input type="submit" value="Save" class="button primary" /></li>
 		</ul>
 

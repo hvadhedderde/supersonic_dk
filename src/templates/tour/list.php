@@ -57,8 +57,6 @@
 	</div>
 
 	<ul class="actions">
-		<? if(isset($_SERVER["HTTP_REFERER"]) && strpos($_SERVER["HTTP_REFERER"], $_SERVER["HTTP_HOST"])) { ?>
-			<li class="back"><a href="<?= $_SERVER["HTTP_REFERER"] ?>">Back</a></li>
-		<? } ?>
+		<li class="back"><a href="/about">Back</a></li>
 	</ul>
 </div>

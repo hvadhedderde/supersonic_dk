@@ -19,14 +19,14 @@
 		<?= $item["description"] ?>
 
 		<ul class="actions">
-			<li class="watch"><a href="/videos/<?= $item["id"] ?>/clip/512x288.mp4">Watch movie</a></li>
+			<li class="watch"><a href="/videos/<?= $item["id"] ?>/video/512x288.<?= $item["video"] ?>">Watch movie</a></li>
 		</ul>
 	</div>
 	<?
 	}
 ?>
 
-	<div class="video"></div>
+	<div class="video item_id:<?= $item["item_id"] ?><?= $item["screendump"] ? (" screendump:".$item["screendump"]) : "" ?>"></div>
 
 	<ul class="actions">
 		<? if(isset($_SERVER["HTTP_REFERER"]) && strpos($_SERVER["HTTP_REFERER"], $_SERVER["HTTP_HOST"])) { ?>

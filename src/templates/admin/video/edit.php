@@ -3,8 +3,8 @@
 $action = $this->actions();
 
 $IC = new Item();
-$itemtype = "audio";
-$model = $IC->typeObject("audio");
+$itemtype = "video";
+$model = $IC->typeObject($itemtype);
 
 $item = $IC->getCompleteItem($action[1]);
 $item_id = $item["id"];
@@ -59,7 +59,7 @@ $item_id = $item["id"];
 		</ul>
 	</div>
 
-	<h2>Audio</h2>
+	<h2>Media</h2>
 	<div class="media">
 		<form action="/admin/cms/update/<?= $item_id ?>" class="i:formAddImages labelstyle:inject" method="post" enctype="multipart/form-data">
 			<fieldset>
@@ -67,17 +67,47 @@ $item_id = $item["id"];
 			</fieldset>
 
 			<ul class="actions">
-				<li class="save"><input type="submit" value="Add audio" class="button primary" /></li>
+				<li class="save"><input type="submit" value="Add image" class="button primary" /></li>
 			</ul>
 
 		</form>
 
 		<ul class="media">
-<?		if($item["files"]): ?>
-			<li class="audio i:audio"><a href="/audios/<?= $item_id ?>/128.<?= $item["files"] ?>">Audio</a></li>
+			<li class="image">
+				<h4>thumbnail</h4>
+<?		if($item["thumbnail"]): ?>
+				<img src="/images/<?= $item["id"] ?>/thumbnail/88x.<?= $item["thumbnail"] ?>">
 <?		else: ?>
-			<li class="audio">No audio file</li>
+				<img src="/images/0/missing/88x40.png">
 <?		endif; ?>
+			</li>
+
+			<li class="image">
+				<h4>screendump</h4>
+<?		if($item["screendump"]): ?>
+				<img src="/images/<?= $item["id"] ?>/screendump/x100.<?= $item["screendump"] ?>">
+<?		else: ?>
+				<img src="/images/0/missing/177x100.png">
+<?		endif; ?>
+			</li>
+
+			<li class="image">
+				<h4>poster</h4>
+<?		if($item["poster"]): ?>
+				<img src="/images/<?= $item["id"] ?>/poster/x100.<?= $item["poster"] ?>">
+<?		else: ?>
+				<img src="/images/0/missing/75x100.png">
+<?		endif; ?>
+			</li>
+
+			<li class="video">
+				<h4>video</h4>
+<?		if($item["video"]): ?>
+				<a href="/videos/<?= $item["id"] ?>/video/x100.<?= $item["video"] ?>">video</a>
+<?		else: ?>
+				<img src="/images/0/missing/177x100.png">
+<?		endif; ?>
+			</li>
 		</ul>
 
 	</div>

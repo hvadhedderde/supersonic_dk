@@ -25,11 +25,11 @@
 		foreach($items as $item) {
 			$item = $IC->getCompleteItem($item["id"]);
 
-			if(file_exists(PRIVATE_FILE_PATH."/".$item["id"]."/thumbnail")) {
-				$image = "/images/".$item["id"]."/thumbnail/88x.jpg";
+			if(file_exists(PRIVATE_FILE_PATH."/".$item["id"]."/thumbnail/".$item["thumbnail"])) {
+				$image = "/images/".$item["id"]."/thumbnail/88x.".$item["thumbnail"];
 			}
 			else {
-				$image = "/img/missing_88x40.png";
+				$image = "/images/0/missing/88x40.png";
 			} ?>
 			<li style="background-image: url(<?= $image ?>);">
 				<a href="/video/<?= $item["sindex"] ?>"><?= $item["name"] ?></a>
@@ -41,9 +41,7 @@
 	</div>
 
 	<ul class="actions">
-		<? if(isset($_SERVER["HTTP_REFERER"]) && strpos($_SERVER["HTTP_REFERER"], $_SERVER["HTTP_HOST"])) { ?>
-			<li class="back"><a href="<?= $_SERVER["HTTP_REFERER"] ?>">Back</a></li>
-		<? } ?>
+		<li class="back"><a href="/music">Back</a></li>
 	</ul>
 
 </div>

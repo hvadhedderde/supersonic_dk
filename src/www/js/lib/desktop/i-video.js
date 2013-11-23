@@ -2,6 +2,8 @@ Util.Objects["video"] = new function() {
 	this.init = function(scene) {
 
 		var video = u.qs(".video", scene);
+		scene._item_id = u.cv(video, "item_id");
+		scene._screendump = u.cv(video, "screendump");
 		var page = u.qs("#page");
 		// add global audio player for sound effects
 		if(!page.videoplayer) {
@@ -130,5 +132,9 @@ Util.Objects["video"] = new function() {
 		// append video player
 		u.ae(video, page.videoplayer);
 
+		// add screendump if available
+		if(scene._screendump) {
+			u.as(page.videoplayer, "backgroundImage", "url(/images/"+scene._item_id+"/screendump/512x288."+scene._screendump+")");
+		}
 	}
 }

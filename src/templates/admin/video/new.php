@@ -3,12 +3,12 @@
 $action = $this->actions();
 
 $IC = new Item();
-$itemtype = "audio";
+$itemtype = "video";
 $model = $IC->typeObject($itemtype);
 
 ?>
 <div class="scene defaultNew">
-	<h1>New $itemtype</h1>
+	<h1>New <?= $itemtype ?></h1>
 
 	<ul class="actions">
 		<li class="cancel"><a href="/admin/<?= $itemtype ?>/list" class="button">Back</a></li>
@@ -30,3 +30,4 @@ $model = $IC->typeObject($itemtype);
 	</form>
 
 </div>
+

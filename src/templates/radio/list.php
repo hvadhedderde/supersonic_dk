@@ -23,12 +23,16 @@
 			<?
 				//$items = $IC->getSetItems("Radio");
 				$items = $IC->getItems(array("itemtype" => "audio", "status" => 1, "tags" => "category:Radio"));
-				if($items) {
-					foreach($items as $item) {
+				if($items):
+					foreach($items as $i => $item):
+						if($i != 0 && $i%ceil(count($items)/2) == 0) { ?>
+							</ul>
+							<ul class="audio">
+<?						}
 						$item = $IC->getCompleteItem($item["id"]); ?>
-				<li class=""><a href="/audios/<?= $item["id"] ?>/128.mp3"><?= $item["name"] ?></a></li>
-			<?		}
-				}
+						<li class=""><a href="/audios/<?= $item["id"] ?>/128.<?= $item["files"] ?>"><?= $item["name"] ?></a></li>
+			<?		endforeach;
+				endif;
 			?>
 			</ul>
 		</div>

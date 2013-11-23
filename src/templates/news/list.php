@@ -14,7 +14,7 @@
 					<div class="published"><?= date("Y - F d.", strtotime($item["published_at"])) ?></div>
 				</div>
 				<h2><a href="/news/<?= $item["sindex"] ?>"><?= $item["name"] ?></a></h2>
-				<img src="/images/<?= $item["id"] ?>/200x.jpg" alt="<?= $item["name"] ?>" />
+				<img src="/images/<?= $item["id"] ?>/200x.<?= $item["files"] ?>" alt="<?= $item["name"] ?>" />
 			</li>
 <? 
 	}

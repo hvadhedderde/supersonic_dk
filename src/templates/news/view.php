@@ -13,7 +13,7 @@
 			<div class="published"><?= date("Y - F d.", strtotime($item["published_at"])) ?></div>
 		</div>
 		<h2><?= $item["name"] ?></h2>
-		<img src="/images/<?= $item["id"] ?>/200x90.jpg" alt="<?= $item["name"] ?>" />
+		<img src="/images/<?= $item["id"] ?>/200x90.<?= $item["files"] ?>" alt="<?= $item["name"] ?>" />
 
 		<div class="text">
 			<?= $item["text"] ?>

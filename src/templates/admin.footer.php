@@ -5,10 +5,9 @@
 			<li><a href="/admin/news/list">News</a></li>
 			<li><a href="/admin/audio/list">Audio</a></li>
 			<li><a href="/admin/video/list">Video</a></li>
-			<li><a href="/admin/text/list">Text</a></li>
+			<li><a href="/admin/text/list">Page texts</a></li>
 			<li><a href="/admin/person/list">People</a></li>
-			<li><a href="/admin/set/list">Set</a></li>
-			<li><a href="/admin/tag/list">Tag</a></li>
+			<li><a href="/admin/tag/list">Tags</a></li>
 		</ul>
 	</div>
 

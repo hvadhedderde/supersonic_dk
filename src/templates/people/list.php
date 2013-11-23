@@ -141,15 +141,12 @@
 					$IC = new Item();
 					$items = $IC->getItems(array("itemtype" => "person", "status" => 1, "tags" => "department:Freelance"));
 
-					foreach($items as $item) {
-
+					foreach($items as $item):
 						$item = $IC->getCompleteItem($item["id"]); ?>
 							<li>
 								<a href="/people/<?= $item["sindex"] ?>"><?= $item["nickname"] ?></a>
 							</li>
-				<? 
-					}
-				?>
+				<? endforeach; ?>
 						</ul>
 					</div>
 
@@ -167,8 +164,6 @@
 	</div>
 
 	<ul class="actions">
-		<? if(isset($_SERVER["HTTP_REFERER"]) && strpos($_SERVER["HTTP_REFERER"], $_SERVER["HTTP_HOST"])) { ?>
-			<li class="back"><a href="<?= $_SERVER["HTTP_REFERER"] ?>">Back</a></li>
-		<? } ?>
+		<li class="back"><a href="/about">Back</a></li>
 	</ul>
 </div>

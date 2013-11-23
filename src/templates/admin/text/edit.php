@@ -3,16 +3,17 @@
 $action = $this->actions();
 
 $IC = new Item();
+$itemtype = "text";
 $model = $IC->typeObject("text");
 
 $item = $IC->getCompleteItem($action[1]);
 $item_id = $item["id"];
 ?>
-<div class="scene defaultEdit">
-	<h1>Edit text</h1>
+<div class="scene defaultEdit <?= $itemtype ?>Edit">
+	<h1>Edit <?= $itemtype ?></h1>
 
 	<ul class="actions">
-		<li class="cancel"><a href="/admin/text/list" class="button">Back</a></li>
+		<li class="cancel"><a href="/admin/ <?= $itemtype ?>Edit/list" class="button">Back</a></li>
 	</ul>
 
 	<div class="item">
@@ -25,7 +26,7 @@ $item_id = $item["id"];
 			</fieldset>
 
 			<ul class="actions">
-				<li class="cancel"><a href="/admin/text/list" class="button key:esc">Back</a></li>
+				<li class="cancel"><a href="/admin/ <?= $itemtype ?>Edit/list" class="button key:esc">Back</a></li>
 				<li class="save"><input type="submit" value="Update" class="button primary key:s" /></li>
 			</ul>
 

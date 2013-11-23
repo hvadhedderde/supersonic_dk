@@ -3,13 +3,14 @@
 $action = $this->actions();
 
 $IC = new Item();
-$all_items = $IC->getItems(array("itemtype" => "text", "order" => "status DESC"));
+$itemtype = "text";
+$all_items = $IC->getItems(array("itemtype" => $itemtype, "order" => "status DESC"));
 ?>
-<div class="scene i:defaultList defaultList textList">
+<div class="scene i:defaultList defaultList <?= $itemtype ?>List">
 	<h1>Texts</h1>
 
 	<ul class="actions">
-		<li class="new"><a href="/admin/text/new" class="button primary">Create new text</a></li>
+		<li class="new"><a href="/admin/<?= $itemtype ?>/new" class="button primary">Create new text</a></li>
 	</ul>
 
 	<div class="all_items">
@@ -30,7 +31,7 @@ $all_items = $IC->getItems(array("itemtype" => "text", "order" => "status DESC")
 <?				endif; ?>
 
 				<ul class="actions">
-					<li class="edit"><a href="/admin/text/edit/<?= $item["id"] ?>" class="button">Edit</a></li>
+					<li class="edit"><a href="/admin/<?= $itemtype ?>/edit/<?= $item["id"] ?>" class="button">Edit</a></li>
 					<li class="delete">
 						<form action="/admin/cms/delete/<?= $item["id"] ?>" class="i:formDefaultDelete" method="post" enctype="multipart/form-data">
 							<input type="submit" value="Delete" class="button delete" />

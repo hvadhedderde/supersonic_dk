@@ -3,14 +3,14 @@
 $action = $this->actions();
 
 $IC = new Item();
-$itemtype = "news";
+$itemtype = "video";
 $all_items = $IC->getItems(array("itemtype" => $itemtype, "order" => "status DESC"));
 ?>
 <div class="scene i:defaultList defaultList <?= $itemtype ?>List">
-	<h1>News</h1>
+	<h1>Videos</h1>
 
 	<ul class="actions">
-		<li class="new"><a href="/admin/<?= $itemtype ?>/new" class="button primary">Create news post</a></li>
+		<li class="new"><a href="/admin/<?= $itemtype ?>/new" class="button primary">Create new <?= $itemtype ?></a></li>
 	</ul>
 
 	<div class="all_items">
@@ -18,9 +18,9 @@ $all_items = $IC->getItems(array("itemtype" => $itemtype, "order" => "status DES
 		<ul class="items taggable">
 <?			foreach($all_items as $item): 
 				$item = $IC->getCompleteItem($item["id"]); ?>
-			<li class="item item_id:<?= $item["id"] ?> image:<?= $item["files"] ?> width:160">
+			<li class="item item_id:<?= $item["id"] ?> image:<?= $item["files"] ?> width:100 height:116">
 				<h3><?= $item["name"] ?></h3>
-				<div class="description"><?= $item["text"] ?></div>
+				<div class="description"><?= $item["description"] ?></div>
 
 <?				if($item["tags"]): ?>
 				<ul class="tags">
@@ -47,7 +47,7 @@ $all_items = $IC->getItems(array("itemtype" => $itemtype, "order" => "status DES
 <?			endforeach; ?>
 		</ul>
 <?		else: ?>
-		<p>No news items.</p>
+		<p>No videos.</p>
 <?		endif; ?>
 	</div>
 

@@ -3,16 +3,17 @@
 $action = $this->actions();
 
 $IC = new Item();
-$model = $IC->typeObject("person");
+$itemtype = "person";
+$model = $IC->typeObject($itemtype);
 
 $item = $IC->getCompleteItem($action[1]);
 $item_id = $item["id"];
 ?>
-<div class="scene defaultEdit">
-	<h1>Edit person</h1>
+<div class="scene defaultEdit <?= $itemtype ?>Edit">
+	<h1>Edit <?= $itemtype ?></h1>
 
 	<ul class="actions">a
-		<li class="cancel"><a href="/admin/person/list" class="button">Back</a></li>
+		<li class="cancel"><a href="/admin/<?= $item_id ?>/list" class="button">Back</a></li>
 	</ul>
 
 	<div class="item">
@@ -28,7 +29,7 @@ $item_id = $item["id"];
 			</fieldset>
 
 			<ul class="actions">
-				<li class="cancel"><a href="/admin/person/list" class="button key:esc">Back</a></li>
+				<li class="cancel"><a href="/admin/<?= $itemtype ?>/list" class="button key:esc">Back</a></li>
 				<li class="save"><input type="submit" value="Update" class="button primary key:s" /></li>
 			</ul>
 
@@ -61,8 +62,8 @@ $item_id = $item["id"];
 		</ul>
 	</div>
 
-	<h2>Images</h2>
-	<div class="images">
+	<h2>Image</h2>
+	<div class="media">
 		<form action="/admin/cms/update/<?= $item_id ?>" class="i:formAddImages labelstyle:inject" method="post" enctype="multipart/form-data">
 			<fieldset>
 				<?= $model->input("files") ?>
@@ -74,12 +75,15 @@ $item_id = $item["id"];
 
 		</form>
 
-		<ul class="images">
+		<ul class="media">
+			<li class="image">
+				<h4>Image</h4>
 <?		if($item["files"]): ?>
-			<li class="image"><img src="/images/<?= $item["id"] ?>/x100.<?= $item["files"] ?>"></li>
+				<img src="/images/<?= $item["id"] ?>/75x100.<?= $item["files"] ?>">
 <?		else: ?>
-			<li class="image"><img src="/images/0/missing/x100.png"></li>
+				<img src="/images/0/missing/75x100.png">
 <?		endif; ?>
+			</li>
 		</ul>
 
 	</div>
