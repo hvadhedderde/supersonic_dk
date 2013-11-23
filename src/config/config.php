@@ -29,4 +29,3 @@ define("SITE_ITEMS", true);
 define("SITE_COLLECT_NOTIFICATIONS", 50);
 
 ?>
-
