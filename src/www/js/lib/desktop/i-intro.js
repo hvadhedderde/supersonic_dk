@@ -3,7 +3,8 @@ Util.Objects["intro"] = new function() {
 
 		var page = u.qs("#page");
 		// add global audio player for sound effects
-		page.videoplayer = u.videoPlayer(node);
+		page.videoplayer = u.videoPlayer();
+		u.ae(node, page.videoplayer);
 
 		page.videoplayer.ended = function() {
 			u.t.setTimer(this.parentNode, this.parentNode.clicked, 1500);

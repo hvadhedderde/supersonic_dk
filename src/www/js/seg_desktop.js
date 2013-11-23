@@ -2902,7 +2902,8 @@ u.e.addDOMReadyEvent(u.init);
 Util.Objects["intro"] = new function() {
 	this.init = function(node) {
 		var page = u.qs("#page");
-		page.videoplayer = u.videoPlayer(node);
+		page.videoplayer = u.videoPlayer();
+		u.ae(node, page.videoplayer);
 		page.videoplayer.ended = function() {
 			u.t.setTimer(this.parentNode, this.parentNode.clicked, 1500);
 		}
