@@ -24,6 +24,7 @@ $query = new Query();
 
 // move posters
 $videos = $IC->getItems(array("itemtype" => "video"));
+print_r($videos);
 foreach($videos as $video) {
 	if($video["id"] >= 560 && $video["id"] >= 573) {
 		if(file_exists(PRIVATE_FILE_PATH."/".$video["id"]."/thumbnail/jpg")) {
