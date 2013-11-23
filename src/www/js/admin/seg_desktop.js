@@ -4414,7 +4414,6 @@ u.e.addDOMReadyEvent(u.init)
 /*i-form.js*/
 Util.Objects["defaultList"] = new function() {
 	this.init = function(scene) {
-		u.bug("init defaultList")
 		scene.list = u.qs("ul.items", scene);
 		if(scene.list) {
 			var i, scene;
@@ -4485,13 +4484,10 @@ Util.Objects["defaultList"] = new function() {
 			if(u.hc(scene.list, "searchable")) {
 			}
 			if(u.hc(scene.list, "taggable")) {
-				u.bug("init taggable")
 				scene.list.tagsResponse = function(response) {
-					u.bug("response:" + response);
 					if(response.cms_status == "success" && response.cms_object) {
 						this._tags = response.cms_object;
 						var i, node, tag, j, bn_add, context, value;
-						u.bug("nodes:" + this.scene.nodes);
 						for(i = 0; node = this.scene.nodes[i]; i++) {
 							node._tags = u.qs("ul.tags", node);
 							if(!node._tags) {
@@ -4525,7 +4521,7 @@ Util.Objects["defaultList"] = new function() {
 							}
 							for(tag in response.cms_object) {
 								context = response.cms_object[tag].context;
-								value = response.cms_object[tag].value;
+								value = response.cms_object[tag].value.replace(/ & /, " &amp; ");
 								if(node.usedTags && node.usedTags[context] && node.usedTags[context][value]) {
 									tag_node = node.usedTags[context][value];
 								}
@@ -4566,7 +4562,7 @@ Util.Objects["defaultList"] = new function() {
 													alert(response.cms_message[0]);
 												}
 											}
-											u.request(this, "/admin/cms/update/"+u.cv(this.node, "item_id"), {"method":"post", "params":"tags="+this._context+":"+this._value});
+											u.request(this, "/admin/cms/update/"+u.cv(this.node, "item_id"), {"method":"post", "params":"tags="+this._id});
 										}
 									}
 								}
@@ -4607,6 +4603,7 @@ Util.Objects["defaultTags"] = new function() {
 					node.tagList = this;
 					node._context = response.cms_object[i].context;
 					node._value = response.cms_object[i].value;
+					node._value = response.cms_object[i].value.replace(/ & /, " &amp; ");
 					node._id = response.cms_object[i].id;
 					u.ae(node, "span", {"class":"context", "html":node._context})
 					u.ae(node, "span", {"class":"value", "html":node._value})
