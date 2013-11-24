@@ -34,9 +34,6 @@ foreach($videos as $video) {
 			print "move thumbnail to poster:".$video["id"]."<br>";
 		}
 	}
-	else {
-		print "dont check".$video["id"]."<br>";
-	}
 
 	if(file_exists(PRIVATE_FILE_PATH."/".$video["id"]."/clip/mov")) {
 		FileSystem::makeDirRecursively(PRIVATE_FILE_PATH."/".$video["id"]."/video");

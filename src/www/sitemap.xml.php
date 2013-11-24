@@ -20,14 +20,14 @@
 	$items = $IC->getItems(array("itemtype" => "news", "status" => 1)); ?>
 	<url>
 		<loc>http://supersonic.dk/news/</loc>
-		<lastmod><?= $items[0]["modified_at"] ?></lastmod>
+		<lastmod><?= date("Y-m-d", strtotime($items[0]["modified_at"])) ?></lastmod>
 		<changefreq>daily</changefreq>
 		<priority>1</priority>
 	</url>
 <? foreach($items as $item): ?>
 	<url>
 		<loc>http://supersonic.dk/news/<?= $item["sindex"] ?></loc>
-		<lastmod><?= $item["modified_at"] ?></lastmod>
+		<lastmod><?= date("Y-m-d", strtotime($item["modified_at"])) ?></lastmod>
 		<changefreq>weekly</changefreq>
 		<priority>0.9</priority>
 	</url>
@@ -39,14 +39,14 @@
 	$items = $IC->getItems(array("tags" => "category:Feature films", "status" => 1)); ?>
 	<url>
 		<loc>http://supersonic.dk/feature-films</loc>
-		<lastmod><?= $items[0]["modified_at"] ?></lastmod>
+		<lastmod><?= date("Y-m-d", strtotime($items[0]["modified_at"])) ?></lastmod>
 		<changefreq>daily</changefreq>
 		<priority>1</priority>
 	</url>
 <? foreach($items as $item): ?>
 	<url>
 		<loc>http://supersonic.dk/video/<?= $item["sindex"] ?></loc>
-		<lastmod><?= $item["modified_at"] ?></lastmod>
+		<lastmod><?= date("Y-m-d", strtotime($item["modified_at"])) ?></lastmod>
 		<changefreq>weekly</changefreq>
 		<priority>0.9</priority>
 	</url>
@@ -70,14 +70,14 @@
 	$items = $IC->getItems(array("tags" => "category:Music", "status" => 1)); ?>
 	<url>
 		<loc>http://supersonic.dk/music/examples/</loc>
-		<lastmod><?= $items[0]["modified_at"] ?></lastmod>
+		<lastmod><?= date("Y-m-d", strtotime($items[0]["modified_at"])) ?></lastmod>
 		<changefreq>daily</changefreq>
 		<priority>1</priority>
 	</url>
 <? foreach($items as $item): ?>
 	<url>
 		<loc>http://supersonic.dk/video/<?= $item["sindex"] ?></loc>
-		<lastmod><?= $item["modified_at"] ?></lastmod>
+		<lastmod><?= date("Y-m-d", strtotime($item["modified_at"])) ?></lastmod>
 		<changefreq>weekly</changefreq>
 		<priority>0.9</priority>
 	</url>
@@ -89,7 +89,7 @@
 	$items = $IC->getItems(array("tags" => "category:Tunes,category:Jingles", "limit" => 1, "status" => 1)); ?>
 	<url>
 		<loc>http://supersonic.dk/music/available/</loc>
-		<lastmod><?= $items[0]["modified_at"] ?></lastmod>
+		<lastmod><?= date("Y-m-d", strtotime($items[0]["modified_at"])) ?></lastmod>
 		<changefreq>weekly</changefreq>
 		<priority>1</priority>
 	</url>
@@ -101,14 +101,14 @@
 	$items = $IC->getItems(array("tags" => "category:Tv & docs", "status" => 1)); ?>
 	<url>
 		<loc>http://supersonic.dk/tv-and-documentary</loc>
-		<lastmod><?= $items[0]["modified_at"] ?></lastmod>
+		<lastmod><?= date("Y-m-d", strtotime($items[0]["modified_at"])) ?></lastmod>
 		<changefreq>daily</changefreq>
 		<priority>1</priority>
 	</url>
 <? foreach($items as $item): ?>
 	<url>
 		<loc>http://supersonic.dk/video/<?= $item["sindex"] ?></loc>
-		<lastmod><?= $item["modified_at"] ?></lastmod>
+		<lastmod><?= date("Y-m-d", strtotime($item["modified_at"])) ?></lastmod>
 		<changefreq>weekly</changefreq>
 		<priority>0.9</priority>
 	</url>
@@ -120,14 +120,14 @@
 	$items = $IC->getItems(array("tags" => "category:Commercial", "status" => 1)); ?>
 	<url>
 		<loc>http://supersonic.dk/commercials/</loc>
-		<lastmod><?= $items[0]["modified_at"] ?></lastmod>
+		<lastmod><?= date("Y-m-d", strtotime($items[0]["modified_at"])) ?></lastmod>
 		<changefreq>daily</changefreq>
 		<priority>1</priority>
 	</url>
 <? foreach($items as $item): ?>
 	<url>
 		<loc>http://supersonic.dk/video/<?= $item["sindex"] ?></loc>
-		<lastmod><?= $item["modified_at"] ?></lastmod>
+		<lastmod><?= date("Y-m-d", strtotime($item["modified_at"])) ?></lastmod>
 		<changefreq>weekly</changefreq>
 		<priority>0.9</priority>
 	</url>
@@ -139,7 +139,7 @@
 	$items = $IC->getItems(array("tags" => "category:Radio", "limit" => 1, "status" => 1)); ?>
 	<url>
 		<loc>http://supersonic.dk/radio/</loc>
-		<lastmod><?= $items[0]["modified_at"] ?></lastmod>
+		<lastmod><?= date("Y-m-d", strtotime($items[0]["modified_at"])) ?></lastmod>
 		<changefreq>daily</changefreq>
 		<priority>1</priority>
 	</url>
@@ -151,7 +151,7 @@
 	$items = $IC->getItems(array("tags" => "page:Voice casting", "limit" => 1, "status" => 1)); ?>
 	<url>
 		<loc>http://supersonic.dk/voice-casting/</loc>
-		<lastmod><?= $items[0]["modified_at"] ?></lastmod>
+		<lastmod><?= date("Y-m-d", strtotime($items[0]["modified_at"])) ?></lastmod>
 		<changefreq>weekly</changefreq>
 		<priority>1</priority>
 	</url>
@@ -163,7 +163,7 @@
 	$items = $IC->getItems(array("tags" => "page:About", "limit" => 1, "status" => 1)); ?>
 	<url>
 		<loc>http://supersonic.dk/about/</loc>
-		<lastmod><?= $items[0]["modified_at"] ?></lastmod>
+		<lastmod><?= date("Y-m-d", strtotime($items[0]["modified_at"])) ?></lastmod>
 		<changefreq>weekly</changefreq>
 		<priority>0.8</priority>
 	</url>
@@ -175,14 +175,14 @@
 	$items = $IC->getItems(array("itemtype" => "person", "status" => 1)); ?>
 	<url>
 		<loc>http://supersonic.dk/people/</loc>
-		<lastmod><?= $items[0]["modified_at"] ?></lastmod>
+		<lastmod><?= date("Y-m-d", strtotime($items[0]["modified_at"])) ?></lastmod>
 		<changefreq>daily</changefreq>
 		<priority>1</priority>
 	</url>
 <? foreach($items as $item): ?>
 	<url>
 		<loc>http://supersonic.dk/people/<?= $item["sindex"] ?></loc>
-		<lastmod><?= $item["modified_at"] ?></lastmod>
+		<lastmod><?= date("Y-m-d", strtotime($item["modified_at"])) ?></lastmod>
 		<changefreq>weekly</changefreq>
 		<priority>0.9</priority>
 	</url>
