@@ -47,7 +47,7 @@ $all_items = $IC->getItems(array("itemtype" => $itemtype, "order" => "status DES
 <?			endforeach; ?>
 		</ul>
 <?		else: ?>
-		<p>No news items.</p>
+		<p>No audio items.</p>
 <?		endif; ?>
 	</div>
 
