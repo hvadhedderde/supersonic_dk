@@ -1,10 +1,15 @@
 
-/*seg_tv.js*/
+/*seg_tv_include.js*/
+
+/*seg_tv_include.js*/
+
+/*seg_desktop.js*/
 if(!u || !Util) {
-	var u, Util = u = new function() {}
-	u.version = 0.7;
-	u.bug = function() {}
-	u.stats = new function() {this.pageView = function(){};this.event = function(){};this.customVar = function(){}}
+	var u, Util = u = new function() {};
+	u.version = 0.8;
+	u.bug = function() {};
+	u.nodeId = function() {};
+	u.stats = new function() {this.pageView = function(){};this.event = function(){};this.customVar = function(){};}
 }
 Util.debugURL = function(url) {
 	if(u.bug_force) {
@@ -13,7 +18,6 @@ Util.debugURL = function(url) {
 	return document.domain.match(/.local$/);
 }
 Util.nodeId = function(node, include_path) {
-	try {
 		if(!include_path) {
 			return node.id ? node.nodeName+"#"+node.id : (node.className ? node.nodeName+"."+node.className : (node.name ? node.nodeName + "["+node.name+"]" : node.nodeName));
 		}
@@ -25,10 +29,6 @@ Util.nodeId = function(node, include_path) {
 				return u.nodeId(node);
 			}
 		}
-	}
-	catch(exception) {
-		u.bug("Exception ("+exception+") in u.nodeId("+node+"), called from: "+arguments.callee.caller);
-	}
 	return "Unindentifiable node!";
 }
 Util.bug = function(message, corner, color) {
@@ -128,7 +128,7 @@ Util.Animation = u.a = new function() {
 		return this._variant;
 	}
 	this.transition = function(node, transition) {
-		try {
+		try {		
 			node.style[this.variant() + "Transition"] = transition;
 			if(this.variant() == "Moz") {
 				u.e.addEvent(node, "transitionend", this._transitioned);
@@ -142,16 +142,22 @@ Util.Animation = u.a = new function() {
 			}
 			else {
 				node.duration = false;
+				if(transition.match(/none/i)) {
+					node.transitioned = null;
+				}
 			}
 		}
 		catch(exception) {
-			u.bug("Exception ("+exception+") in u.a.transition(" + u.nodeId(node) + "), called from: "+arguments.callee.caller);
+			u.bug("Exception ("+exception+") in u.a.transition(" + node + "), called from: "+arguments.callee.caller);
 		}
 	}
 	this._transitioned = function(event) {
 		if(event.target == this && typeof(this.transitioned) == "function") {
 			this.transitioned(event);
 		}
+	}
+	this.removeTransform = function(node) {
+		node.style[this.variant() + "Transform"] = "none";
 	}
 	this.translate = function(node, x, y) {
 		if(this.support3d()) {
@@ -688,6 +694,9 @@ Util.Events = u.e = new function() {
 				}
 			}
 			u.e.addMoveEvent(this, u.e._move);
+			if(u.e.event_pref == "touch") {
+				u.e.addMoveEvent(this, u.e._cancelClick);
+			}
 			u.e.addEndEvent(this, u.e._dblclicked);
 			if(u.e.event_pref == "mouse") {
 				u.e.addEvent(this, "mouseout", u.e._cancelClick);
@@ -810,7 +819,7 @@ u.e.resetDragEvents = function(node) {
 	this.removeEvent(node, "touchmove", this._drag);
 	this.removeEvent(node, "mouseup", this._drop);
 	this.removeEvent(node, "touchend", this._drop);
-	this.removeEvent(node, "mouseout", this._drop);
+	this.removeEvent(node, "mouseout", this._drop_mouse);
 	this.removeEvent(node, "mousemove", this._scrollStart);
 	this.removeEvent(node, "touchmove", this._scrollStart);
 	this.removeEvent(node, "mousemove", this._scrolling);
@@ -857,14 +866,22 @@ u.e.drag = function(node, boundaries, settings) {
 	node.drag_elastica = 0;
 	node.drag_dropout = true;
 	node.show_bounds = false;
+	node.callback_picked = "picked";
+	node.callback_moved = "moved";
+	node.callback_dropped = "dropped";
 	if(typeof(settings) == "object") {
 		var argument;
 		for(argument in settings) {
 			switch(argument) {
-				case "strict"		: node.drag_strict		= settings[argument]; break;
-				case "elastica"		: node.drag_elastica	= Number(settings[argument]); break;
-				case "dropout"		: node.drag_dropout		= settings[argument]; break;
-				case "show_bounds"	: node.show_bounds		= settings[argument]; break; // NEEDS HELP
+				case "strict"			: node.drag_strict			= settings[argument]; break;
+				case "elastica"			: node.drag_elastica		= Number(settings[argument]); break;
+				case "dropout"			: node.drag_dropout			= settings[argument]; break;
+				case "show_bounds"		: node.show_bounds			= settings[argument]; break; 
+				case "vertical_lock"	: node.vertical_lock		= settings[argument]; break;
+				case "horizontal_lock"	: node.horizontal_lock		= settings[argument]; break;
+				case "callback_picked"	: node.callback_picked		= settings[argument]; break;
+				case "callback_moved"	: node.callback_moved		= settings[argument]; break;
+				case "callback_dropped"	: node.callback_dropped		= settings[argument]; break;
 			}
 		}
 	}
@@ -900,16 +917,16 @@ u.e.drag = function(node, boundaries, settings) {
 	node._x = node._x ? node._x : 0;
 	node._y = node._y ? node._y : 0;
 	node.locked = ((node.end_drag_x - node.start_drag_x == node.offsetWidth) && (node.end_drag_y - node.start_drag_y == node.offsetHeight));
-	node.only_vertical = (!node.locked && node.end_drag_x - node.start_drag_x == node.offsetWidth);
-	node.only_horisontal = (!node.locked && node.end_drag_y - node.start_drag_y == node.offsetHeight);
+	node.only_vertical = (node.vertical_lock || (!node.locked && node.end_drag_x - node.start_drag_x == node.offsetWidth));
+	node.only_horizontal = (node.horizontal_lock || (!node.locked && node.end_drag_y - node.start_drag_y == node.offsetHeight));
 	u.e.addStartEvent(node, this._inputStart);
 }
 u.e._pick = function(event) {
 	var init_speed_x = Math.abs(this.start_event_x - u.eventX(event));
 	var init_speed_y = Math.abs(this.start_event_y - u.eventY(event));
-	if(init_speed_x > init_speed_y && this.only_horisontal || 
-	   init_speed_x < init_speed_y && this.only_vertical ||
-	   !this.only_vertical && !this.only_horisontal) {
+	if((init_speed_x > init_speed_y && this.only_horizontal) || 
+	   (init_speed_x < init_speed_y && this.only_vertical) ||
+	   (!this.only_vertical && !this.only_horizontal)) {
 		u.e.resetNestedEvents(this);
 	    u.e.kill(event);
 		this.move_timestamp = event.timeStamp;
@@ -926,14 +943,14 @@ u.e._pick = function(event) {
 		this.current_xps = 0;
 		this.current_yps = 0;
 		u.a.transition(this, "none");
-		if(typeof(this.picked) == "function") {
-			this.picked(event);
-		}
 		u.e.addMoveEvent(this, u.e._drag);
 		u.e.addEndEvent(this, u.e._drop);
+		if(typeof(this[this.callback_picked]) == "function") {
+			this[this.callback_picked](event);
+		}
 	}
 	if(this.drag_dropout && u.e.event_pref == "mouse") {
-		u.e.addEvent(this, "mouseout", u.e._drop);
+		u.e.addEvent(this, "mouseout", u.e._drop_mouse);
 	}
 }
 u.e._drag = function(event) {
@@ -950,10 +967,10 @@ u.e._drag = function(event) {
 	this.move_timestamp = event.timeStamp;
 	this.move_last_x = this.current_x;
 	this.move_last_y = this.current_y;
-	if(this.only_vertical) {
+	if(!this.locked && this.only_vertical) {
 		this._y = this.current_y;
 	}
-	else if(this.only_horisontal) {
+	else if(!this.locked && this.only_horizontal) {
 		this._x = this.current_x;
 	}
 	else if(!this.locked) {
@@ -961,7 +978,7 @@ u.e._drag = function(event) {
 		this._y = this.current_y;
 	}
 	if(this.e_swipe) {
-		if(this.current_xps && (Math.abs(this.current_xps) > Math.abs(this.current_yps) || this.only_horisontal)) {
+		if(this.current_xps && (Math.abs(this.current_xps) > Math.abs(this.current_yps) || this.only_horizontal)) {
 			if(this.current_xps < 0) {
 				this.swiped = "left";
 			}
@@ -1000,12 +1017,12 @@ u.e._drag = function(event) {
 			else {
 				this.current_x = this._x;
 			}
-			if(!this.only_horisontal && this._y < this.start_drag_y) {
+			if(!this.only_horizontal && this._y < this.start_drag_y) {
 				offset = this._y < this.start_drag_y - this.drag_elastica ? - this.drag_elastica : this._y - this.start_drag_y;
 				this._y = this.start_drag_y;
 				this.current_y = this._y + offset + (Math.round(Math.pow(offset, 2)/this.drag_elastica));
 			}
-			else if(!this.horisontal && this._y + this.offsetHeight > this.end_drag_y) {
+			else if(!this.horizontal && this._y + this.offsetHeight > this.end_drag_y) {
 				offset = (this._y + this.offsetHeight > this.end_drag_y + this.drag_elastica) ? this.drag_elastica : (this._y + this.offsetHeight - this.end_drag_y);
 				this._y = this.end_drag_y - this.offsetHeight;
 				this.current_y = this._y + offset - (Math.round(Math.pow(offset, 2)/this.drag_elastica));
@@ -1036,8 +1053,8 @@ u.e._drag = function(event) {
 			u.a.translate(this, this._x, this._y);
 		}
 	}
-	if(typeof(this.moved) == "function") {
-		this.moved(event);
+	if(typeof(this[this.callback_moved]) == "function") {
+		this[this.callback_moved](event);
 	}
 }
 u.e._drop = function(event) {
@@ -1057,15 +1074,15 @@ u.e._drop = function(event) {
 		}
 	}
 	else if(!this.drag_strict && !this.locked) {
-		this.current_x = this._x + (this.current_xps/2);
-		this.current_y = this._y + (this.current_yps/2);
+		this.current_x = Math.round(this._x + (this.current_xps/2));
+		this.current_y = Math.round(this._y + (this.current_yps/2));
 		if(this.only_vertical || this.current_x < this.start_drag_x) {
 			this.current_x = this.start_drag_x;
 		}
 		else if(this.current_x + this.offsetWidth > this.end_drag_x) {
 			this.current_x = this.end_drag_x - this.offsetWidth;
 		}
-		if(this.only_horisontal || this.current_y < this.start_drag_y) {
+		if(this.only_horizontal || this.current_y < this.start_drag_y) {
 			this.current_y = this.start_drag_y;
 		}
 		else if(this.current_y + this.offsetHeight > this.end_drag_y) {
@@ -1082,12 +1099,18 @@ u.e._drop = function(event) {
 			u.a.transition(this, "all 1s cubic-bezier(0,0,0.25,1)");
 		}
 		else {
-			u.a.transition(this, "none");
+			u.a.transition(this, "all 0.2s cubic-bezier(0,0,0.25,1)");
 		}
 		u.a.translate(this, this.current_x, this.current_y);
 	}
-	if(typeof(this.dropped) == "function") {
-		this.dropped(event);
+	if(typeof(this[this.callback_dropped]) == "function") {
+		this[this.callback_dropped](event);
+	}
+}
+u.e._drop_mouse = function(event) {
+	if(event.target == this) {
+		this._drop = u.e._drop;
+		this._drop(event);
 	}
 }
 u.e.swipe = function(node, boundaries, settings) {
@@ -1273,6 +1296,7 @@ Util.Form = u.f = new function() {
 			if(error_message) {
 				u.ae(field, "div", {"class":"error", "html":error_message})
 			}
+			field._indicator = u.ae(field, "div", {"class":"indicator"});
 			field._label = u.qs("label", field);
 			field._hint = u.qs(".hint", field);
 			field._error = u.qs(".error", field);
@@ -1285,7 +1309,7 @@ Util.Form = u.f = new function() {
 				}
 			}
 			if(not_initialized) {
-				if(u.hc(field, "string|email|tel|numeric|integer|password")) {
+				if(u.hc(field, "string|email|tel|number|integer|password")) {
 					field._input = u.qs("input", field);
 					field._input.field = field;
 					this.formIndex(form, field._input);
@@ -1312,14 +1336,24 @@ Util.Form = u.f = new function() {
 						this.formIndex(form, input);
 					}
 				}
-				else if(u.hc(field, "date")) {
+				else if(u.hc(field, "date|datetime")) {
 					field._input = u.qsa("select,input", field);
 					for(j = 0; input = field._input[j]; j++) {
 						input.field = field;
 						this.formIndex(form, input);
 					}
 				}
-				else if(u.hc(field, "file")) {
+				else if(u.hc(field, "tags")) {
+					field._input = u.qs("input", field);
+					field._input.field = field;
+					this.formIndex(form, field._input);
+				}
+				else if(u.hc(field, "prices")) {
+					field._input = u.qs("input", field);
+					field._input.field = field;
+					this.formIndex(form, field._input);
+				}
+				else if(u.hc(field, "files")) {
 					field._input = u.qs("input", field);
 					field._input.field = field;
 					this.formIndex(form, field._input);
@@ -1348,17 +1382,16 @@ Util.Form = u.f = new function() {
 					if(this.type && this.type.match(/submit/i)) {
 						this.form._submit_button = this;
 						this.form._submit_input = false;
-						this.form._submit(event);
+						this.form._submit(event, this);
 					}
 				}
 			}
 			this.buttonOnEnter(action._input);
 			this.activateButton(action._input);
-			if(action._input.name && action._input.name) {
-				form.actions[action._input.name] = action._input;
-			}
-			if(typeof(u.e.k) == "object" && u.hc(action._input, "key:[a-z0-9]+")) {
-				u.e.k.addShortcut(u.cv(action._input, "key"), action._input);
+			var action_name = action._input.name ? action._input.name : action.className;
+				form.actions[action_name] = action._input;
+			if(typeof(u.k) == "object" && u.hc(action._input, "key:[a-z0-9]+")) {
+				u.k.addKey(u.cv(action._input, "key"), action._input);
 			}
 		}
 	}
@@ -1436,7 +1469,7 @@ Util.Form = u.f = new function() {
 				u.e.kill(event);
 				this.form.submitInput = this;
 				this.form.submitButton = false;
-				this.form._submit(event);
+				this.form._submit(event, this);
 			}
 		}
 		u.e.addEvent(node, "keydown", node.keyPressed);
@@ -1452,30 +1485,37 @@ Util.Form = u.f = new function() {
 		}
 		u.e.addEvent(node, "keydown", node.keyPressed);
 	}
-	this.formIndex = function(form, node) {
-		node.tab_index = form.tab_order.length;
-		form.tab_order[node.tab_index] = node;
-		if(node.field && node.name) {
-			form.fields[node.name] = node;
-			if(node.nodeName.match(/input/i) && node.type && node.type.match(/text|email|number|password/)) {
-				node.val = this._value;
-				u.e.addEvent(node, "keyup", this._updated);
-				u.e.addEvent(node, "change", this._changed);
-				this.inputOnEnter(node);
+	this.formIndex = function(form, iN) {
+		iN.tab_index = form.tab_order.length;
+		form.tab_order[iN.tab_index] = iN;
+		if(iN.field && iN.name) {
+			form.fields[iN.name] = iN;
+			if(iN.nodeName.match(/input/i) && iN.type && iN.type.match(/text|email|tel|number|password|datetime|date/)) {
+				iN.val = this._value;
+				u.e.addEvent(iN, "keyup", this._updated);
+				u.e.addEvent(iN, "change", this._changed);
+				this.inputOnEnter(iN);
 			}
-			else if(node.nodeName.match(/textarea/i)) {
-				node.val = this._value;
-				u.e.addEvent(node, "keyup", this._updated);
-				u.e.addEvent(node, "change", this._changed);
-				if(u.hc(node.field, "autoexpand")) {
-					u.as(node, "overflow", "hidden");
-					node.autoexpand_offset = 0;
-					if(parseInt(u.gcs(node, "height")) != node.scrollHeight) {
-						node.autoexpand_offset = node.scrollHeight - parseInt(u.gcs(node, "height"));
+			else if(iN.nodeName.match(/textarea/i)) {
+				iN.val = this._value;
+				u.e.addEvent(iN, "keyup", this._updated);
+				u.e.addEvent(iN, "change", this._changed);
+				if(u.hc(iN.field, "autoexpand")) {
+					var current_height = parseInt(u.gcs(iN, "height"));
+					u.bug(current_height + "," + iN.scrollHeight);
+					var current_value = iN.val();
+					iN.val("");
+					u.bug(current_height + "," + iN.scrollHeight);
+					u.as(iN, "overflow", "hidden");
+					u.bug(current_height + "," + iN.scrollHeight);
+					iN.autoexpand_offset = 0;
+					if(parseInt(u.gcs(iN, "height")) != iN.scrollHeight) {
+						iN.autoexpand_offset = iN.scrollHeight - parseInt(u.gcs(iN, "height"));
 					}
-					node.setHeight = function() {
+					iN.val(current_value);
+					iN.setHeight = function() {
 						var textarea_height = parseInt(u.gcs(this, "height"));
-						if(this.value) {
+						if(this.val()) {
 							if(u.browser("webkit")) {
 								if(this.scrollHeight - this.autoexpand_offset > textarea_height) {
 									u.a.setHeight(this, this.scrollHeight);
@@ -1491,43 +1531,44 @@ Util.Form = u.f = new function() {
 							}
 						}
 					}
-					u.e.addEvent(node, "keyup", node.setHeight);
+					u.e.addEvent(iN, "keyup", iN.setHeight);
+					iN.setHeight();
 				}
 			}
-			else if(node.nodeName.match(/select/i)) {
-				node.val = this._value_select;
-				u.e.addEvent(node, "change", this._updated);
-				u.e.addEvent(node, "keyup", this._updated);
-				u.e.addEvent(node, "change", this._changed);
+			else if(iN.nodeName.match(/select/i)) {
+				iN.val = this._value_select;
+				u.e.addEvent(iN, "change", this._updated);
+				u.e.addEvent(iN, "keyup", this._updated);
+				u.e.addEvent(iN, "change", this._changed);
 			}
-			else if(node.type && node.type.match(/checkbox/)) {
-				node.val = this._value_checkbox;
+			else if(iN.type && iN.type.match(/checkbox/)) {
+				iN.val = this._value_checkbox;
 				if(u.browser("explorer", "<=8")) {
-					node.pre_state = node.checked;
-					node._changed = u.f._changed;
-					node._updated = u.f._updated;
-					node._clicked = function(event) {
+					iN.pre_state = iN.checked;
+					iN._changed = u.f._changed;
+					iN._updated = u.f._updated;
+					iN._clicked = function(event) {
 						if(this.checked != this.pre_state) {
 							this._changed(window.event);
 							this._updated(window.event);
 						}
 						this.pre_state = this.checked;
 					}
-					u.e.addEvent(node, "click", node._clicked);
+					u.e.addEvent(iN, "click", iN._clicked);
 				}
 				else {
-					u.e.addEvent(node, "change", this._updated);
-					u.e.addEvent(node, "change", this._changed);
+					u.e.addEvent(iN, "change", this._updated);
+					u.e.addEvent(iN, "change", this._changed);
 				}
-				this.inputOnEnter(node);
+				this.inputOnEnter(iN);
 			}
-			else if(node.type && node.type.match(/radio/)) {
-				node.val = this._value_radio;
+			else if(iN.type && iN.type.match(/radio/)) {
+				iN.val = this._value_radio;
 				if(u.browser("explorer", "<=8")) {
-					node.pre_state = node.checked;
-					node._changed = u.f._changed;
-					node._updated = u.f._updated;
-					node._clicked = function(event) {
+					iN.pre_state = iN.checked;
+					iN._changed = u.f._changed;
+					iN._updated = u.f._updated;
+					iN._clicked = function(event) {
 						var i, input;
 						if(this.checked != this.pre_state) {
 							this._changed(window.event);
@@ -1537,16 +1578,32 @@ Util.Form = u.f = new function() {
 							input.pre_state = input.checked;
 						}
 					}
-					u.e.addEvent(node, "click", node._clicked);
+					u.e.addEvent(iN, "click", iN._clicked);
 				}
 				else {
-					u.e.addEvent(node, "change", this._updated);
-					u.e.addEvent(node, "change", this._changed);
+					u.e.addEvent(iN, "change", this._updated);
+					u.e.addEvent(iN, "change", this._changed);
 				}
-				this.inputOnEnter(node);
+				this.inputOnEnter(iN);
 			}
-			this.activateField(node);
-			this.validate(node);
+			else if(iN.type && iN.type.match(/file/)) {
+				iN.val = function(value) {
+					if(value !== undefined) {
+						alert('adding values manually to input type="file" is not supported')
+					}
+					else {
+						var i, file, files = [];
+						for(i = 0; file = this.files[i]; i++) {
+							files.push(file);
+						}
+						return files.join(",");
+					}
+				}
+				u.e.addEvent(iN, "keyup", this._updated);
+				u.e.addEvent(iN, "change", this._changed);
+			}
+			this.activateField(iN);
+			this.validate(iN);
 		}
 	}
 	this._changed = function(event) {
@@ -1574,7 +1631,7 @@ Util.Form = u.f = new function() {
 	this._validate = function() {
 		u.f.validate(this);
 	}
-	this._submit = function(event, input) {
+	this._submit = function(event, iN) {
 		for(name in this.fields) {
 			if(this.fields[name].field) {
 				this.fields[name].used = true;
@@ -1588,199 +1645,321 @@ Util.Form = u.f = new function() {
 		}
 		else {
 			if(typeof(this.submitted) == "function") {
-				this.submitted(input);
+				this.submitted(iN);
 			}
 			else {
 				this.submit();
 			}
 		}
 	}
-	this.activateField = function(input) {
-		this._focus = function(event) {
-			this.field.focused = true;
-			u.ac(this.field, "focus");
-			u.ac(this, "focus");
-			if(typeof(this.focused) == "function") {
-				this.focused();
-			}
-			if(typeof(this.form.focused) == "function") {
-				this.form.focused(this);
+	this._focus = function(event) {
+		this.field.focused = true;
+		u.ac(this.field, "focus");
+		u.ac(this, "focus");
+		if(typeof(this.focused) == "function") {
+			this.focused();
+		}
+		if(typeof(this.form.focused) == "function") {
+			this.form.focused(this);
+		}
+	}
+	this._blur = function(event) {
+		this.field.focused = false;
+		u.rc(this.field, "focus");
+		u.rc(this, "focus");
+		this.used = true;
+		if(typeof(this.blurred) == "function") {
+			this.blurred();
+		}
+		if(typeof(this.form.blurred) == "function") {
+			this.form.blurred(this);
+		}
+	}
+	this._button_focus = function(event) {
+		u.ac(this, "focus");
+		if(typeof(this.focused) == "function") {
+			this.focused();
+		}
+		if(typeof(this.form.focused) == "function") {
+			this.form.focused(this);
+		}
+	}
+	this._button_blur = function(event) {
+		u.rc(this, "focus");
+		if(typeof(this.blurred) == "function") {
+			this.blurred();
+		}
+		if(typeof(this.form.blurred) == "function") {
+			this.form.blurred(this);
+		}
+	}
+	this._default_value_focus = function() {
+		u.rc(this, "default");
+		if(this.val() == this.default_value) {
+			this.val("");
+		}
+	}
+	this._default_value_blur = function() {
+		if(this.val() == "") {
+			u.ac(this, "default");
+			this.val(this.default_value);
+		}
+	}
+	this.activateField = function(iN) {
+		u.e.addEvent(iN, "focus", this._focus);
+		u.e.addEvent(iN, "blur", this._blur);
+		u.e.addEvent(iN, "blur", this._validate);
+		if(iN.form.labelstyle || u.hc(iN.form, "labelstyle:[a-z]+")) {
+			iN.form.labelstyle = iN.form.labelstyle ? iN.form.labelstyle : u.cv(iN.form, "labelstyle");
+			if(iN.form.labelstyle == "inject" && (!iN.type || !iN.type.match(/file|radio|checkbox/))) {
+				iN.default_value = iN.field._label.innerHTML;
+				u.e.addEvent(iN, "focus", this._default_value_focus);
+				u.e.addEvent(iN, "blur", this._default_value_blur);
+				if(iN.val() == "") {
+					iN.val(iN.default_value);
+					u.ac(iN, "default");
+				}
 			}
 		}
-		this._blur = function(event) {
-			this.field.focused = false;
-			u.rc(this.field, "focus");
-			u.rc(this, "focus");
-			this.used = true;
-			if(typeof(this.blurred) == "function") {
-				this.blurred();
-			}
-			if(typeof(this.form.blurred) == "function") {
-				this.form.blurred(this);
-			}
-		}
-		u.e.addEvent(input, "focus", this._focus);
-		u.e.addEvent(input, "blur", this._blur);
-		u.e.addEvent(input, "blur", this._validate);
 	}
 	this.activateButton = function(button) {
-		this._button_focus = function(event) {
-			u.ac(this, "focus");
-			if(typeof(this.focused) == "function") {
-				this.focused();
-			}
-			if(typeof(this.form.focused) == "function") {
-				this.form.focused(this);
-			}
-		}
-		this._button_blur = function(event) {
-			u.rc(this, "focus");
-			if(typeof(this.blurred) == "function") {
-				this.blurred();
-			}
-			if(typeof(this.form.blurred) == "function") {
-				this.form.blurred(this);
-			}
-		}
 		u.e.addEvent(button, "focus", this._button_focus);
 		u.e.addEvent(button, "blur", this._button_blur);
 	}
-	this.isDefault = function(input) {
-		if(input.field.default_value && input.val() == iN.field.default_value) {
+ 	this.isDefault = function(iN) {
+		if(iN.default_value && iN.val() == iN.default_value) {
 			return true;
 		}
 		return false;
 	}
-	this.fieldError = function(input) {
-		u.rc(input, "correct");
-		u.rc(input.field, "correct");
-		if(input.used || !this.isDefault(input) && input.val()) {
-			u.ac(input, "error");
-			u.ac(input.field, "error");
-			if(typeof(input.validationFailed) == "function") {
-				input.validationFailed();
+	this.fieldError = function(iN) {
+		u.rc(iN, "correct");
+		u.rc(iN.field, "correct");
+		if(iN.used || !this.isDefault(iN) && iN.val()) {
+			u.ac(iN, "error");
+			u.ac(iN.field, "error");
+			if(typeof(iN.validationFailed) == "function") {
+				iN.validationFailed();
 			}
 		}
 	}
-	this.fieldCorrect = function(input) {
-		if(!this.isDefault(input) && input.val()) {
-			u.ac(input, "correct");
-			u.ac(input.field, "correct");
-			u.rc(input, "error");
-			u.rc(input.field, "error");
+	this.fieldCorrect = function(iN) {
+		if(!this.isDefault(iN) && iN.val()) {
+			u.ac(iN, "correct");
+			u.ac(iN.field, "correct");
+			u.rc(iN, "error");
+			u.rc(iN.field, "error");
 		}
 		else {
-			u.rc(input, "correct");
-			u.rc(input.field, "correct");
-			u.rc(input, "error");
-			u.rc(input.field, "error");
+			u.rc(iN, "correct");
+			u.rc(iN.field, "correct");
+			u.rc(iN, "error");
+			u.rc(iN.field, "error");
 		}
 	}
-	this.validate = function(input) {
-		var min, max;
+	this.validate = function(iN) {
+		var min, max, pattern;
 		var not_validated = true;
+		if(!u.hc(iN.field, "required") && (iN.val() == "" || this.isDefault(iN))) {
+			this.fieldCorrect(iN);
+			return true;
+		}
+		else if(u.hc(iN.field, "required") && (iN.val() == "" || this.isDefault(iN))) {
+			this.fieldError(iN);
+			return false;
+		}
 		var custom_validate;
 		for(custom_validate in u.f.customValidate) {
-			if(u.hc(input.field, custom_validate)) {
-				u.f.customValidate[custom_validate](input);
+			if(u.hc(iN.field, custom_validate)) {
+				u.f.customValidate[custom_validate](iN);
 				not_validated = false;
 			}
 		}
 		if(not_validated) {
-			if(u.hc(input.field, "password")) {
-				min = Number(u.cv(input.field, "min"));
-				max = Number(u.cv(input.field, "max"));
+			if(u.hc(iN.field, "password")) {
+				min = Number(u.cv(iN.field, "min"));
+				max = Number(u.cv(iN.field, "max"));
 				min = min ? min : 8;
 				max = max ? max : 20;
-				if((input.value.length >= min && input.value.length <= max && !this.isDefault(input)) || (!u.hc(input.field, "required") && !input.value)) {
-					this.fieldCorrect(input);
+				pattern = iN.getAttribute("pattern");
+				if(
+					iN.val().length >= min && 
+					iN.val().length <= max && 
+					(!pattern || iN.val().match("^"+pattern+"$"))
+				) {
+					this.fieldCorrect(iN);
 				}
 				else {
-					this.fieldError(input);
+					this.fieldError(iN);
 				}
 			}
-			else if(u.hc(input.field, "numeric")) {
-				min = Number(u.cv(input.field, "min"));
-				max = Number(u.cv(input.field, "max"));
+			else if(u.hc(iN.field, "number")) {
+				min = Number(u.cv(iN.field, "min"));
+				max = Number(u.cv(iN.field, "max"));
 				min = min ? min : 0;
 				max = max ? max : 99999999999999999999999999999;
-				if((input.value && !isNaN(input.value) && input.value >= min && input.value <= max && !this.isDefault(input)) || (!u.hc(input.field, "required") && !input.value)) {
-					this.fieldCorrect(input);
+				pattern = iN.getAttribute("pattern");
+				if(
+					!isNaN(iN.val()) && 
+					iN.val() >= min && 
+					iN.val() <= max && 
+					(!pattern || iN.val().match("^"+pattern+"$"))
+				) {
+					this.fieldCorrect(iN);
 				}
 				else {
-					this.fieldError(input);
+					this.fieldError(iN);
 				}
 			}
-			else if(u.hc(input.field, "integer")) {
-				min = Number(u.cv(input.field, "min"));
-				max = Number(u.cv(input.field, "max"));
+			else if(u.hc(iN.field, "integer")) {
+				min = Number(u.cv(iN.field, "min"));
+				max = Number(u.cv(iN.field, "max"));
 				min = min ? min : 0;
 				max = max ? max : 99999999999999999999999999999;
-				if((input.value && !isNaN(input.value) && Math.round(input.value) == input.value && input.value >= min && input.value <= max && !this.isDefault(input)) || (!u.hc(input.field, "required") && !input.value)) {
-					this.fieldCorrect(input);
+				pattern = iN.getAttribute("pattern");
+				if(
+					!isNaN(iN.val()) && 
+					Math.round(iN.val()) == iN.val() && 
+					iN.val() >= min && 
+					iN.val() <= max && 
+					(!pattern || iN.val().match("^"+pattern+"$"))
+				) {
+					this.fieldCorrect(iN);
 				}
 				else {
-					this.fieldError(input);
+					this.fieldError(iN);
 				}
 			}
-			else if(u.hc(input.field, "tel")) {
-				if((input.value.match(/^([\+0-9\-\.\s\(\)]){5,16}$/) && !this.isDefault(input)) || (!u.hc(input.field, "required") && !input.value)) {
-					this.fieldCorrect(input);
+			else if(u.hc(iN.field, "tel")) {
+				pattern = iN.getAttribute("pattern");
+				if(
+					!pattern && iN.val().match(/^([\+0-9\-\.\s\(\)]){5,18}$/) ||
+					(pattern && iN.val().match("^"+pattern+"$"))
+				) {
+					this.fieldCorrect(iN);
 				}
 				else {
-					this.fieldError(input);
+					this.fieldError(iN);
 				}
 			}
-			else if(u.hc(input.field, "email")) {
-				if((input.value.match(/^([^<>\\\/%$])+\@([^<>\\\/%$])+\.([^<>\\\/%$]{2,20})$/) && !this.isDefault(input)) || (!u.hc(input.field, "required") && !input.value)) {
-					this.fieldCorrect(input);
+			else if(u.hc(iN.field, "email")) {
+				if(
+					!pattern && iN.val().match(/^([^<>\\\/%$])+\@([^<>\\\/%$])+\.([^<>\\\/%$]{2,20})$/) ||
+					(pattern && iN.val().match("^"+pattern+"$"))
+				) {
+					this.fieldCorrect(iN);
 				}
 				else {
-					this.fieldError(input);
+					this.fieldError(iN);
 				}
 			}
-			else if(u.hc(input.field, "text")) {
-				min = Number(u.cv(input.field, "min"));
-				max = Number(u.cv(input.field, "max"));
+			else if(u.hc(iN.field, "text")) {
+				min = Number(u.cv(iN.field, "min"));
+				max = Number(u.cv(iN.field, "max"));
 				min = min ? min : 1;
 				max = max ? max : 10000000;
-				if((input.value.length >= min && input.value.length <= max && !this.isDefault(input)) || (!u.hc(input.field, "required") && !input.value)) {
-					this.fieldCorrect(input);
+				pattern = iN.getAttribute("pattern");
+				if(
+					iN.val().length >= min && 
+					iN.val().length <= max && 
+					(!pattern || iN.val().match("^"+pattern+"$"))
+				) {
+					this.fieldCorrect(iN);
 				}
 				else {
-					this.fieldError(input);
+					this.fieldError(iN);
 				}
 			}
-			else if(u.hc(input.field, "select")) {
-				if(input.val() != "" || !u.hc(input.field, "required")) {
-					this.fieldCorrect(input);
+			else if(u.hc(iN.field, "select")) {
+				if(iN.val()) {
+					this.fieldCorrect(iN);
 				}
 				else {
-					this.fieldError(input);
+					this.fieldError(iN);
 				}
 			}
-			else if(u.hc(input.field, "checkbox|boolean|radio|radio_buttons")) {
-				if(input.val() != "" || !u.hc(input.field, "required")) {
-					this.fieldCorrect(input);
+			else if(u.hc(iN.field, "checkbox|boolean|radio|radio_buttons")) {
+				if(iN.val()) {
+					this.fieldCorrect(iN);
 				}
 				else {
-					this.fieldError(input);
+					this.fieldError(iN);
 				}
 			}
-			else if(u.hc(input.field, "string")) {
-				min = Number(u.cv(input.field, "min"));
-				max = Number(u.cv(input.field, "max"));
+			else if(u.hc(iN.field, "string")) {
+				min = Number(u.cv(iN.field, "min"));
+				max = Number(u.cv(iN.field, "max"));
 				min = min ? min : 1;
-				max = max ? max : 10000000;
-				if((input.value.length >= min && input.value.length <= max && !this.isDefault(input)) || (!u.hc(input.field, "required") && !input.value)) {
-					this.fieldCorrect(input);
+				max = max ? max : 255;
+				pattern = iN.getAttribute("pattern");
+				if(
+					iN.val().length >= min &&
+					iN.val().length <= max && 
+					(!pattern || iN.val().match("^"+pattern+"$"))
+				) {
+					this.fieldCorrect(iN);
 				}
 				else {
-					this.fieldError(input);
+					this.fieldError(iN);
+				}
+			}
+			else if(u.hc(iN.field, "date")) {
+				pattern = iN.getAttribute("pattern");
+				if(
+					!pattern && iN.val().match(/^([\d]{4}[\-\/\ ]{1}[\d]{2}[\-\/\ ][\d]{2})$/) ||
+					(pattern && iN.val().match("^"+pattern+"$"))
+				) {
+					this.fieldCorrect(iN);
+				}
+				else {
+					this.fieldError(iN);
+				}
+			}
+			else if(u.hc(iN.field, "datetime")) {
+				pattern = iN.getAttribute("pattern");
+				if(
+					!pattern && iN.val().match(/^([\d]{4}[\-\/\ ]{1}[\d]{2}[\-\/\ ][\d]{2} [\d]{2}[\-\/\ \:]{1}[\d]{2}[\-\/\ \:]{0,1}[\d]{0,2})$/) ||
+					(pattern && iN.val().match(pattern))
+				) {
+					this.fieldCorrect(iN);
+				}
+				else {
+					this.fieldError(iN);
+				}
+			}
+			else if(u.hc(iN.field, "tags")) {
+				if(
+					!pattern && iN.val().match(/\:/) ||
+					(pattern && iN.val().match("^"+pattern+"$"))
+				) {
+					this.fieldCorrect(iN);
+				}
+				else {
+					this.fieldError(iN);
+				}
+			}
+			else if(u.hc(iN.field, "prices")) {
+				if(
+					!isNaN(iN.val())
+				) {
+					this.fieldCorrect(iN);
+				}
+				else {
+					this.fieldError(iN);
+				}
+			}
+			else if(u.hc(iN.field, "files")) {
+				if(
+					1
+				) {
+					this.fieldCorrect(iN);
+				}
+				else {
+					this.fieldError(iN);
 				}
 			}
 		}
-		if(u.hc(input.field, "error")) {
+		if(u.hc(iN.field, "error")) {
 			return false;
 		}
 		else {
@@ -1800,7 +1979,7 @@ Util.Form = u.f = new function() {
 			}
 		}
 		var i, input, select, textarea, param;
-		var params = new Object();
+			var params = new Object();
 		if(form._submit_button && form._submit_button.name) {
 			params[form._submit_button.name] = form._submit_button.value;
 		}
@@ -1810,21 +1989,34 @@ Util.Form = u.f = new function() {
 		for(i = 0; input = inputs[i]; i++) {
 			if(!u.hc(input, ignore_inputs)) {
 				if((input.type == "checkbox" || input.type == "radio") && input.checked) {
-					params[input.name] = input.value;
+					if(!this.isDefault(input)) {
+						params[input.name] = input.value;
+					}
 				}
-				else if(!input.type.match(/button|submit|reset|checkbox|radio/i)) {
-					params[input.name] = input.value;
+				else if(input.type == "file") {
+					if(!this.isDefault(input)) {
+						params[input.name] = input.value;
+					}
+				}
+				else if(!input.type.match(/button|submit|reset|file|checkbox|radio/i)) {
+					if(!this.isDefault(input)) {
+						params[input.name] = input.value;
+					}
 				}
 			}
 		}
 		for(i = 0; select = selects[i]; i++) {
 			if(!u.hc(select, ignore_inputs)) {
-				params[select.name] = select.options[select.selectedIndex].value;
+				if(!this.isDefault(select)) {
+					params[select.name] = select.options[select.selectedIndex].value;
+				}
 			}
 		}
 		for(i = 0; textarea = textareas[i]; i++) {
 			if(!u.hc(textarea, ignore_inputs)) {
-				params[textarea.name] = textarea.value;
+				if(!this.isDefault(textarea)) {
+					params[textarea.name] = textarea.value;
+				}
 			}
 		}
 		if(send_as && typeof(this.customSend[send_as]) == "function") {
@@ -1839,7 +2031,7 @@ Util.Form = u.f = new function() {
 		else {
 			var string = "";
 			for(param in params) {
-				string += (string ? "&" : "") + param + "=" + encodeURIComponent(params[param]);
+					string += (string ? "&" : "") + param + "=" + encodeURIComponent(params[param]);
 			}
 			return string;
 		}
@@ -1943,10 +2135,10 @@ Util.browserHeight = u.browserH = function() {
 	return document.documentElement.clientHeight;
 }
 Util.htmlWidth = u.htmlW = function() {
-	return document.body.offsetWidth + parseInt(u.gcs(document.body, "margin-left")) +  + parseInt(u.gcs(document.body, "margin-right"));
+	return document.body.offsetWidth + parseInt(u.gcs(document.body, "margin-left")) + parseInt(u.gcs(document.body, "margin-right"));
 }
 Util.htmlHeight = u.htmlH = function() {
-	return document.body.offsetHeight + parseInt(u.gcs(document.body, "margin-top")) +  + parseInt(u.gcs(document.body, "margin-bottom"));
+	return document.body.offsetHeight + parseInt(u.gcs(document.body, "margin-top")) + parseInt(u.gcs(document.body, "margin-bottom"));
 }
 Util.pageScrollX = u.scrollX = function() {
 	return window.pageXOffset;
@@ -1991,7 +2183,7 @@ Util.Hash = u.h = new function() {
 		}
 	}
 	this.getCleanUrl = function(string, levels) {
-		string = string.split("#")[0].replace(location.protocol+"//"+document.domain, "");
+		string = string.replace(location.protocol+"//"+document.domain, "").match(/[^#$]+/)[0];
 		if(!levels) {
 			return string;
 		}
@@ -2021,40 +2213,18 @@ Util.Hash = u.h = new function() {
 		}
 	}
 }
-Util.Image = u.i = new function() {
-	this.load = function(node, src) {
-		var image = new Image();
-		image.node = node;
-		u.ac(node, "loading");
-	    u.e.addEvent(image, 'load', u.i._loaded);
-		u.e.addEvent(image, 'error', u.i._error);
-		image.src = src;
-	}
-	this._loaded = function(event) {
-		u.rc(this.node, "loading");
-		if(typeof(this.node.loaded) == "function") {
-			this.node.loaded(event);
+Util.Objects = u.o = new Object();
+Util.init = function(scope) {
+	var i, node, nodes, object;
+	scope = scope && scope.nodeName ? scope : document;
+	nodes = u.ges("i\:([_a-zA-Z0-9])+");
+	for(i = 0; node = nodes[i]; i++) {
+		while((object = u.cv(node, "i"))) {
+			u.rc(node, "i:"+object);
+			if(object && typeof(u.o[object]) == "object") {
+				u.o[object].init(node);
+			}
 		}
-	}
-	this._error = function(event) {
-		u.rc(this.node, "loading");
-		u.ac(this.node, "error");
-		if(typeof(this.node.loaded) == "function" && typeof(this.node.failed) != "function") {
-			this.node.loaded(event);
-		}
-		else if(typeof(this.node.failed) == "function") {
-			this.node.failed(event);
-		}
-	}
-	this._progress = function(event) {
-		u.bug("progress")
-		if(typeof(this.node.progress) == "function") {
-			this.node.progress(event);
-		}
-	}
-	this._debug = function(event) {
-		u.bug("event:" + event.type);
-		u.xInObject(event);
 	}
 }
 Util.random = function(min, max) {
@@ -2065,6 +2235,10 @@ Util.numToHex = function(num) {
 }
 Util.hexToNum = function(hex) {
 	return parseInt(hex,16);
+}
+Util.round = function(number, decimals) {
+	var round_number = number*Math.pow(10, decimals);
+	return Math.round(round_number)/Math.pow(10, decimals);
 }
 Util.period = function(format, time) {
 	var seconds = 0;
@@ -2084,15 +2258,15 @@ Util.period = function(format, time) {
 	}
 	var tokens = /y|n|o|O|w|W|c|d|e|D|g|h|H|l|m|M|r|s|S|t|T|u|U/g;
 	var chars = new Object();
-	chars.y = 0; // TODO
-	chars.n = 0; // TODO 
-	chars.o = (chars.n > 9 ? "" : "0") + chars.n; // TODO
-	chars.O = 0; // TODO
-	chars.w = 0; // TODO
-	chars.W = 0; // TODO
-	chars.c = 0; // TODO
-	chars.d = 0; // TODO
-	chars.e = 0; // TODO
+	chars.y = 0; 
+	chars.n = 0; 
+	chars.o = (chars.n > 9 ? "" : "0") + chars.n; 
+	chars.O = 0; 
+	chars.w = 0; 
+	chars.W = 0; 
+	chars.c = 0; 
+	chars.d = 0; 
+	chars.e = 0; 
 	chars.D = Math.floor(((seconds/60)/60)/24);
 	chars.g = Math.floor((seconds/60)/60)%24;
 	chars.h = (chars.g > 9 ? "" : "0") + chars.g;
@@ -2137,7 +2311,7 @@ Util.popup = function(url, settings) {
 	document[name] = window.open(url, name, p);
 	return document[name];
 }
-Util.createRequestObject = function() {
+Util.createRequestObject = u.createRequestObject = function() {
 	return new XMLHttpRequest();
 }
 Util.Request = u.request = function(node, url, settings) {
@@ -2146,14 +2320,16 @@ Util.Request = u.request = function(node, url, settings) {
 	node.request_async = true;
 	node.request_params = "";
 	node.request_headers = false;
+	node.response_callback = "response";
 	if(typeof(settings) == "object") {
 		var argument;
 		for(argument in settings) {
 			switch(argument) {
-				case "method"	: node.request_method	= settings[argument]; break;
-				case "params"	: node.request_params	= settings[argument]; break;
-				case "async"	: node.request_async	= settings[argument]; break;
-				case "headers"	: node.request_headers	= settings[argument]; break;
+				case "method"		: node.request_method		= settings[argument]; break;
+				case "params"		: node.request_params		= settings[argument]; break;
+				case "async"		: node.request_async		= settings[argument]; break;
+				case "headers"		: node.request_headers		= settings[argument]; break;
+				case "callback"		: node.response_callback	= settings[argument]; break;
 			}
 		}
 	}
@@ -2186,7 +2362,13 @@ Util.Request = u.request = function(node, url, settings) {
 				node.HTTPRequest.send("");
 			}
 			else if(node.request_method.match(/POST|PUT|PATCH/i)) {
-				var params = typeof(node.request_params) == "object" ? JSON.stringify(node.request_params) : node.request_params;
+				var params;
+				if(typeof(node.request_params) == "object" && !node.request_params.constructor.toString().match(/FormData/i)) {
+					params = JSON.stringify(node.request_params);
+				}
+				else {
+					params = node.request_params;
+				}
 				node.HTTPRequest.open(node.request_method, node.request_url, node.request_async);
 				node.HTTPRequest.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
 				var csfr_field = u.qs('meta[name="csrf-token"]');
@@ -2260,7 +2442,7 @@ Util.isStringHTML = function(string) {
 			var test = document.createElement("div");
 			test.innerHTML = string;
 			if(test.childNodes.length) {
-				var body_class = string.match(/<body class="([a-z0-9A-Z_ ]+)"/);
+				var body_class = string.match(/<body class="([a-z0-9A-Z_: ]+)"/);
 				test.body_class = body_class ? body_class[1] : "";
 				var head_title = string.match(/<title>([^$]+)<\/title>/);
 				test.head_title = head_title ? head_title[1] : "";
@@ -2313,11 +2495,8 @@ Util.validateResponse = function(response){
 		}
 	}
 	if(object) {
-		if(typeof(response.node.Response) == "function") {
-			response.node.Response(object);
-		}
-		if(typeof(response.node.response) == "function") {
-			response.node.response(object);
+		if(typeof(response.node[response.node.response_callback]) == "function") {
+			response.node[response.node.response_callback](object);
 		}
 	}
 	else {
@@ -2377,7 +2556,7 @@ Util.uuid = function() {
  	}
 	return uuid.join('');
 }
-Util.stringOr = function(value, replacement) {
+Util.stringOr = u.eitherOr = function(value, replacement) {
 	if(value !== undefined && value !== null) {
 		return value;
 	}
@@ -2438,6 +2617,22 @@ Util.browser = function(model, version) {
 	else {
 		return false;
 	}
+}
+Util.segment = function(segment) {
+	if(!u.current_segment) {
+		var scripts = document.getElementsByTagName("script");
+		var script, i, src;
+		for(i = 0; script = scripts[i]; i++) {
+			seg_src = script.src.match(/\/seg_([a-z_]+)/);
+			if(seg_src) {
+				u.current_segment = seg_src[1];
+			}
+		}
+	}
+	if(segment) {
+		return segment == u.current_segment;
+	}
+	return u.current_segment;
 }
 Util.system = function(os, version) {
 }
@@ -2522,1965 +2717,7 @@ Util.getVar = function(param, url) {
 		return "";
 	}
 }
-if(!Array.prototype.unshift || new Array(1,2).unshift(0) != 3) {
-	Array.prototype.unshift = function(a) {
-		var b;
-		this.reverse();
-		b = this.push(a);
-		this.reverse();
-		return b
-	};
-}
-if(!Array.prototype.shift) {
-	Array.prototype.shift = function() {
-		for(var i = 0, b = this[0], l = this.length-1; i < l; i++ ) {
-			this[i] = this[i+1];
-		}
-		this.length--;
-		return b;
-	};
-}
-if(!Array.prototype.indexOf) {
-	Array.prototype.indexOf = function (obj, start) {
-		for(var i = (start || 0); i < this.length; i++) {
-			if(this[i] == obj) {
-				return i;
-			}
-		}
-		return -1;
-	}
-}
-u.a.transition = function(node, transition) {
-	var duration = transition.match(/[0-9.]+[ms]+/g);
-	if(duration) {
-		node.duration = duration[0].match("ms") ? parseFloat(duration[0]) : (parseFloat(duration[0]) * 1000);
-	}
-	else {
-		node.duration = false;
-	}
-	if(u.support(this.variant()+"Transition")) {
-		node.style[this.variant()+"Transition"] = "none";
-	}
-}
-u.a.translate = function(node, x, y) {
-	var update_frequency = 100;
-	node._x = node._x ? node._x : 0;
-	node._y = node._y ? node._y : 0;
-	if(node.translate_offset_x == undefined) {
-		var abs_left = u.gcs(node, "left");
-		var abs_top = u.gcs(node, "top");
-		if(abs_left.match(/px/)) {
-			node.translate_offset_x = parseInt(abs_left);
-		}
-		else {
-			node.translate_offset_x = u.relX(node);
-		}
-		if(abs_top.match(/px/)) {
-			node.translate_offset_y = parseInt(abs_top);
-		}
-		else {
-			node.translate_offset_y = u.relY(node);
-		}
-		u.as(node, "left", node.translate_offset_x+"px");
-		u.as(node, "top", node.translate_offset_y+"px");
-		u.as(node, "position", "absolute");
-	}
-	if(node.duration && (node._x != x || node._y != y)) {
-		node.x_start = node._x;
-		node.y_start = node._y;
-		node.translate_transitions = node.duration/update_frequency;
-		node.translate_progress = 0;
-		node.x_change = (x - node.x_start) / node.translate_transitions;
-		node.y_change = (y - node.y_start) / node.translate_transitions;
-		node.translate_transitionTo = function(event) {
-			++this.translate_progress;
-			var new_x = (Number(this.x_start) + Number(this.translate_progress * this.x_change) + this.translate_offset_x);
-			var new_y = (Number(this.y_start) + Number(this.translate_progress * this.y_change) + this.translate_offset_y);
-			u.as(node, "left", new_x + "px");
-			u.as(node, "top", new_y + "px");
-			this.offsetHeight;
-			if(this.translate_progress < this.translate_transitions) {
-				this.t_translate_transition = u.t.setTimer(this, this.translate_transitionTo, update_frequency);
-			}
-			else {
-				u.as(this, "left", (this.translate_offset_x + this._x)+"px");
-				u.as(this, "top", (this.translate_offset_y + this._y)+"px");
-				if(typeof(this.transitioned) == "function") {
-					this.transitioned(event);
-				}
-			}
-		}
-		node.translate_transitionTo();
-	}
-	else {
-		u.as(node, "left", (node.translate_offset_x + x)+"px");
-		u.as(node, "top", (node.translate_offset_y + y)+"px");
-	}
-	node._x = x;
-	node._y = y;
-	node.offsetHeight;
-}
-u.a.rotate = function(node, deg) {
-	if(node.duration && node._rotation !== deg) {
-		u.t.setTimer(node, function() {if(typeof(this.transitioned) == "function") {this.transitioned();}}, node.duration);
-	}
-	node._rotation = deg;
-}
-u.a.scale = function(node, scale) {
-	if(node.duration && node._scale !== scale) {
-		u.t.setTimer(node, function() {if(typeof(this.transitioned) == "function") {this.transitioned();}}, node.duration);
-	}
-	node._scale = scale;
-}
-u.a.setOpacity = function(node, opacity) {
-	var update_frequency = 100;
-	node._opacity = node._opacity != undefined ? node._opacity : u.gcs(node, "opacity");
-	if(!u.support("opacity")) {
-		if(opacity == 0) {
-			u.as(node, "visibility", "hidden");
-		}
-		else {
-			u.as(node, "visibility", "visible");
-		}
-		if(node.duration && node._opacity !== opacity) {
-			u.t.setTimer(node, function() {if(typeof(this.transitioned) == "function") {this.transitioned();}}, node.duration);
-		}
-	}
-	else if(node.duration && node._opacity != opacity) {
-		node.opacity_start = node._opacity;
-		node.opacity_transitions = node.duration/update_frequency;
-		node.opacity_change = (opacity - node.opacity_start) / node.opacity_transitions;
-		node.opacity_progress = 0;
-		node.opacity_transitionTo = function(event) {
-			++this.opacity_progress;
-			var new_opacity = (Number(this.opacity_start) + Number(this.opacity_progress * this.opacity_change));
-			u.as(this, "opacity", new_opacity);
-			this.offsetHeight;
-			if(this.opacity_progress < this.opacity_transitions) {
-				this.t_opacity_transition = u.t.setTimer(this, this.opacity_transitionTo, update_frequency);
-			}
-			else {
-				this.style.opacity = this._opacity;
-				if(typeof(this.transitioned) == "function") {
-					this.transitioned(event);
-				}
-			}
-		}
-		node.opacity_transitionTo();
-	}
-	else {
-		node.style.opacity = opacity;
-	}
-	node._opacity = opacity;
-	node.offsetHeight;
-}
-u.a.setWidth = function(node, width) {
-	var update_frequency = 25;
-	node._width = node._width ? node._width : u.gcs(node, "width").match("px") ? u.gcs(node, "width").replace("px", "") : 0;
-	if(node.duration && node._width != width) {
-		node.width_start = node._width;
-		node.width_transitions = node.duration/update_frequency;
-		node.width_change = (width - node.width_start) / node.width_transitions;
-		node.width_progress = 0;
-		node.width_transitionTo = function(event) {
-			++this.width_progress;
-			var new_width = (Number(this.width_start) + Number(this.width_progress * this.width_change));
-				u.as(this, "width", new_width+"px");
-			this.offsetHeight;
-			if(this.width_progress < this.width_transitions) {
-				this.t_width_transition = u.t.setTimer(this, this.width_transitionTo, update_frequency);
-			}
-			else {
-				u.as(this, "width", this._width);
-				if(typeof(this.transitioned) == "function") {
-					this.transitioned(event);
-				}
-			}
-		}
-		node.width_transitionTo();
-	}
-	else {
-		var new_width = width.toString().match(/\%|auto/) ? width : width + "px";
-		u.as(node, "width", new_width);
-	}
-	node._width = width;
-	node.offsetHeight;
-}
-u.a.setHeight = function(node, height) {
-	var update_frequency = 25;
-	node._height = node._height ? node._height : u.gcs(node, "height").match("px") ? u.gcs(node, "height").replace("px", "") : 0;
-	if(node.duration && node._height != height) {
-		node.height_start = node._height;
-		node.height_transitions = node.duration/update_frequency;
-		node.height_change = (height - node.height_start) / node.height_transitions;
-		node.height_progress = 0;
-		node.height_transitionTo = function(event) {
-			++this.height_progress;
-			var new_height = (Number(this.height_start) + Number(this.height_progress * this.height_change));
-				u.as(this, "height", new_height+"px");
-			this.offsetHeight;
-			if(this.height_progress < this.height_transitions) {
-				this.t_height_transition = u.t.setTimer(this, this.height_transitionTo, update_frequency);
-			}
-			else {
-				u.as(this, "height", this._height);
-				if(typeof(this.transitioned) == "function") {
-					this.transitioned(event);
-				}
-			}
-		}
-		node.height_transitionTo();
-	}
-	else {
-		var new_height = height.toString().match(/\%|auto/) ? height : height + "px";
-		u.as(node, "height", new_height);
-	}
-	node._height = height;
-	node.offsetHeight;
-}
-u.a.setBgPos = function(node, x, y) {
-	var update_frequency = 25;
-	if(!node._bg_x || !node._bg_y) {
-		if(u.gcs(node, "background-position")) {
-			var current_bg = u.gcs(node, "background-position").split(" ");
-			var current_bg_x = current_bg[0];
-			var current_bg_y = current_bg[1];
-		}
-		else {
-			var current_bg_x = u.gcs(node, "background-position-x");
-			var current_bg_y = u.gcs(node, "background-position-y");
-		}
-	}
-	node._bg_x = node._bg_x ? node._bg_x : current_bg_x.match("px") ? current_bg_x.replace("px", "") : x;
-	node._bg_y = node._bg_y ? node._bg_y : current_bg_y.match("px") ? current_bg_y.replace("px", "") : y;
-	if(node.duration && (node._bg_x != x || node._bg_y != y)) {
-		node._bg_same_x = false;
-		node._bg_same_y = false;
-		node.bg_transitions = node.duration/update_frequency;
-		if(node._bg_x != x) {
-			node.bg_start_x = node._bg_x;
-			node.bg_change_x = (x - node.bg_start_x) / node.bg_transitions;
-		}
-		else {
-			node._bg_same_x = true;
-		}
-		if(node._bg_y != y) {
-			node.bg_start_y = node._bg_y;
-			node.bg_change_y = (y - node.bg_start_y) / node.bg_transitions;
-		}
-		else {
-			node._bg_same_y = true;
-		}
-		node.bg_progress = 0;
-		node.bg_transitionTo = function(event) {
-			++this.bg_progress;
-			var new_x, new_y;
-			if(!this._bg_same_x) {
-				new_x = Math.round((Number(this.bg_start_x) + Number(this.bg_progress * this.bg_change_x)));
-			}
-			else {
-				new_x = this._bg_x;
-			}
-			if(!this._bg_same_y) {
-				new_y = Math.round((Number(this.bg_start_y) + Number(this.bg_progress * this.bg_change_y)));
-			}
-			else {
-				new_y = this._bg_y;
-			}
-			var new_bg_x = new_x.toString().match(/\%|top|left|right|center|bottom/) ? new_x : (new_x + "px");
-			var new_bg_y = new_y.toString().match(/\%|top|left|right|center|bottom/) ? new_y : (new_y + "px");
-			u.as(this, "backgroundPosition", new_bg_x + " " + new_bg_y);
-			this.offsetHeight;
-			if(this.bg_progress < this.bg_transitions) {
-				this.t_bg_transition = u.t.setTimer(this, this.bg_transitionTo, update_frequency);
-			}
-			else {
-				u.as(this, "backgroundPosition", this._bg_x + " " + this._bg_y);
-				if(typeof(this.transitioned) == "function") {
-					this.transitioned(event);
-				}
-			}
-		}
-		node.bg_transitionTo();
-	}
-	else {
-		var new_bg_x = x.toString().match(/\%|top|left|right|center|bottom/) ? x : (x + "px");
-		var new_bg_y = y.toString().match(/\%|top|left|right|center|bottom/) ? y : (y + "px");
-		u.as(node, "backgroundPosition", new_bg_x + " " + new_bg_y);
-	}
-	node._bg_x = x;
-	node._bg_y = y;
-	node.offsetHeight;
-}
-u.a.setBgColor = function(node, color) {
-	var update_frequency = 100;
-	if(isNaN(node._bg_color_r) || isNaN(node._bg_color_g) || isNaN(node._bg_color_b)) {
-		var current_bg_color = u.gcs(node, "background-color");
-		var matches;
-		var current_bg_color_r, current_bg_color_g, current_bg_color_b;
-		var new_bg_color_r = false;
-		var new_bg_color_g = false;
-		var new_bg_color_b = false;
-		if(current_bg_color.match(/#[\da-fA-F]{3,6}/)) {
-			if(current_bg_color.length == 7) {
-				matches = current_bg_color.match(/#([\da-fA-F]{2})([\da-fA-F]{2})([\da-fA-F]{2})/);
-			}
-			else {
-				matches = current_bg_color.match(/#([\da-fA-F]{1}),[ ]?([\da-fA-F]{1}),[ ]?([\da-fA-F]{1})/);
-			}
-			current_bg_color_r = u.hexToNum(matches[1]);
-			current_bg_color_g = u.hexToNum(matches[2]); 
-			current_bg_color_b = u.hexToNum(matches[3]);
-		}
-		else if(current_bg_color.match(/rgb\([\d]{1,3},[ ]?[\d]{1,3},[ ]?[\d]{1,3}\)/)) {
-			matches = current_bg_color.match(/rgb\(([\d]{1,3}),[ ]?([\d]{1,3}),[ ]?([\d]{1,3})\)/);
-			current_bg_color_r = matches[1];
-			current_bg_color_g = matches[2];
-			current_bg_color_b = matches[3];
-		}
-		else if(current_bg_color.match(/rgba\([\d]{1,3},[ ]?[\d]{1,3},[ ]?[\d]{1,3},[ ]?[\d\.]+\)/)) {
-			matches = current_bg_color.match(/rgba\(([\d]{1,3}),[ ]?([\d]{1,3}),[ ]?([\d]{1,3}),[ ]?([\d\.]+)\)/);
-			current_bg_color_r = matches[1];
-			current_bg_color_g = matches[2];
-			current_bg_color_b = matches[3];
-		}
-	}
-	if(color.match(/#[\da-fA-F]{3,6}/)) {
-		if(color.length == 7) {
-			matches = color.match(/#([\da-fA-F]{2})([\da-fA-F]{2})([\da-fA-F]{2})/);
-		}
-		else {
-			matches = color.match(/#([\da-fA-F]{1}),[ ]?([\da-fA-F]{1}),[ ]?([\da-fA-F]{1})/);
-		}
-		new_bg_color_r = u.hexToNum(matches[1]);
-		new_bg_color_g = u.hexToNum(matches[2]);
-		new_bg_color_b = u.hexToNum(matches[3]);
-	}
-	node._bg_color_r = !isNaN(node._bg_color_r) ? node._bg_color_r : !isNaN(current_bg_color_r) ? current_bg_color_r : false;
-	node._bg_color_g = !isNaN(node._bg_color_g) ? node._bg_color_g : !isNaN(current_bg_color_g) ? current_bg_color_g : false;
-	node._bg_color_b = !isNaN(node._bg_color_b) ? node._bg_color_b : !isNaN(current_bg_color_b) ? current_bg_color_b : false;
-	if(node.duration && 
-	node._bg_color_r !== false && 
-	node._bg_color_g !== false && 
-	node._bg_color_b !== false && 
-	new_bg_color_r !== false && 
-	new_bg_color_g !== false && 
-	new_bg_color_b !== false &&
-	(new_bg_color_r != node._bg_color_r ||
-	new_bg_color_g != node._bg_color_g ||
-	new_bg_color_b != node._bg_color_b)) {
-		node.bg_color_r_start = node._bg_color_r;
-		node.bg_color_g_start = node._bg_color_g;
-		node.bg_color_b_start = node._bg_color_b;
-		node.bg_color_transitions = node.duration/update_frequency;
-		node.bg_color_r_change = (new_bg_color_r - node.bg_color_r_start) / node.bg_color_transitions;
-		node.bg_color_g_change = (new_bg_color_g - node.bg_color_g_start) / node.bg_color_transitions;
-		node.bg_color_b_change = (new_bg_color_b - node.bg_color_b_start) / node.bg_color_transitions;
-		node.bg_color_progress = 0;
-		node.bg_color_transitionTo = function(event) {
-			++this.bg_color_progress;
-			var new_bg_color_r = Math.round(Number(this.bg_color_r_start) + Number(this.bg_color_progress * this.bg_color_r_change));
-			var new_bg_color_g = Math.round(Number(this.bg_color_g_start) + Number(this.bg_color_progress * this.bg_color_g_change));
-			var new_bg_color_b = Math.round(Number(this.bg_color_b_start) + Number(this.bg_color_progress * this.bg_color_b_change));
-			var bg_hex_r = u.prefix(u.numToHex(new_bg_color_r), 2);
-			var bg_hex_g = u.prefix(u.numToHex(new_bg_color_g), 2);
-			var bg_hex_b = u.prefix(u.numToHex(new_bg_color_b), 2);
-			u.as(this, "backgroundColor", "#" + bg_hex_r + bg_hex_g + bg_hex_b);
-			this.offsetHeight;
-			if(this.bg_color_progress < this.bg_color_transitions) {
-				this.t_bg_color_transition = u.t.setTimer(this, this.bg_color_transitionTo, update_frequency);
-			}
-			else {
-				u.as(this, "backgroundColor", this._bg_color);
-				if(typeof(this.transitioned) == "function") {
-					this.transitioned(event);
-				}
-			}
-		}
-		node.bg_color_transitionTo();
-	}
-	else {
-		node.style.backgroundColor = color;
-	}
-	node._bg_color = color;
-	node.offsetHeight;
-}
-Util.getComputedStyle = u.gcs = function(e, attribute) {
-	e.offsetHeight;
-	if(attribute == "opacity" && e._opacity != undefined) {
-		return e._opacity;
-	}
-	if(document.defaultView && document.defaultView.getComputedStyle) {
-		return document.defaultView.getComputedStyle(e, null).getPropertyValue(attribute);
-	}
-	else if(document.body.currentStyle && attribute != "opacity") {
-		attribute = attribute.replace(/(-\w)/g, function(word){return word.replace(/-/, "").toUpperCase()});
-		return e.currentStyle[attribute];
-	}
-	else if(document.body.currentStyle && attribute == "opacity" && e.currentStyle["filter"]) {
-		var match = e.currentStyle["filter"].match(/Opacity=([0-9]+)/);
-		if(match) {
-			return match[1]/100;
-		}
-	}
-	return false;
-}
-Util.appendElement = u.ae = function(parent, node_type, attributes) {
-	try {
-		var node = (typeof(node_type) == "object") ? node_type : document.createElement(node_type);
-		node = parent.appendChild(node);
-		if(attributes) {
-			var attribute;
-			for(attribute in attributes) {
-				if(attribute == "html") {
-					node.innerHTML = attributes[attribute]
-				}
-				else if(attribute != "class" && attribute != "type") {
-					node.setAttribute(attribute, attributes[attribute]);
-				}
-			}
-			if(attributes["class"]) {
-				u.setClass(node, attributes["class"]);
-			}
-			if(attributes["type"]) {
-				node.type = attributes["type"];
-			}
-		}
-		return node;
-	}
-	catch(exception) {
-		u.bug("Exception ("+exception+") in u.ae, called from: "+arguments.callee.caller);
-		u.bug("node:" + u.nodeId(parent, 1));
-	}
-}
-Util.insertElement = u.ie = function(parent, node_type, attributes) {
-	var node = (typeof(node_type) == "object") ? node_type : document.createElement(node_type);
-	node = parent.insertBefore(node, parent.firstChild);
-	if(attributes) {
-		var attribute;
-		for(attribute in attributes) {
-			if(attribute == "html") {
-				node.innerHTML = attributes[attribute]
-			}
-			else if(attribute != "class" && attribute != "type") {
-				node.setAttribute(attribute, attributes[attribute]);
-			}
-		}
-		if(attributes["class"]) {
-			u.setClass(node, attributes["class"]);
-		}
-		if(attributes["type"]) {
-			node.type = attributes["type"];
-		}
-	}
-	return node;
-}
-Util.wrapElement = u.we = function(node, node_type, attributes) {
-	try {
-		var wrapper_node = node.parentNode.insertBefore(document.createElement(node_type), node);
-		if(attributes) {
-			var attribute;
-			for(attribute in attributes) {
-				if(attribute != "class" && attribute != "type") {
-					wrapper_node.setAttribute(attribute, attributes[attribute]);
-				}
-			}
-			if(attributes["class"]) {
-				u.setClass(wrapper_node, attributes["class"]);
-			}
-			if(attributes["type"]) {
-				wrapper_node.type = attributes["type"];
-			}
-		}
-		wrapper_node.appendChild(node);
-		return wrapper_node;
-	}
-	catch(exception) {
-		u.bug("Exception ("+exception+") in u.we, called from: "+arguments.callee.caller);
-		u.bug("node:" + u.nodeId(node, 1));
-		u.xInObject(attributes);
-	}
-	return false;
-}
-Util.textContent = u.text = function(node) {
-	if(node.textContent) {
-		return node.textContent;
-	}
-	else if(node.innerText) {
-		return node.innerText;
-	}
-	else {
-		return node.innerHTML.replace(/\<[^\>]*\>/g, "");
-	}
-}
-if(document.querySelector == undefined) {
-	(function(){
-	var chunker = /((?:\((?:\([^()]+\)|[^()]+)+\)|\[(?:\[[^\[\]]*\]|['"][^'"]*['"]|[^\[\]'"]+)+\]|\\.|[^ >+~,(\[\\]+)+|[>+~])(\s*,\s*)?((?:.|\r|\n)*)/g,
-		expando = "sizcache" + (Math.random() + '').replace('.', ''),
-		done = 0,
-		toString = Object.prototype.toString,
-		hasDuplicate = false,
-		baseHasDuplicate = true,
-		rBackslash = /\\/g,
-		rReturn = /\r\n/g,
-		rNonWord = /\W/;
-	[0, 0].sort(function() {
-		baseHasDuplicate = false;
-		return 0;
-	});
-	var Sizzle = function( selector, context, results, seed ) {
-		results = results || [];
-		context = context || document;
-		var origContext = context;
-		if ( context.nodeType !== 1 && context.nodeType !== 9 ) {
-			return [];
-		}
-		if ( !selector || typeof selector !== "string" ) {
-			return results;
-		}
-		var m, set, checkSet, extra, ret, cur, pop, i,
-			prune = true,
-			contextXML = Sizzle.isXML( context ),
-			parts = [],
-			soFar = selector;
-		do {
-			chunker.exec( "" );
-			m = chunker.exec( soFar );
-			if ( m ) {
-				soFar = m[3];
-				parts.push( m[1] );
-				if ( m[2] ) {
-					extra = m[3];
-					break;
-				}
-			}
-		} while ( m );
-		if ( parts.length > 1 && origPOS.exec( selector ) ) {
-			if ( parts.length === 2 && Expr.relative[ parts[0] ] ) {
-				set = posProcess( parts[0] + parts[1], context, seed );
-			} else {
-				set = Expr.relative[ parts[0] ] ?
-					[ context ] :
-					Sizzle( parts.shift(), context );
-				while ( parts.length ) {
-					selector = parts.shift();
-					if ( Expr.relative[ selector ] ) {
-						selector += parts.shift();
-					}
-					set = posProcess( selector, set, seed );
-				}
-			}
-		} else {
-			if ( !seed && parts.length > 1 && context.nodeType === 9 && !contextXML &&
-					Expr.match.ID.test(parts[0]) && !Expr.match.ID.test(parts[parts.length - 1]) ) {
-				ret = Sizzle.find( parts.shift(), context, contextXML );
-				context = ret.expr ?
-					Sizzle.filter( ret.expr, ret.set )[0] :
-					ret.set[0];
-			}
-			if ( context ) {
-				ret = seed ?
-					{ expr: parts.pop(), set: makeArray(seed) } :
-					Sizzle.find( parts.pop(), parts.length === 1 && (parts[0] === "~" || parts[0] === "+") && context.parentNode ? context.parentNode : context, contextXML );
-				set = ret.expr ?
-					Sizzle.filter( ret.expr, ret.set ) :
-					ret.set;
-				if ( parts.length > 0 ) {
-					checkSet = makeArray( set );
-				} else {
-					prune = false;
-				}
-				while ( parts.length ) {
-					cur = parts.pop();
-					pop = cur;
-					if ( !Expr.relative[ cur ] ) {
-						cur = "";
-					} else {
-						pop = parts.pop();
-					}
-					if ( pop == null ) {
-						pop = context;
-					}
-					Expr.relative[ cur ]( checkSet, pop, contextXML );
-				}
-			} else {
-				checkSet = parts = [];
-			}
-		}
-		if ( !checkSet ) {
-			checkSet = set;
-		}
-		if ( !checkSet ) {
-			Sizzle.error( cur || selector );
-		}
-		if ( toString.call(checkSet) === "[object Array]" ) {
-			if ( !prune ) {
-				results.push.apply( results, checkSet );
-			} else if ( context && context.nodeType === 1 ) {
-				for ( i = 0; checkSet[i] != null; i++ ) {
-					if ( checkSet[i] && (checkSet[i] === true || checkSet[i].nodeType === 1 && Sizzle.contains(context, checkSet[i])) ) {
-						results.push( set[i] );
-					}
-				}
-			} else {
-				for ( i = 0; checkSet[i] != null; i++ ) {
-					if ( checkSet[i] && checkSet[i].nodeType === 1 ) {
-						results.push( set[i] );
-					}
-				}
-			}
-		} else {
-			makeArray( checkSet, results );
-		}
-		if ( extra ) {
-			Sizzle( extra, origContext, results, seed );
-			Sizzle.uniqueSort( results );
-		}
-		return results;
-	};
-	Sizzle.uniqueSort = function( results ) {
-		if ( sortOrder ) {
-			hasDuplicate = baseHasDuplicate;
-			results.sort( sortOrder );
-			if ( hasDuplicate ) {
-				for ( var i = 1; i < results.length; i++ ) {
-					if ( results[i] === results[ i - 1 ] ) {
-						results.splice( i--, 1 );
-					}
-				}
-			}
-		}
-		return results;
-	};
-	Sizzle.matches = function( expr, set ) {
-		return Sizzle( expr, null, null, set );
-	};
-	Sizzle.matchesSelector = function( node, expr ) {
-		return Sizzle( expr, null, null, [node] ).length > 0;
-	};
-	Sizzle.find = function( expr, context, isXML ) {
-		var set, i, len, match, type, left;
-		if ( !expr ) {
-			return [];
-		}
-		for ( i = 0, len = Expr.order.length; i < len; i++ ) {
-			type = Expr.order[i];
-			if ( (match = Expr.leftMatch[ type ].exec( expr )) ) {
-				left = match[1];
-				match.splice( 1, 1 );
-				if ( left.substr( left.length - 1 ) !== "\\" ) {
-					match[1] = (match[1] || "").replace( rBackslash, "" );
-					set = Expr.find[ type ]( match, context, isXML );
-					if ( set != null ) {
-						expr = expr.replace( Expr.match[ type ], "" );
-						break;
-					}
-				}
-			}
-		}
-		if ( !set ) {
-			set = typeof context.getElementsByTagName !== "undefined" ?
-				context.getElementsByTagName( "*" ) :
-				[];
-		}
-		return { set: set, expr: expr };
-	};
-	Sizzle.filter = function( expr, set, inplace, not ) {
-		var match, anyFound,
-			type, found, item, filter, left,
-			i, pass,
-			old = expr,
-			result = [],
-			curLoop = set,
-			isXMLFilter = set && set[0] && Sizzle.isXML( set[0] );
-		while ( expr && set.length ) {
-			for ( type in Expr.filter ) {
-				if ( (match = Expr.leftMatch[ type ].exec( expr )) != null && match[2] ) {
-					filter = Expr.filter[ type ];
-					left = match[1];
-					anyFound = false;
-					match.splice(1,1);
-					if ( left.substr( left.length - 1 ) === "\\" ) {
-						continue;
-					}
-					if ( curLoop === result ) {
-						result = [];
-					}
-					if ( Expr.preFilter[ type ] ) {
-						match = Expr.preFilter[ type ]( match, curLoop, inplace, result, not, isXMLFilter );
-						if ( !match ) {
-							anyFound = found = true;
-						} else if ( match === true ) {
-							continue;
-						}
-					}
-					if ( match ) {
-						for ( i = 0; (item = curLoop[i]) != null; i++ ) {
-							if ( item ) {
-								found = filter( item, match, i, curLoop );
-								pass = not ^ found;
-								if ( inplace && found != null ) {
-									if ( pass ) {
-										anyFound = true;
-									} else {
-										curLoop[i] = false;
-									}
-								} else if ( pass ) {
-									result.push( item );
-									anyFound = true;
-								}
-							}
-						}
-					}
-					if ( found !== undefined ) {
-						if ( !inplace ) {
-							curLoop = result;
-						}
-						expr = expr.replace( Expr.match[ type ], "" );
-						if ( !anyFound ) {
-							return [];
-						}
-						break;
-					}
-				}
-			}
-			if ( expr === old ) {
-				if ( anyFound == null ) {
-					Sizzle.error( expr );
-				} else {
-					break;
-				}
-			}
-			old = expr;
-		}
-		return curLoop;
-	};
-	Sizzle.error = function( msg ) {
-		throw new Error( "Syntax error, unrecognized expression: " + msg );
-	};
-	var getText = Sizzle.getText = function( elem ) {
-	    var i, node,
-			nodeType = elem.nodeType,
-			ret = "";
-		if ( nodeType ) {
-			if ( nodeType === 1 || nodeType === 9 ) {
-				if ( typeof elem.textContent === 'string' ) {
-					return elem.textContent;
-				} else if ( typeof elem.innerText === 'string' ) {
-					return elem.innerText.replace( rReturn, '' );
-				} else {
-					for ( elem = elem.firstChild; elem; elem = elem.nextSibling) {
-						ret += getText( elem );
-					}
-				}
-			} else if ( nodeType === 3 || nodeType === 4 ) {
-				return elem.nodeValue;
-			}
-		} else {
-			for ( i = 0; (node = elem[i]); i++ ) {
-				if ( node.nodeType !== 8 ) {
-					ret += getText( node );
-				}
-			}
-		}
-		return ret;
-	};
-	var Expr = Sizzle.selectors = {
-		order: [ "ID", "NAME", "TAG" ],
-		match: {
-			ID: /#((?:[\w\u00c0-\uFFFF\-]|\\.)+)/,
-			CLASS: /\.((?:[\w\u00c0-\uFFFF\-]|\\.)+)/,
-			NAME: /\[name=['"]*((?:[\w\u00c0-\uFFFF\-]|\\.)+)['"]*\]/,
-			ATTR: /\[\s*((?:[\w\u00c0-\uFFFF\-]|\\.)+)\s*(?:(\S?=)\s*(?:(['"])(.*?)\3|(#?(?:[\w\u00c0-\uFFFF\-]|\\.)*)|)|)\s*\]/,
-			TAG: /^((?:[\w\u00c0-\uFFFF\*\-]|\\.)+)/,
-			CHILD: /:(only|nth|last|first)-child(?:\(\s*(even|odd|(?:[+\-]?\d+|(?:[+\-]?\d*)?n\s*(?:[+\-]\s*\d+)?))\s*\))?/,
-			POS: /:(nth|eq|gt|lt|first|last|even|odd)(?:\((\d*)\))?(?=[^\-]|$)/,
-			PSEUDO: /:((?:[\w\u00c0-\uFFFF\-]|\\.)+)(?:\((['"]?)((?:\([^\)]+\)|[^\(\)]*)+)\2\))?/
-		},
-		leftMatch: {},
-		attrMap: {
-			"class": "className",
-			"for": "htmlFor"
-		},
-		attrHandle: {
-			href: function( elem ) {
-				return elem.getAttribute( "href" );
-			},
-			type: function( elem ) {
-				return elem.getAttribute( "type" );
-			}
-		},
-		relative: {
-			"+": function(checkSet, part){
-				var isPartStr = typeof part === "string",
-					isTag = isPartStr && !rNonWord.test( part ),
-					isPartStrNotTag = isPartStr && !isTag;
-				if ( isTag ) {
-					part = part.toLowerCase();
-				}
-				for ( var i = 0, l = checkSet.length, elem; i < l; i++ ) {
-					if ( (elem = checkSet[i]) ) {
-						while ( (elem = elem.previousSibling) && elem.nodeType !== 1 ) {}
-						checkSet[i] = isPartStrNotTag || elem && elem.nodeName.toLowerCase() === part ?
-							elem || false :
-							elem === part;
-					}
-				}
-				if ( isPartStrNotTag ) {
-					Sizzle.filter( part, checkSet, true );
-				}
-			},
-			">": function( checkSet, part ) {
-				var elem,
-					isPartStr = typeof part === "string",
-					i = 0,
-					l = checkSet.length;
-				if ( isPartStr && !rNonWord.test( part ) ) {
-					part = part.toLowerCase();
-					for ( ; i < l; i++ ) {
-						elem = checkSet[i];
-						if ( elem ) {
-							var parent = elem.parentNode;
-							checkSet[i] = parent.nodeName.toLowerCase() === part ? parent : false;
-						}
-					}
-				} else {
-					for ( ; i < l; i++ ) {
-						elem = checkSet[i];
-						if ( elem ) {
-							checkSet[i] = isPartStr ?
-								elem.parentNode :
-								elem.parentNode === part;
-						}
-					}
-					if ( isPartStr ) {
-						Sizzle.filter( part, checkSet, true );
-					}
-				}
-			},
-			"": function(checkSet, part, isXML){
-				var nodeCheck,
-					doneName = done++,
-					checkFn = dirCheck;
-				if ( typeof part === "string" && !rNonWord.test( part ) ) {
-					part = part.toLowerCase();
-					nodeCheck = part;
-					checkFn = dirNodeCheck;
-				}
-				checkFn( "parentNode", part, doneName, checkSet, nodeCheck, isXML );
-			},
-			"~": function( checkSet, part, isXML ) {
-				var nodeCheck,
-					doneName = done++,
-					checkFn = dirCheck;
-				if ( typeof part === "string" && !rNonWord.test( part ) ) {
-					part = part.toLowerCase();
-					nodeCheck = part;
-					checkFn = dirNodeCheck;
-				}
-				checkFn( "previousSibling", part, doneName, checkSet, nodeCheck, isXML );
-			}
-		},
-		find: {
-			ID: function( match, context, isXML ) {
-				if ( typeof context.getElementById !== "undefined" && !isXML ) {
-					var m = context.getElementById(match[1]);
-					return m && m.parentNode ? [m] : [];
-				}
-			},
-			NAME: function( match, context ) {
-				if ( typeof context.getElementsByName !== "undefined" ) {
-					var ret = [],
-						results = context.getElementsByName( match[1] );
-					for ( var i = 0, l = results.length; i < l; i++ ) {
-						if ( results[i].getAttribute("name") === match[1] ) {
-							ret.push( results[i] );
-						}
-					}
-					return ret.length === 0 ? null : ret;
-				}
-			},
-			TAG: function( match, context ) {
-				if ( typeof context.getElementsByTagName !== "undefined" ) {
-					return context.getElementsByTagName( match[1] );
-				}
-			}
-		},
-		preFilter: {
-			CLASS: function( match, curLoop, inplace, result, not, isXML ) {
-				match = " " + match[1].replace( rBackslash, "" ) + " ";
-				if ( isXML ) {
-					return match;
-				}
-				for ( var i = 0, elem; (elem = curLoop[i]) != null; i++ ) {
-					if ( elem ) {
-						if ( not ^ (elem.className && (" " + elem.className + " ").replace(/[\t\n\r]/g, " ").indexOf(match) >= 0) ) {
-							if ( !inplace ) {
-								result.push( elem );
-							}
-						} else if ( inplace ) {
-							curLoop[i] = false;
-						}
-					}
-				}
-				return false;
-			},
-			ID: function( match ) {
-				return match[1].replace( rBackslash, "" );
-			},
-			TAG: function( match, curLoop ) {
-				return match[1].replace( rBackslash, "" ).toLowerCase();
-			},
-			CHILD: function( match ) {
-				if ( match[1] === "nth" ) {
-					if ( !match[2] ) {
-						Sizzle.error( match[0] );
-					}
-					match[2] = match[2].replace(/^\+|\s*/g, '');
-					var test = /(-?)(\d*)(?:n([+\-]?\d*))?/.exec(
-						match[2] === "even" && "2n" || match[2] === "odd" && "2n+1" ||
-						!/\D/.test( match[2] ) && "0n+" + match[2] || match[2]);
-					match[2] = (test[1] + (test[2] || 1)) - 0;
-					match[3] = test[3] - 0;
-				}
-				else if ( match[2] ) {
-					Sizzle.error( match[0] );
-				}
-				match[0] = done++;
-				return match;
-			},
-			ATTR: function( match, curLoop, inplace, result, not, isXML ) {
-				var name = match[1] = match[1].replace( rBackslash, "" );
-				if ( !isXML && Expr.attrMap[name] ) {
-					match[1] = Expr.attrMap[name];
-				}
-				match[4] = ( match[4] || match[5] || "" ).replace( rBackslash, "" );
-				if ( match[2] === "~=" ) {
-					match[4] = " " + match[4] + " ";
-				}
-				return match;
-			},
-			PSEUDO: function( match, curLoop, inplace, result, not ) {
-				if ( match[1] === "not" ) {
-					if ( ( chunker.exec(match[3]) || "" ).length > 1 || /^\w/.test(match[3]) ) {
-						match[3] = Sizzle(match[3], null, null, curLoop);
-					} else {
-						var ret = Sizzle.filter(match[3], curLoop, inplace, true ^ not);
-						if ( !inplace ) {
-							result.push.apply( result, ret );
-						}
-						return false;
-					}
-				} else if ( Expr.match.POS.test( match[0] ) || Expr.match.CHILD.test( match[0] ) ) {
-					return true;
-				}
-				return match;
-			},
-			POS: function( match ) {
-				match.unshift( true );
-				return match;
-			}
-		},
-		filters: {
-			enabled: function( elem ) {
-				return elem.disabled === false && elem.type !== "hidden";
-			},
-			disabled: function( elem ) {
-				return elem.disabled === true;
-			},
-			checked: function( elem ) {
-				return elem.checked === true;
-			},
-			selected: function( elem ) {
-				if ( elem.parentNode ) {
-					elem.parentNode.selectedIndex;
-				}
-				return elem.selected === true;
-			},
-			parent: function( elem ) {
-				return !!elem.firstChild;
-			},
-			empty: function( elem ) {
-				return !elem.firstChild;
-			},
-			has: function( elem, i, match ) {
-				return !!Sizzle( match[3], elem ).length;
-			},
-			header: function( elem ) {
-				return (/h\d/i).test( elem.nodeName );
-			},
-			text: function( elem ) {
-				var attr = elem.getAttribute( "type" ), type = elem.type;
-				return elem.nodeName.toLowerCase() === "input" && "text" === type && ( attr === type || attr === null );
-			},
-			radio: function( elem ) {
-				return elem.nodeName.toLowerCase() === "input" && "radio" === elem.type;
-			},
-			checkbox: function( elem ) {
-				return elem.nodeName.toLowerCase() === "input" && "checkbox" === elem.type;
-			},
-			file: function( elem ) {
-				return elem.nodeName.toLowerCase() === "input" && "file" === elem.type;
-			},
-			password: function( elem ) {
-				return elem.nodeName.toLowerCase() === "input" && "password" === elem.type;
-			},
-			submit: function( elem ) {
-				var name = elem.nodeName.toLowerCase();
-				return (name === "input" || name === "button") && "submit" === elem.type;
-			},
-			image: function( elem ) {
-				return elem.nodeName.toLowerCase() === "input" && "image" === elem.type;
-			},
-			reset: function( elem ) {
-				var name = elem.nodeName.toLowerCase();
-				return (name === "input" || name === "button") && "reset" === elem.type;
-			},
-			button: function( elem ) {
-				var name = elem.nodeName.toLowerCase();
-				return name === "input" && "button" === elem.type || name === "button";
-			},
-			input: function( elem ) {
-				return (/input|select|textarea|button/i).test( elem.nodeName );
-			},
-			focus: function( elem ) {
-				return elem === elem.ownerDocument.activeElement;
-			}
-		},
-		setFilters: {
-			first: function( elem, i ) {
-				return i === 0;
-			},
-			last: function( elem, i, match, array ) {
-				return i === array.length - 1;
-			},
-			even: function( elem, i ) {
-				return i % 2 === 0;
-			},
-			odd: function( elem, i ) {
-				return i % 2 === 1;
-			},
-			lt: function( elem, i, match ) {
-				return i < match[3] - 0;
-			},
-			gt: function( elem, i, match ) {
-				return i > match[3] - 0;
-			},
-			nth: function( elem, i, match ) {
-				return match[3] - 0 === i;
-			},
-			eq: function( elem, i, match ) {
-				return match[3] - 0 === i;
-			}
-		},
-		filter: {
-			PSEUDO: function( elem, match, i, array ) {
-				var name = match[1],
-					filter = Expr.filters[ name ];
-				if ( filter ) {
-					return filter( elem, i, match, array );
-				} else if ( name === "contains" ) {
-					return (elem.textContent || elem.innerText || getText([ elem ]) || "").indexOf(match[3]) >= 0;
-				} else if ( name === "not" ) {
-					var not = match[3];
-					for ( var j = 0, l = not.length; j < l; j++ ) {
-						if ( not[j] === elem ) {
-							return false;
-						}
-					}
-					return true;
-				} else {
-					Sizzle.error( name );
-				}
-			},
-			CHILD: function( elem, match ) {
-				var first, last,
-					doneName, parent, cache,
-					count, diff,
-					type = match[1],
-					node = elem;
-				switch ( type ) {
-					case "only":
-					case "first":
-						while ( (node = node.previousSibling) ) {
-							if ( node.nodeType === 1 ) {
-								return false;
-							}
-						}
-						if ( type === "first" ) {
-							return true;
-						}
-						node = elem;
-					case "last":
-						while ( (node = node.nextSibling) ) {
-							if ( node.nodeType === 1 ) {
-								return false;
-							}
-						}
-						return true;
-					case "nth":
-						first = match[2];
-						last = match[3];
-						if ( first === 1 && last === 0 ) {
-							return true;
-						}
-						doneName = match[0];
-						parent = elem.parentNode;
-						if ( parent && (parent[ expando ] !== doneName || !elem.nodeIndex) ) {
-							count = 0;
-							for ( node = parent.firstChild; node; node = node.nextSibling ) {
-								if ( node.nodeType === 1 ) {
-									node.nodeIndex = ++count;
-								}
-							}
-							parent[ expando ] = doneName;
-						}
-						diff = elem.nodeIndex - last;
-						if ( first === 0 ) {
-							return diff === 0;
-						} else {
-							return ( diff % first === 0 && diff / first >= 0 );
-						}
-				}
-			},
-			ID: function( elem, match ) {
-				return elem.nodeType === 1 && elem.getAttribute("id") === match;
-			},
-			TAG: function( elem, match ) {
-				return (match === "*" && elem.nodeType === 1) || !!elem.nodeName && elem.nodeName.toLowerCase() === match;
-			},
-			CLASS: function( elem, match ) {
-				return (" " + (elem.className || elem.getAttribute("class")) + " ")
-					.indexOf( match ) > -1;
-			},
-			ATTR: function( elem, match ) {
-				var name = match[1],
-					result = Sizzle.attr ?
-						Sizzle.attr( elem, name ) :
-						Expr.attrHandle[ name ] ?
-						Expr.attrHandle[ name ]( elem ) :
-						elem[ name ] != null ?
-							elem[ name ] :
-							elem.getAttribute( name ),
-					value = result + "",
-					type = match[2],
-					check = match[4];
-				return result == null ?
-					type === "!=" :
-					!type && Sizzle.attr ?
-					result != null :
-					type === "=" ?
-					value === check :
-					type === "*=" ?
-					value.indexOf(check) >= 0 :
-					type === "~=" ?
-					(" " + value + " ").indexOf(check) >= 0 :
-					!check ?
-					value && result !== false :
-					type === "!=" ?
-					value !== check :
-					type === "^=" ?
-					value.indexOf(check) === 0 :
-					type === "$=" ?
-					value.substr(value.length - check.length) === check :
-					type === "|=" ?
-					value === check || value.substr(0, check.length + 1) === check + "-" :
-					false;
-			},
-			POS: function( elem, match, i, array ) {
-				var name = match[2],
-					filter = Expr.setFilters[ name ];
-				if ( filter ) {
-					return filter( elem, i, match, array );
-				}
-			}
-		}
-	};
-	var origPOS = Expr.match.POS,
-		fescape = function(all, num){
-			return "\\" + (num - 0 + 1);
-		};
-	for ( var type in Expr.match ) {
-		Expr.match[ type ] = new RegExp( Expr.match[ type ].source + (/(?![^\[]*\])(?![^\(]*\))/.source) );
-		Expr.leftMatch[ type ] = new RegExp( /(^(?:.|\r|\n)*?)/.source + Expr.match[ type ].source.replace(/\\(\d+)/g, fescape) );
-	}
-	Expr.match.globalPOS = origPOS;
-	var makeArray = function( array, results ) {
-		array = Array.prototype.slice.call( array, 0 );
-		if ( results ) {
-			results.push.apply( results, array );
-			return results;
-		}
-		return array;
-	};
-	try {
-		Array.prototype.slice.call( document.documentElement.childNodes, 0 )[0].nodeType;
-	} catch( e ) {
-		makeArray = function( array, results ) {
-			var i = 0,
-				ret = results || [];
-			if ( toString.call(array) === "[object Array]" ) {
-				Array.prototype.push.apply( ret, array );
-			} else {
-				if ( typeof array.length === "number" ) {
-					for ( var l = array.length; i < l; i++ ) {
-						ret.push( array[i] );
-					}
-				} else {
-					for ( ; array[i]; i++ ) {
-						ret.push( array[i] );
-					}
-				}
-			}
-			return ret;
-		};
-	}
-	var sortOrder, siblingCheck;
-	if ( document.documentElement.compareDocumentPosition ) {
-		sortOrder = function( a, b ) {
-			if ( a === b ) {
-				hasDuplicate = true;
-				return 0;
-			}
-			if ( !a.compareDocumentPosition || !b.compareDocumentPosition ) {
-				return a.compareDocumentPosition ? -1 : 1;
-			}
-			return a.compareDocumentPosition(b) & 4 ? -1 : 1;
-		};
-	} else {
-		sortOrder = function( a, b ) {
-			if ( a === b ) {
-				hasDuplicate = true;
-				return 0;
-			} else if ( a.sourceIndex && b.sourceIndex ) {
-				return a.sourceIndex - b.sourceIndex;
-			}
-			var al, bl,
-				ap = [],
-				bp = [],
-				aup = a.parentNode,
-				bup = b.parentNode,
-				cur = aup;
-			if ( aup === bup ) {
-				return siblingCheck( a, b );
-			} else if ( !aup ) {
-				return -1;
-			} else if ( !bup ) {
-				return 1;
-			}
-			while ( cur ) {
-				ap.unshift( cur );
-				cur = cur.parentNode;
-			}
-			cur = bup;
-			while ( cur ) {
-				bp.unshift( cur );
-				cur = cur.parentNode;
-			}
-			al = ap.length;
-			bl = bp.length;
-			for ( var i = 0; i < al && i < bl; i++ ) {
-				if ( ap[i] !== bp[i] ) {
-					return siblingCheck( ap[i], bp[i] );
-				}
-			}
-			return i === al ?
-				siblingCheck( a, bp[i], -1 ) :
-				siblingCheck( ap[i], b, 1 );
-		};
-		siblingCheck = function( a, b, ret ) {
-			if ( a === b ) {
-				return ret;
-			}
-			var cur = a.nextSibling;
-			while ( cur ) {
-				if ( cur === b ) {
-					return -1;
-				}
-				cur = cur.nextSibling;
-			}
-			return 1;
-		};
-	}
-	(function(){
-		var form = document.createElement("div"),
-			id = "script" + (new Date()).getTime(),
-			root = document.documentElement;
-		form.innerHTML = "<a name='" + id + "'/>";
-		root.insertBefore( form, root.firstChild );
-		if ( document.getElementById( id ) ) {
-			Expr.find.ID = function( match, context, isXML ) {
-				if ( typeof context.getElementById !== "undefined" && !isXML ) {
-					var m = context.getElementById(match[1]);
-					return m ?
-						m.id === match[1] || typeof m.getAttributeNode !== "undefined" && m.getAttributeNode("id").nodeValue === match[1] ?
-							[m] :
-							undefined :
-						[];
-				}
-			};
-			Expr.filter.ID = function( elem, match ) {
-				var node = typeof elem.getAttributeNode !== "undefined" && elem.getAttributeNode("id");
-				return elem.nodeType === 1 && node && node.nodeValue === match;
-			};
-		}
-		root.removeChild( form );
-		root = form = null;
-	})();
-	(function(){
-		var div = document.createElement("div");
-		div.appendChild( document.createComment("") );
-		if ( div.getElementsByTagName("*").length > 0 ) {
-			Expr.find.TAG = function( match, context ) {
-				var results = context.getElementsByTagName( match[1] );
-				if ( match[1] === "*" ) {
-					var tmp = [];
-					for ( var i = 0; results[i]; i++ ) {
-						if ( results[i].nodeType === 1 ) {
-							tmp.push( results[i] );
-						}
-					}
-					results = tmp;
-				}
-				return results;
-			};
-		}
-		div.innerHTML = "<a href='#'></a>";
-		if ( div.firstChild && typeof div.firstChild.getAttribute !== "undefined" &&
-				div.firstChild.getAttribute("href") !== "#" ) {
-			Expr.attrHandle.href = function( elem ) {
-				return elem.getAttribute( "href", 2 );
-			};
-		}
-		div = null;
-	})();
-	if ( document.querySelectorAll ) {
-		(function(){
-			var oldSizzle = Sizzle,
-				div = document.createElement("div"),
-				id = "__sizzle__";
-			div.innerHTML = "<p class='TEST'></p>";
-			if ( div.querySelectorAll && div.querySelectorAll(".TEST").length === 0 ) {
-				return;
-			}
-			Sizzle = function( query, context, extra, seed ) {
-				context = context || document;
-				if ( !seed && !Sizzle.isXML(context) ) {
-					var match = /^(\w+$)|^\.([\w\-]+$)|^#([\w\-]+$)/.exec( query );
-					if ( match && (context.nodeType === 1 || context.nodeType === 9) ) {
-						if ( match[1] ) {
-							return makeArray( context.getElementsByTagName( query ), extra );
-						} else if ( match[2] && Expr.find.CLASS && context.getElementsByClassName ) {
-							return makeArray( context.getElementsByClassName( match[2] ), extra );
-						}
-					}
-					if ( context.nodeType === 9 ) {
-						if ( query === "body" && context.body ) {
-							return makeArray( [ context.body ], extra );
-						} else if ( match && match[3] ) {
-							var elem = context.getElementById( match[3] );
-							if ( elem && elem.parentNode ) {
-								if ( elem.id === match[3] ) {
-									return makeArray( [ elem ], extra );
-								}
-							} else {
-								return makeArray( [], extra );
-							}
-						}
-						try {
-							return makeArray( context.querySelectorAll(query), extra );
-						} catch(qsaError) {}
-					} else if ( context.nodeType === 1 && context.nodeName.toLowerCase() !== "object" ) {
-						var oldContext = context,
-							old = context.getAttribute( "id" ),
-							nid = old || id,
-							hasParent = context.parentNode,
-							relativeHierarchySelector = /^\s*[+~]/.test( query );
-						if ( !old ) {
-							context.setAttribute( "id", nid );
-						} else {
-							nid = nid.replace( /'/g, "\\$&" );
-						}
-						if ( relativeHierarchySelector && hasParent ) {
-							context = context.parentNode;
-						}
-						try {
-							if ( !relativeHierarchySelector || hasParent ) {
-								return makeArray( context.querySelectorAll( "[id='" + nid + "'] " + query ), extra );
-							}
-						} catch(pseudoError) {
-						} finally {
-							if ( !old ) {
-								oldContext.removeAttribute( "id" );
-							}
-						}
-					}
-				}
-				return oldSizzle(query, context, extra, seed);
-			};
-			for ( var prop in oldSizzle ) {
-				Sizzle[ prop ] = oldSizzle[ prop ];
-			}
-			div = null;
-		})();
-	}
-	(function(){
-		var html = document.documentElement,
-			matches = html.matchesSelector || html.mozMatchesSelector || html.webkitMatchesSelector || html.msMatchesSelector;
-		if ( matches ) {
-			var disconnectedMatch = !matches.call( document.createElement( "div" ), "div" ),
-				pseudoWorks = false;
-			try {
-				matches.call( document.documentElement, "[test!='']:sizzle" );
-			} catch( pseudoError ) {
-				pseudoWorks = true;
-			}
-			Sizzle.matchesSelector = function( node, expr ) {
-				expr = expr.replace(/\=\s*([^'"\]]*)\s*\]/g, "='$1']");
-				if ( !Sizzle.isXML( node ) ) {
-					try {
-						if ( pseudoWorks || !Expr.match.PSEUDO.test( expr ) && !/!=/.test( expr ) ) {
-							var ret = matches.call( node, expr );
-							if ( ret || !disconnectedMatch ||
-									node.document && node.document.nodeType !== 11 ) {
-								return ret;
-							}
-						}
-					} catch(e) {}
-				}
-				return Sizzle(expr, null, null, [node]).length > 0;
-			};
-		}
-	})();
-	(function(){
-		var div = document.createElement("div");
-		div.innerHTML = "<div class='test e'></div><div class='test'></div>";
-		if ( !div.getElementsByClassName || div.getElementsByClassName("e").length === 0 ) {
-			return;
-		}
-		div.lastChild.className = "e";
-		if ( div.getElementsByClassName("e").length === 1 ) {
-			return;
-		}
-		Expr.order.splice(1, 0, "CLASS");
-		Expr.find.CLASS = function( match, context, isXML ) {
-			if ( typeof context.getElementsByClassName !== "undefined" && !isXML ) {
-				return context.getElementsByClassName(match[1]);
-			}
-		};
-		div = null;
-	})();
-	function dirNodeCheck( dir, cur, doneName, checkSet, nodeCheck, isXML ) {
-		for ( var i = 0, l = checkSet.length; i < l; i++ ) {
-			var elem = checkSet[i];
-			if ( elem ) {
-				var match = false;
-				elem = elem[dir];
-				while ( elem ) {
-					if ( elem[ expando ] === doneName ) {
-						match = checkSet[elem.sizset];
-						break;
-					}
-					if ( elem.nodeType === 1 && !isXML ){
-						elem[ expando ] = doneName;
-						elem.sizset = i;
-					}
-					if ( elem.nodeName.toLowerCase() === cur ) {
-						match = elem;
-						break;
-					}
-					elem = elem[dir];
-				}
-				checkSet[i] = match;
-			}
-		}
-	}
-	function dirCheck( dir, cur, doneName, checkSet, nodeCheck, isXML ) {
-		for ( var i = 0, l = checkSet.length; i < l; i++ ) {
-			var elem = checkSet[i];
-			if ( elem ) {
-				var match = false;
-				elem = elem[dir];
-				while ( elem ) {
-					if ( elem[ expando ] === doneName ) {
-						match = checkSet[elem.sizset];
-						break;
-					}
-					if ( elem.nodeType === 1 ) {
-						if ( !isXML ) {
-							elem[ expando ] = doneName;
-							elem.sizset = i;
-						}
-						if ( typeof cur !== "string" ) {
-							if ( elem === cur ) {
-								match = true;
-								break;
-							}
-						} else if ( Sizzle.filter( cur, [elem] ).length > 0 ) {
-							match = elem;
-							break;
-						}
-					}
-					elem = elem[dir];
-				}
-				checkSet[i] = match;
-			}
-		}
-	}
-	if ( document.documentElement.contains ) {
-		Sizzle.contains = function( a, b ) {
-			return a !== b && (a.contains ? a.contains(b) : true);
-		};
-	} else if ( document.documentElement.compareDocumentPosition ) {
-		Sizzle.contains = function( a, b ) {
-			return !!(a.compareDocumentPosition(b) & 16);
-		};
-	} else {
-		Sizzle.contains = function() {
-			return false;
-		};
-	}
-	Sizzle.isXML = function( elem ) {
-		var documentElement = (elem ? elem.ownerDocument || elem : 0).documentElement;
-		return documentElement ? documentElement.nodeName !== "HTML" : false;
-	};
-	var posProcess = function( selector, context, seed ) {
-		var match,
-			tmpSet = [],
-			later = "",
-			root = context.nodeType ? [context] : context;
-		while ( (match = Expr.match.PSEUDO.exec( selector )) ) {
-			later += match[0];
-			selector = selector.replace( Expr.match.PSEUDO, "" );
-		}
-		selector = Expr.relative[selector] ? selector + "*" : selector;
-		for ( var i = 0, l = root.length; i < l; i++ ) {
-			Sizzle( selector, root[i], tmpSet, seed );
-		}
-		return Sizzle.filter( later, tmpSet );
-	};
-	window.Sizzle = Sizzle;
-	})();
-	Util.querySelector = u.qs = function(query, target) {
-		var res = Sizzle(query, target);
-		return res[0];
-	}
-	Util.querySelectorAll = u.qsa = function(query, target) {
-		var res = Sizzle(query, target);
-		return res;
-	}
-}
-if(document.all) {
-	window.attachedEvents = {};
-	window.eventHandler = function(eid) {
-		var element, i;
-		if(eid != "window") {
-			element = u.ge("eid:"+eid);
-		}
-		else {
-			element = window;
-		}
-		var win_event = new Object();
-		for(x in window.event) {
-			win_event[x] = window.event[x];
-		}
-		win_event.target = element;
-		win_event.timeStamp = new Date().getTime();
-		if(element && eid && window.attachedEvents[eid] && window.attachedEvents[eid][window.event.type]) {
-			var i, attachedAction;
-			for(i = 0; attachedAction = window.attachedEvents[eid][window.event.type][i]; i++) {
-				element.ie_event_action = attachedAction;
-				element.ie_event_action(win_event);
-			}
-		}
-		return;
-	}
-	u.e.event_pref = "mouse";
-	u.e.kill = function(event) {
-		if(event) {
-			event.cancelBubble = true;
-			event.returnValue = false;
-		}
-	}
-	u.e.addEvent = function(node, type, action) {
-		if(node != window) {
-			var eid = u.cv(node, "eid");
-			if(!eid) {
-				var eid = u.randomString();
-				u.ac(node, "eid:"+eid)
-			}
-		}
-		else {
-			eid = "window";
-		}
-		if(!window.attachedEvents[eid]) {
-			window.attachedEvents[eid] = {};
-		}
-		if(!window.attachedEvents[eid][type]) {
-			window.attachedEvents[eid][type] = new Array();
-		}
-		if(window.attachedEvents[eid][type].length == 0) {
-			eval('node._'+type+'eventhandler = function() {window.eventHandler("'+eid+'")}');
-			node.attachEvent("on"+type, node["_"+type+"eventhandler"]);
-		}
-		if(window.attachedEvents[eid][type].indexOf(action) == -1) {
-			window.attachedEvents[eid][type].push(action);
-		}
-	}
-	u.e.removeEvent = function(node, type, action) {
-		if(node != window) {
-			var eid = u.cv(node, "eid");
-		}
-		else {
-			eid = "window";
-		}
-		if(eid && window.attachedEvents[eid] && window.attachedEvents[eid][type]) {
-			for(i in window.attachedEvents[eid][type]) {
-				if(window.attachedEvents[eid][type][i] == action) {
-					window.attachedEvents[eid][type].splice(i,1);
-					if(!window.attachedEvents[eid][type].length) {
-						node.detachEvent("on"+type, node["_"+type+"eventhandler"])
-					}
-				}
-			}
-		}
-	}
-}
-Util.actualWidth = u.actualW = function(node) {
-	var width = parseInt(u.gcs(node, "width"));
-	if(isNaN(width)) {
-		return node.offsetWidth - parseInt(u.gcs(node, "padding-left")) - parseInt(u.gcs(node, "padding-right"));
-	}
-	else {
-		return width;
-	}
-}
-Util.actualHeight = u.actualH = function(node) {
-	var height = parseInt(u.gcs(node, "height"));
-	if(isNaN(height)) {
-		return node.offsetHeight - parseInt(u.gcs(node, "padding-top")) - parseInt(u.gcs(node, "padding-bottom"));
-	}
-	else {
-		return height;
-	}
-}
-Util.eventX = function(event){
-	if(event.targetTouches) {
-		return event.targetTouches[0].pageX;
-	}
-	else if(event.pageX != undefined) {
-		return event.pageX;
-	}
-	else if(event.clientX != undefined) {
-		return event.clientX + document.documentElement.scrollLeft;
-	}
-	else {
-		return 0;
-	}
-}
-Util.eventY = function(event){
-	if(event.targetTouches) {
-		return event.targetTouches[0].pageY;
-	}
-	else if(event.pageY != undefined) {
-		return event.pageY;
-	}
-	else if(event.clientY != undefined) {
-		return event.clientY + document.documentElement.scrollTop;
-	}
-	else {
-		return 0;
-	}
-}
-Util.pageScrollX = u.scrollX = function() {
-	if(window.pageYOffset != undefined) {
-		return window.pageYOffset;
-	}
-	else if(document.documentElement.scrollLeft != undefined) {
-		return document.documentElement.scrollLeft;
-	}
-	else {
-		return 0;
-	}
-}
-Util.pageScrollY = u.scrollY = function() {
-	if(window.pageYOffset != undefined) {
-		return window.pageYOffset;
-	}
-	else if(document.documentElement.scrollTop != undefined) {
-		return document.documentElement.scrollTop;
-	}
-	else {
-		return 0;
-	}
-}
-u.i.load = function(e, src) {
-	var image = new Image();
-	image.e = e;
-	u.addClass(e, "loading");
-	image.onload = function() {
-		var event = new Object();
-		event.target = this;
-		u.removeClass(this.e, "loading");
-		if(typeof(this.e.loaded) == "function") {
-			this.e.loaded(event);
-		}
-	}
-	image.src = src;
-}
-if (typeof JSON !== 'object') {
-    JSON = {};
-}
-(function () {
-    'use strict';
-    function f(n) {
-        return n < 10 ? '0' + n : n;
-    }
-    if (typeof Date.prototype.toJSON !== 'function') {
-        Date.prototype.toJSON = function (key) {
-            return isFinite(this.valueOf())
-                ? this.getUTCFullYear()     + '-' +
-                    f(this.getUTCMonth() + 1) + '-' +
-                    f(this.getUTCDate())      + 'T' +
-                    f(this.getUTCHours())     + ':' +
-                    f(this.getUTCMinutes())   + ':' +
-                    f(this.getUTCSeconds())   + 'Z'
-                : null;
-        };
-        String.prototype.toJSON      =
-            Number.prototype.toJSON  =
-            Boolean.prototype.toJSON = function (key) {
-                return this.valueOf();
-            };
-    }
-    var cx = new RegExp("[\u0000\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u2028-\u202f\u2060-\u206f\ufeff\ufff0-\uffff]", "g"),
-        escapable = new RegExp("[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u2028-\u202f\u2060-\u206f\ufeff\ufff0-\uffff]", "g"),
-        gap,
-        indent,
-        meta = {    // table of character substitutions
-            '\b': '\\b',
-            '\t': '\\t',
-            '\n': '\\n',
-            '\f': '\\f',
-            '\r': '\\r',
-            '"' : '\\"',
-            '\\': '\\\\'
-        },
-        rep;
-    function quote(string) {
-        escapable.lastIndex = 0;
-        return escapable.test(string) ? '"' + string.replace(escapable, function (a) {
-            var c = meta[a];
-            return typeof c === 'string'
-                ? c
-                : '\\u' + ('0000' + a.charCodeAt(0).toString(16)).slice(-4);
-        }) + '"' : '"' + string + '"';
-    }
-    function str(key, holder) {
-        var i,          // The loop counter.
-            k,          // The member key.
-            v,          // The member value.
-            length,
-            mind = gap,
-            partial,
-            value = holder[key];
-        if (value && typeof value === 'object' &&
-                typeof value.toJSON === 'function') {
-            value = value.toJSON(key);
-        }
-        if (typeof rep === 'function') {
-            value = rep.call(holder, key, value);
-        }
-        switch (typeof value) {
-        case 'string':
-            return quote(value);
-        case 'number':
-            return isFinite(value) ? String(value) : 'null';
-        case 'boolean':
-        case 'null':
-            return String(value);
-        case 'object':
-            if (!value) {
-                return 'null';
-            }
-            gap += indent;
-            partial = [];
-            if (Object.prototype.toString.apply(value) === '[object Array]') {
-                length = value.length;
-                for (i = 0; i < length; i += 1) {
-                    partial[i] = str(i, value) || 'null';
-                }
-                v = partial.length === 0
-                    ? '[]'
-                    : gap
-                    ? '[\n' + gap + partial.join(',\n' + gap) + '\n' + mind + ']'
-                    : '[' + partial.join(',') + ']';
-                gap = mind;
-                return v;
-            }
-            if (rep && typeof rep === 'object') {
-                length = rep.length;
-                for (i = 0; i < length; i += 1) {
-                    if (typeof rep[i] === 'string') {
-                        k = rep[i];
-                        v = str(k, value);
-                        if (v) {
-                            partial.push(quote(k) + (gap ? ': ' : ':') + v);
-                        }
-                    }
-                }
-            } else {
-                for (k in value) {
-                    if (Object.prototype.hasOwnProperty.call(value, k)) {
-                        v = str(k, value);
-                        if (v) {
-                            partial.push(quote(k) + (gap ? ': ' : ':') + v);
-                        }
-                    }
-                }
-            }
-            v = partial.length === 0
-                ? '{}'
-                : gap
-                ? '{\n' + gap + partial.join(',\n' + gap) + '\n' + mind + '}'
-                : '{' + partial.join(',') + '}';
-            gap = mind;
-            return v;
-        }
-    }
-    if (typeof JSON.stringify !== 'function') {
-        JSON.stringify = function (value, replacer, space) {
-            var i;
-            gap = '';
-            indent = '';
-            if (typeof space === 'number') {
-                for (i = 0; i < space; i += 1) {
-                    indent += ' ';
-                }
-            } else if (typeof space === 'string') {
-                indent = space;
-            }
-            rep = replacer;
-            if (replacer && typeof replacer !== 'function' &&
-                    (typeof replacer !== 'object' ||
-                    typeof replacer.length !== 'number')) {
-                throw new Error('JSON.stringify');
-            }
-            return str('', {'': value});
-        };
-    }
-    if (typeof JSON.parse !== 'function') {
-        JSON.parse = function (text, reviver) {
-            var j;
-            function walk(holder, key) {
-                var k, v, value = holder[key];
-                if (value && typeof value === 'object') {
-                    for (k in value) {
-                        if (Object.prototype.hasOwnProperty.call(value, k)) {
-                            v = walk(value, k);
-                            if (v !== undefined) {
-                                value[k] = v;
-                            } else {
-                                delete value[k];
-                            }
-                        }
-                    }
-                }
-                return reviver.call(holder, key, value);
-            }
-            text = String(text);
-            cx.lastIndex = 0;
-            if (cx.test(text)) {
-                text = text.replace(cx, function (a) {
-                    return '\\u' +
-                        ('0000' + a.charCodeAt(0).toString(16)).slice(-4);
-                });
-            }
-            if (/^[\],:{}\s]*$/
-                    .test(text.replace(/\\(?:["\\\/bfnrt]|u[0-9a-fA-F]{4})/g, '@')
-                        .replace(/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g, ']')
-                        .replace(/(?:^|:|,)(?:\s*\[)+/g, ''))) {
-                j = eval('(' + text + ')');
-                return typeof reviver === 'function'
-                    ? walk({'': j}, '')
-                    : j;
-            }
-            throw new SyntaxError('JSON.parse');
-        };
-    }
-}());
-Util.createRequestObject = function() {
-	var xmlhttp;
-	if(window.XMLHttpRequest) {
-		xmlhttp = new XMLHttpRequest();
-	}
-	else if(window.ActiveXObject) {
-		xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-	}
-	if(xmlhttp) {
-		var wrapper = new Object();
-		wrapper.xmlhttp = xmlhttp;
-		wrapper.xmlhttp.onreadystatechange = function() {
-			if(wrapper.xmlhttp.readyState == 4) {
-				wrapper.responseText = wrapper.xmlhttp.responseText;
-				wrapper.status = wrapper.xmlhttp.status;
-				wrapper.readyState = 4;
-				if(typeof(wrapper.onreadystatechange) == "function") {
-					wrapper.onreadystatechange();
-				}
-			}
-		}
-		wrapper.setRequestHeader = function(type, value) {
-			this.xmlhttp.setRequestHeader(type, value);
-		}
-		wrapper.open = function(method, url, async) {
-			this.async = async;
-			url += (url.match(/\?/) ? "&" : "?") + "refresh_activex=" + u.randomString();
-			this.xmlhttp.open(method, url, async);
-		}
-		wrapper.send = function(params) {
-			this.xmlhttp.send(params);
-			if(!this.async) {
-				this.responseText = this.xmlhttp.responseText;
-				this.status = this.xmlhttp.status;
-			}
-		}
-		return wrapper;
-	}
-	else {
-		u.bug("NO XMLHTTP");
-		return false;
-	}
-}
-if(String.prototype.trim == undefined) {
-	String.prototype.trim = function() {
-		return this.replace(/^\s+|\s+$/g, "");
-	};
-}
-if(String.prototype.substr == undefined || "ABC".substr(-1,1) == "A") {
-	String.prototype.substr = function(start_index, length) {
-		start_index = start_index < 0 ? this.length + start_index : start_index;
-		start_index = start_index < 0 ? 0 : start_index;
-		length = length ? start_index + length : this.length;
-		return this.substring(start_index, length);
-	};
-}
 
-/*u-init.js*/
-Util.Objects = u.o = new Object();
-Util.init = function(scope) {
-	var i, node, nodes, object;
-	scope = scope && scope.nodeName ? scope : document;
-	nodes = u.ges("i\:([_a-zA-Z0-9])+");
-	for(i = 0; node = nodes[i]; i++) {
-		while((object = u.cv(node, "i"))) {
-			u.rc(node, "i:"+object);
-			if(object && typeof(u.o[object]) == "object") {
-				u.o[object].init(node);
-			}
-		}
-	}
-}
 
 /*i-unsupported.js*/
 Util.Objects["page"] = new function() {
@@ -4489,3 +2726,5 @@ Util.Objects["page"] = new function() {
 	}
 }
 u.e.addDOMReadyEvent(u.init)
+
+

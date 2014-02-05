@@ -6,16 +6,16 @@ $IC = new Item();
 $itemtype = "person";
 $all_items = $IC->getItems(array("itemtype" => $itemtype, "order" => "status DESC"));
 ?>
-<div class="scene i:defaultList defaultList <?= $itemtype ?>List">
+<div class="scene defaultList <?= $itemtype ?>List">
 	<h1>People</h1>
 
 	<ul class="actions">
 		<li class="new"><a href="/admin/<?= $itemtype ?>/new" class="button primary">Create new <?= $itemtype ?></a></li>
 	</ul>
 
-	<div class="all_items">
+	<div class="all_items i:defaultList taggable filters">
 <?		if($all_items): ?>
-		<ul class="items taggable">
+		<ul class="items">
 <?			foreach($all_items as $item): 
 				$item = $IC->getCompleteItem($item["id"]); ?>
 			<li class="item item_id:<?= $item["id"] ?> image:<?= $item["files"] ?> width:100 height:116">

@@ -16,8 +16,8 @@ $item_id = $item["id"];
 		<li class="cancel"><a href="/admin/<?= $itemtype ?>/list" class="button">Back</a></li>
 	</ul>
 
-	<div class="item">
-		<form action="/admin/cms/update/<?= $item_id ?>" class="i:formDefaultEdit labelstyle:inject" method="post" enctype="multipart/form-data">
+	<div class="item i:defaultEdit">
+		<form action="/admin/cms/update/<?= $item_id ?>" class="labelstyle:inject" method="post" enctype="multipart/form-data">
 
 			<fieldset>
 				<?= $model->input("published_at", array("value" => $item["published_at"])) ?>
@@ -34,8 +34,8 @@ $item_id = $item["id"];
 	</div>
 
 	<h2>Tags</h2>
-	<div class="tags i:defaultTags">
-		<form action="/admin/cms/update/<?= $item_id ?>" class="i:formAddTags labelstyle:inject" method="post" enctype="multipart/form-data">
+	<div class="tags i:defaultTags item_id:<?= $item_id ?>">
+		<form action="/admin/cms/update/<?= $item_id ?>" class="labelstyle:inject" method="post" enctype="multipart/form-data">
 			<fieldset>
 				<?= $model->input("tags") ?>
 			</fieldset>
@@ -49,10 +49,11 @@ $item_id = $item["id"];
 <?		if($item["tags"]): ?>
 <?			foreach($item["tags"] as $index => $tag): ?>
 			<li class="tag">
-				<h3><span class="context"><?= $tag["context"] ?></span>:<span class="value"><?= $tag["value"] ?></span></h3>
-				<form action="/admin/cms/tags/delete/<?= $item_id ?>/<?= $tag["id"] ?>" class="i:formDefaultDelete" method="post" enctype="multipart/form-data">
+				<span class="context"><?= $tag["context"] ?></span>:<span class="value"><?= $tag["value"] ?></span>
+
+				<!--form action="/admin/cms/tags/delete/<?= $item_id ?>/<?= $tag["id"] ?>" class="i:formDefaultDelete" method="post" enctype="multipart/form-data">
 					<input type="submit" value="Delete" class="delete" />
-				</form>
+				</form-->
 			</li>
 <?			endforeach; ?>
 <?		endif; ?>
