@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="<?= $this->language() ?>">
 <head>
-	<!-- (c) & (p) think.dk 2011 //-->
+	<!-- (c) & (p) hvadhedderde.dk 2011, 2012, 2013, 2014 //-->
 	<!-- All material protected by copyrightlaws, as if you didnt know //-->
+	<!-- Released on CPAL-License https://github.com/hvadhedderde/supersonic_dk/blob/master/LICENSE-CPAL.md //-->
 	<title><?= $this->pageTitle() ?></title>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	<meta name="keywords" content="" />
