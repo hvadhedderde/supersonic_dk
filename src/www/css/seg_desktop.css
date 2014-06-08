@@ -1,4 +1,6 @@
 
+/*seg_desktop_include.css*/
+
 /*s-page.css*/
 * {font-family: Arial, Verdana, sans-serif; font-size: 16px; color: #ffffff; font-weight: normal;}
 html {height: 100%;}
@@ -163,6 +165,8 @@ input, textarea {outline: none;}
 .music #content .scene div.music.available .category {display: inline-block; vertical-align: top; width: 285px;}
 .commercial #content .scene {background: transparent url(/img/bg_tile.png) repeat top left;}
 .commercial #content .scene div.commercials {padding: 80px 0 0 380px; height: 400px; overflow: auto;}
+.visual #content .scene {background: transparent url(/img/bg_tile.png) repeat top left;}
+.visual #content .scene div.visuals {padding: 80px 0 0 380px; height: 400px; overflow: auto;}
 .radio #content .scene {background: transparent url(/img/bg_tile.png) repeat top left;}
 .radio #content .scene div.radio {padding: 80px 0 0 380px; font-size: 0; height: 400px; overflow: auto;}
 .about #content .scene {background: transparent url(/img/bg_tile.png) repeat top left;}
