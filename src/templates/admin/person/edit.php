@@ -1,24 +1,27 @@
 <?php
+global $action;
+global $IC;
+global $itemtype;
+global $model;
 
-$action = $this->actions();
-
-$IC = new Item();
-$itemtype = "person";
-
-$model = $IC->typeObject($itemtype);
-
-$item = $IC->getCompleteItem($action[1]);
+$item = $IC->getCompleteItem(array("id" => $action[1]));
 $item_id = $item["id"];
 ?>
 <div class="scene defaultEdit <?= $itemtype ?>Edit">
 	<h1>Edit <?= $itemtype ?></h1>
 
-	<ul class="actions">a
-		<li class="cancel"><a href="/admin/<?= $itemtype ?>/list" class="button">Back</a></li>
+	<ul class="actions">
+		<?= $HTML->link("Back", "/admin/".$itemtype."/list", array("class" => "button", "wrapper" => "li.cancel")) ?>
 	</ul>
 
-	<div class="item i:defaultEdit">
-		<form action="/admin/cms/update/<?= $item_id ?>" class="labelstyle:inject" method="post" enctype="multipart/form-data">
+	<div class="status i:defaultEditStatus item_id:<?= $item["id"] ?>">
+		<ul class="actions">
+			<?= $HTML->status("Enable", "Disable", "/admin/cms/status", $item, array("js" => true)) ?>
+		</ul>
+	</div>
+
+	<div class="item i:defaultEdit item_id:<?= $item_id ?>">
+		<?= $model->formStart("/admin/cms/update/".$item_id, array("class" => "labelstyle:inject")) ?>
 
 			<fieldset>
 				<?= $model->input("published_at", array("value" => $item["published_at"])) ?>
@@ -30,34 +33,30 @@ $item_id = $item["id"];
 			</fieldset>
 
 			<ul class="actions">
-				<li class="cancel"><a href="/admin/<?= $itemtype ?>/list" class="button key:esc">Back</a></li>
-				<li class="save"><input type="submit" value="Update" class="button primary key:s" /></li>
+				<?= $model->link("Back", "/admin/".$itemtype."/list", array("class" => "button key:esc", "wrapper" => "li.cancel")) ?>
+				<?= $model->submit("Update", array("class" => "primary key:s", "wrapper" => "li.save")) ?>
 			</ul>
 
-		</form>
+		<?= $model->formEnd() ?>
 	</div>
 
 	<h2>Tags</h2>
 	<div class="tags i:defaultTags item_id:<?= $item_id ?>">
-		<form action="/admin/cms/update/<?= $item_id ?>" class="i:formAddTags labelstyle:inject" method="post" enctype="multipart/form-data">
+		<?= $model->formStart("/admin/cms/update/".$item_id, array("class" => "labelstyle:inject")) ?>
 			<fieldset>
 				<?= $model->input("tags") ?>
 			</fieldset>
 
 			<ul class="actions">
-				<li class="save"><input type="submit" value="Add tag" class="button primary" /></li>
+				<?= $model->submit("Add tag", array("class" => "primary", "wrapper" => "li.save")) ?>
 			</ul>
-		</form>
+		<?= $model->formEnd() ?>
 
 		<ul class="tags">
 <?		if($item["tags"]): ?>
 <?			foreach($item["tags"] as $index => $tag): ?>
 			<li class="tag">
 				<span class="context"><?= $tag["context"] ?></span>:<span class="value"><?= $tag["value"] ?></span>
-
-				<!--form action="/admin/cms/tags/delete/<?= $item_id ?>/<?= $tag["id"] ?>" class="i:formDefaultDelete" method="post" enctype="multipart/form-data">
-					<input type="submit" value="Delete" class="delete" />
-				</form-->
 			</li>
 <?			endforeach; ?>
 <?		endif; ?>
@@ -67,16 +66,17 @@ $item_id = $item["id"];
 	<h2>Image</h2>
 	<div class="media i:addMedia">
 		<p>Image must be 232x270 pixels, jpg or png.</p>
-		<form action="/admin/cms/update/<?= $item_id ?>" class="labelstyle:inject" method="post" enctype="multipart/form-data">
+
+		<?= $model->formStart("/admin/cms/update/".$item_id, array("class" => "upload labelstyle:inject")) ?>
 			<fieldset>
 				<?= $model->input("files") ?>
 			</fieldset>
 
 			<ul class="actions">
-				<li class="save"><input type="submit" value="Add image" class="button primary" /></li>
+				<?= $model->submit("Add image", array("class" => "primary", "wrapper" => "li.save")) ?>
 			</ul>
 
-		</form>
+		<?= $model->formEnd() ?>
 
 		<ul class="media">
 			<li class="image">

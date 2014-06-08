@@ -1,30 +1,28 @@
+<?php
+global $IC;
+
+$text_items = $IC->getItems(array("itemtype" => "text", "status" => 1, "tags" => "page:Commercials"));
+$items = $IC->getItems(array("itemtype" => "video", "status" => 1, "tags" => "category:Commercial", "order" => "sindex"));
+?>
 <div class="scene i:videos">
 
-	<?php
-		$IC = new Item();
-		$items = $IC->getItems(array("itemtype" => "text", "status" => 1, "tags" => "page:Commercials"));
-
-		if($items) { ?>
+<?		if($text_items) { ?>
 		<div class="text">
-		<?	$random = rand(0, count($items)-1);
-			$item = $items[$random];
-			$item = $IC->getCompleteItem($item["id"]);
+		<?	$random = rand(0, count($text_items)-1);
+			$text = $text_items[$random];
+			$text = $IC->extendItem($text);
 
-			print $item["text"]; ?>
+			print $text["text"]; ?>
 		</div>
-		<? } 
-	?>
+<? 		} ?>
 
 	<div class="commercials">
 		<h2>Selected work</h2>
 		<ul class="videos">
-<?php
-	$IC = new Item();
-	$items = $IC->getItems(array("status" => 1, "tags" => "category:Commercial", "order" => "sindex"));
-	if($items) {
+<?	if($items) {
 		foreach($items as $item) {
-			$item = $IC->getCompleteItem($item["id"]);
-			
+			$item = $IC->extendItem($item);
+
 			if(file_exists(PRIVATE_FILE_PATH."/".$item["id"]."/thumbnail/".$item["thumbnail"])) {
 				$image = "/images/".$item["id"]."/thumbnail/88x.".$item["thumbnail"];
 			}
@@ -34,8 +32,8 @@
 			<li style="background-image: url(<?= $image ?>);">
 				<a href="/video/<?= $item["sindex"] ?>"><?= $item["name"] ?></a>
 			</li>
-<?		}
-	} ?>
+<?		} ?>
+<?	} ?>
 		</ul>
 	</div>
 

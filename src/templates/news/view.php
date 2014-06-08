@@ -1,13 +1,12 @@
+<?php
+global $action;
+global $IC;
+global $itemtype;
+
+$item = $IC->getCompleteItem(array("sindex" => $action[0]));
+?>
 <div class="scene i:newsview">
 	<div class="news">
-
-<?php
-	$IC = new Item();
-
-	$item = $IC->getItem(RESTParams(0));
-	if($item) {
-		$item = $IC->getCompleteItem($item["id"]);
-?>
 
 		<div class="info">
 			<div class="published"><?= date("Y - F d.", strtotime($item["published_at"])) ?></div>
@@ -19,9 +18,6 @@
 			<?= $item["text"] ?>
 		</div>
 
-<?
-	}
-?>
 	</div>
 
 	<ul class="actions">

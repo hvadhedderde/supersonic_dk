@@ -22,7 +22,7 @@ Util.Objects["people"] = new function() {
 				this.resetNodes();
 				u.ac(this, "selected");
 
-				this.Response = function(response) {
+				this.response = function(response) {
 					var profile = u.qs(".profile", response);
 
 					if(profile) {
@@ -31,7 +31,7 @@ Util.Objects["people"] = new function() {
 					}
 				}
 
-				u.Request(this, this.url);
+				u.request(this, this.url);
 			}
 			if(u.e.event_pref == "mouse") {
 				u.e.addEvent(node, "mouseover", node.clicked);

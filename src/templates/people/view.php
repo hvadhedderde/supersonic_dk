@@ -1,3 +1,10 @@
+<?php
+global $action;
+global $IC;
+global $itemtype;
+
+$item = $IC->getCompleteItem(array("sindex" => $action[0]));
+?>
 <div class="scene">
 
 	<div class="text"></div>
@@ -5,9 +12,6 @@
 	<div class="person">
 
 		<?php
-			$IC = new Item();
-
-			$item = $IC->getCompleteItem(RESTParams(0));
 			if($item) {
 //				$item = array_merge($item, $IC->TypeObject($item["itemtype"])->get($item["id"]));
 		?>

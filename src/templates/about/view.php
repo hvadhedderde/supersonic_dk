@@ -1,17 +1,17 @@
+<?php
+global $IC;
+
+$text_items = $IC->getItems(array("itemtype" => "text", "status" => 1, "tags" => "page:About"));
+?>
 <div class="scene">
 
-	<?php
-		$IC = new Item();
-		$items = $IC->getItems(array("itemtype" => "text", "status" => 1, "tags" => "page:About"));
-
-		if($items) { ?>
+<?		if($text_items) { ?>
 		<div class="text">
-		<?	$random = rand(0, count($items)-1);
-			$item = $items[$random];
-			$item = $IC->getCompleteItem($item["id"]);
+		<?	$random = rand(0, count($text_items)-1);
+			$text = $text_items[$random];
+			$text = $IC->extendItem($text);
 
-			print $item["text"]; ?>
-
+			print $text["text"]; ?>
 
 			<div class="contact">
 				<h2>Contact</h2>

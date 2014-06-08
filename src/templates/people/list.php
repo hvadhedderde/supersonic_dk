@@ -1,17 +1,25 @@
+<?php
+global $IC;
+
+$text_items = $IC->getItems(array("itemtype" => "text", "status" => 1, "tags" => "page:People"));
+
+$items_booking = $IC->getItems(array("itemtype" => "person", "status" => 1, "tags" => "department:Booking"));
+$items_audio = $IC->getItems(array("itemtype" => "person", "status" => 1, "tags" => "department:Audio"));
+$items_mix = $IC->getItems(array("itemtype" => "person", "status" => 1, "tags" => "department:Mix & mastering"));
+$items_service = $IC->getItems(array("itemtype" => "person", "status" => 1, "tags" => "department:Service"));
+$items_visuals = $IC->getItems(array("itemtype" => "person", "status" => 1, "tags" => "department:Visuals"));
+$items_admin = $IC->getItems(array("itemtype" => "person", "status" => 1, "tags" => "department:Administration"));
+$items_freelance = $IC->getItems(array("itemtype" => "person", "status" => 1, "tags" => "department:Freelance"));
+?>
 <div class="scene i:people">
 
-	<?php
-		$IC = new Item();
-		$items = $IC->getItems(array("itemtype" => "text", "status" => 1, "tags" => "page:People"));
-
-		if($items) { ?>
+<?		if($text_items) { ?>
 		<div class="text">
-		<?	$random = rand(0, count($items)-1);
-			$item = $items[$random];
-			$item = $IC->getCompleteItem($item["id"]);
+		<?	$random = rand(0, count($text_items)-1);
+			$text = $text_items[$random];
+			$text = $IC->extendItem($text);
 
-			print $item["text"]; ?>
-
+			print $text["text"]; ?>
 
 			<div class="columns">
 
@@ -21,11 +29,8 @@
 						<h2>Booking</h2>
 						<ul class="people">
 				<?php
-					$IC = new Item();
-					$items = $IC->getItems(array("itemtype" => "person", "status" => 1, "tags" => "department:Booking"));
-
-					foreach($items as $item) {
-						$item = $IC->getCompleteItem($item["id"]); ?>
+					foreach($items_booking as $item) {
+						$item = $IC->extendItem($item); ?>
 							<li>
 								<a href="/people/<?= $item["sindex"] ?>"><?= $item["nickname"] ?></a>
 							</li>
@@ -39,12 +44,8 @@
 						<h2>Audio</h2>
 						<ul class="people">
 				<?php
-					$IC = new Item();
-					$items = $IC->getItems(array("itemtype" => "person", "status" => 1, "tags" => "department:Audio"));
-
-					foreach($items as $item) {
-
-						$item = $IC->getCompleteItem($item["id"]); ?>
+					foreach($items_audio as $item) {
+						$item = $IC->extendItem($item); ?>
 							<li>
 								<a href="/people/<?= $item["sindex"] ?>"><?= $item["nickname"] ?></a>
 							</li>
@@ -58,12 +59,8 @@
 						<h2>Mix &amp; mastering</h2>
 						<ul class="people">
 				<?php
-					$IC = new Item();
-					$items = $IC->getItems(array("itemtype" => "person", "status" => 1, "tags" => "department:Mix & mastering"));
-
-					foreach($items as $item) {
-
-						$item = $IC->getCompleteItem($item["id"]); ?>
+					foreach($items_mix as $item) {
+						$item = $IC->extendItem($item); ?>
 							<li>
 								<a href="/people/<?= $item["sindex"] ?>"><?= $item["nickname"] ?></a>
 							</li>
@@ -81,12 +78,8 @@
 						<h2>Service</h2>
 						<ul class="people">
 				<?php
-					$IC = new Item();
-					$items = $IC->getItems(array("itemtype" => "person", "status" => 1, "tags" => "department:Service"));
-
-					foreach($items as $item) {
-
-						$item = $IC->getCompleteItem($item["id"]); ?>
+					foreach($items_service as $item) {
+						$item = $IC->extendItem($item); ?>
 							<li>
 								<a href="/people/<?= $item["sindex"] ?>"><?= $item["nickname"] ?></a>
 							</li>
@@ -97,15 +90,11 @@
 					</div>
 
 					<div class="group">
-						<h2>Editor</h2>
+						<h2>Visuals</h2>
 						<ul class="people">
 				<?php
-					$IC = new Item();
-					$items = $IC->getItems(array("itemtype" => "person", "status" => 1, "tags" => "department:Editor"));
-
-					foreach($items as $item) {
-
-						$item = $IC->getCompleteItem($item["id"]); ?>
+					foreach($items_visuals as $item) {
+						$item = $IC->extendItem($item); ?>
 							<li>
 								<a href="/people/<?= $item["sindex"] ?>"><?= $item["nickname"] ?></a>
 							</li>
@@ -119,12 +108,8 @@
 						<h2>Administration</h2>
 						<ul class="people">
 				<?php
-					$IC = new Item();
-					$items = $IC->getItems(array("itemtype" => "person", "status" => 1, "tags" => "department:Administration"));
-
-					foreach($items as $item) {
-
-						$item = $IC->getCompleteItem($item["id"]); ?>
+					foreach($items_admin as $item) {
+						$item = $IC->extendItem($item); ?>
 							<li>
 								<a href="/people/<?= $item["sindex"] ?>"><?= $item["nickname"] ?></a>
 							</li>
@@ -138,11 +123,8 @@
 						<h2>Freelance</h2>
 						<ul class="people">
 				<?php
-					$IC = new Item();
-					$items = $IC->getItems(array("itemtype" => "person", "status" => 1, "tags" => "department:Freelance"));
-
-					foreach($items as $item):
-						$item = $IC->getCompleteItem($item["id"]); ?>
+					foreach($items_freelance as $item):
+						$item = $IC->extendItem($item); ?>
 							<li>
 								<a href="/people/<?= $item["sindex"] ?>"><?= $item["nickname"] ?></a>
 							</li>

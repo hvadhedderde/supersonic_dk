@@ -1,14 +1,12 @@
+<?php
+global $action;
+global $IC;
+global $itemtype;
+
+$item = $IC->getCompleteItem(array("sindex" => $action[0]));
+?>
 <div class="scene i:video">
 
-<?php
-
-	$IC = new Item();
-
-	$item = $IC->getItem(RESTParams(0));
-	if($item) {
-		$item = $IC->getCompleteItem($item["id"]);
-	
-	?>
 	<div class="text">
 
 		<div class="info">
@@ -22,9 +20,6 @@
 			<li class="watch"><a href="/videos/<?= $item["id"] ?>/video/512x288.<?= $item["video"] ?>">Watch movie</a></li>
 		</ul>
 	</div>
-	<?
-	}
-?>
 
 	<div class="video item_id:<?= $item["item_id"] ?><?= $item["screendump"] ? (" screendump:".$item["screendump"]) : "" ?>"></div>
 

@@ -1,16 +1,17 @@
+<?php
+global $IC;
+
+$text_items = $IC->getItems(array("itemtype" => "text", "status" => 1, "tags" => "page:People"));
+?>
 <div class="scene i:tour">
 
-	<?php
-		$IC = new Item();
-		$items = $IC->getItems(array("itemtype" => "text", "status" => 1, "tags" => "page:Tour"));
-
-		if($items) { ?>
+<?		if($text_items) { ?>
 		<div class="text">
-		<?	$random = rand(0, count($items)-1);
-			$item = $items[$random];
-			$item = $IC->getCompleteItem($item["id"]);
+		<?	$random = rand(0, count($text_items)-1);
+			$text = $text_items[$random];
+			$text = $IC->extendItem($text);
 
-			print $item["text"]; ?>
+			print $text["text"]; ?>
 
 			<ul class="actions">
 				<li><a href="#cphtour">CPH</a></li>

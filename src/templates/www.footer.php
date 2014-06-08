@@ -21,10 +21,11 @@ function menuItem($title, $url) {
 			<?= menuItem("News", "/news") ?>
 			<?= menuItem("Feature Films", "/feature-films") ?>
 			<?= menuItem("Music", "/music") ?>
-			<?= menuItem("TV & Documentary", "/tv-and-documentary") ?>
+			<?= menuItem("TV & Docs", "/tv-and-documentary") ?>
 			<?= menuItem("Commercials", "/commercials") ?>
 			<?= menuItem("Radio", "/radio") ?>
 			<?= menuItem("Voice Casting", "/voice-casting") ?>
+			<?= menuItem("Visuals", "/visuals") ?>
 			<?= menuItem("About", "/about", "/people", "/tour") ?>
 		</ul>
 	</div>

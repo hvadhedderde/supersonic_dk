@@ -30,12 +30,12 @@ Util.Objects["newslist"] = new function() {
 
 					u.ac(this, "selected");
 
-					this.Response = function(response) {
+					this.response = function(response) {
 						var text = this.appendChild(u.qs(".text", response));
 						u.a.transition(this, "all 0.4s ease-in");
 						u.a.setHeight(this, this._start_height + text.offsetHeight);
 					}
-					u.Request(this, this.url);
+					u.request(this, this.url);
 				}
 
 			}
