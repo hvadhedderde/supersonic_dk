@@ -13,7 +13,7 @@ function menuItem($title, $url) {
 			$selected = true;
 		}
 	}
-	return '<li'.HTML::attribute("class", ($selected ? "selected" : "")).'><a href="' . $url . '">' . $title . '</a></li>';
+	return '<li'.$HTML->attribute("class", ($selected ? "selected" : "")).'><a href="' . $url . '">' . $title . '</a></li>';
 }
 ?>
 	<div id="navigation">
