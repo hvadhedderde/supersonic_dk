@@ -4,6 +4,7 @@
 
 function menuItem($title, $url) {
 	global $page;
+	global $HTML;
 
 	$selected = false;
 	$related_urls = func_get_args();
