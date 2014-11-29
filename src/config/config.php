@@ -12,7 +12,7 @@ error_reporting(E_ALL);
 */
 define("SITE_UID", "SON");
 define("SITE_NAME", "Supersonic");
-define("SITE_URL", "supersonic.dk");
+define("SITE_URL", $_SERVER["SERVER_NAME"]);
 
 /**
 * Optional constants
