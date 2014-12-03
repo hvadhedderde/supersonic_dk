@@ -19,8 +19,7 @@ Util.Objects["newslist"] = new function() {
 
 					u.rc(this, "selected");
 					this.transitioned = function() {
-						this.transitioned = null;
-						this.removeChild(u.qs(".text", this));
+						this.removeChild(u.qs(".articlebody", this));
 					}
 
 					u.a.transition(this, "all 0.4s ease-in");
@@ -31,7 +30,7 @@ Util.Objects["newslist"] = new function() {
 					u.ac(this, "selected");
 
 					this.response = function(response) {
-						var text = this.appendChild(u.qs(".text", response));
+						var text = this.appendChild(u.qs(".articlebody", response));
 						u.a.transition(this, "all 0.4s ease-in");
 						u.a.setHeight(this, this._start_height + text.offsetHeight);
 					}

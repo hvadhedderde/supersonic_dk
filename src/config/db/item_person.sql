@@ -5,8 +5,7 @@ CREATE TABLE `SITE_DB`.`item_person` (
   `nickname` varchar(100) NOT NULL,
   `email` varchar(100) DEFAULT NULL,
   `title` varchar(100) DEFAULT NULL,
-  `description` text,
-  `files` varchar(5) NOT NULL DEFAULT '',
+  `html` text,
   PRIMARY KEY (`id`),
   KEY `item_id` (`item_id`),
   CONSTRAINT `item_person_ibfk_1` FOREIGN KEY (`item_id`) REFERENCES `items` (`id`) ON DELETE CASCADE ON UPDATE CASCADE

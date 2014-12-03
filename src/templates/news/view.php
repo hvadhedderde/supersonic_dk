@@ -3,18 +3,20 @@ global $action;
 global $IC;
 global $itemtype;
 
-$item = $IC->getCompleteItem(array("sindex" => $action[0]));
+$item = $IC->getItem(array("sindex" => $action[0], "extend" => array("tags" => true, "mediae" => true)));
 ?>
 <div class="scene i:newsview">
-	<div class="news">
+	<div class="news" itemscope itemtype="http://schema.org/BlogPosting">
 
-		<div class="info">
-			<div class="published"><?= date("Y - F d.", strtotime($item["published_at"])) ?></div>
-		</div>
-		<h2><?= $item["name"] ?></h2>
-		<img src="/images/<?= $item["id"] ?>/200x90.<?= $item["files"] ?>" alt="<?= $item["name"] ?>" />
+		<dl class="info">
+			<dt class="published_at">Date published</dt>
+			<dd class="published_at" itemprop="datePublished" content="<?= date("Y-m-d", strtotime($item["published_at"])) ?>"><?= date("Y - F d.", strtotime($item["published_at"])) ?></dd>
+		</dl>
 
-		<div class="text">
+		<h2itemprop="name"><?= $item["name"] ?></h2>
+		<img src="/images/<?= $item["id"] ?>/200x90.<?= $item["mediae"]["main"]["format"] ?>" alt="<?= $item["name"] ?>" />
+
+		<div class="articlebody" itemprop="articleBody">
 			<?= $item["text"] ?>
 		</div>
 

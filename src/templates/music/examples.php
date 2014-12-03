@@ -2,7 +2,7 @@
 global $IC;
 
 $text_items = $IC->getItems(array("itemtype" => "text", "status" => 1, "tags" => "page:Music examples"));
-$items = $IC->getItems(array("itemtype" => "video", "status" => 1, "tags" => "category:Music", "order" => "sindex"));
+$items = $IC->getItems(array("itemtype" => "video", "status" => 1, "tags" => "category:Music", "order" => "sindex", "extend" => array("mediae" => true)));
 ?>
 <div class="scene i:videos">
 
@@ -12,7 +12,7 @@ $items = $IC->getItems(array("itemtype" => "video", "status" => 1, "tags" => "ca
 			$text = $text_items[$random];
 			$text = $IC->extendItem($text);
 
-			print $text["text"]; ?>
+			print $text["html"]; ?>
 		</div>
 <? 		} ?>
 
@@ -21,10 +21,10 @@ $items = $IC->getItems(array("itemtype" => "video", "status" => 1, "tags" => "ca
 		<ul class="videos">
 <?	if($items) {
 		foreach($items as $item) {
-			$item = $IC->extendItem($item);
+			$media = $IC->sliceMedia($item, "thumbnail");
 
-			if(file_exists(PRIVATE_FILE_PATH."/".$item["id"]."/thumbnail/".$item["thumbnail"])) {
-				$image = "/images/".$item["id"]."/thumbnail/88x.".$item["thumbnail"];
+			if($media && file_exists(PRIVATE_FILE_PATH."/".$item["id"]."/thumbnail/".$media["format"])) {
+				$image = "/images/".$item["id"]."/thumbnail/88x.".$media["format"];
 			}
 			else {
 				$image = "/images/0/missing/88x40.png";

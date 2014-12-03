@@ -2,7 +2,7 @@
 global $IC;
 
 $text_items = $IC->getItems(array("itemtype" => "text", "status" => 1, "tags" => "page:Radio"));
-$items = $IC->getItems(array("itemtype" => "audio", "status" => 1, "tags" => "category:Radio", "order" => "sindex"));
+$items = $IC->getItems(array("itemtype" => "audio", "status" => 1, "tags" => "category:Radio", "order" => "sindex", "extend" => array("mediae" => true)));
 ?>
 <div class="scene i:audio">
 
@@ -12,7 +12,7 @@ $items = $IC->getItems(array("itemtype" => "audio", "status" => 1, "tags" => "ca
 			$text = $text_items[$random];
 			$text = $IC->extendItem($text);
 
-			print $text["text"]; ?>
+			print $text["html"]; ?>
 		</div>
 <? 		} ?>
 
@@ -27,8 +27,8 @@ $items = $IC->getItems(array("itemtype" => "audio", "status" => 1, "tags" => "ca
 						</ul>
 						<ul class="audio">
 <?					}
-					$item = $IC->extendItem($item); ?>
-					<li class=""><a href="/audios/<?= $item["id"] ?>/128.<?= $item["files"] ?>"><?= $item["name"] ?></a></li>
+					$media = $IC->sliceMedia($item, "main"); ?>
+					<li class=""><a href="/audios/<?= $item["id"] ?>/main/128.<?= $media["format"] ?>"><?= $item["name"] ?></a></li>
 <?				endforeach; ?>
 <?			endif; ?>
 			</ul>

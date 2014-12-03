@@ -19,7 +19,7 @@ $items_freelance = $IC->getItems(array("itemtype" => "person", "status" => 1, "t
 			$text = $text_items[$random];
 			$text = $IC->extendItem($text);
 
-			print $text["text"]; ?>
+			print $text["html"]; ?>
 
 			<div class="columns">
 

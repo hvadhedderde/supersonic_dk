@@ -3,7 +3,9 @@ global $action;
 global $IC;
 global $itemtype;
 
-$item = $IC->getCompleteItem(array("sindex" => $action[0]));
+$item = $IC->getItem(array("sindex" => $action[0], "extend" => array("mediae" => true)));
+$video = $IC->sliceMedia($item, "video");
+$screendump = $IC->sliceMedia($item, "screendump");
 ?>
 <div class="scene i:video">
 
@@ -14,14 +16,16 @@ $item = $IC->getCompleteItem(array("sindex" => $action[0]));
 		</div>
 		<h1><?= $item["name"] ?></h1>
 
-		<?= $item["description"] ?>
+		<div class="articlebody">
+			<?= $item["html"] ?>
+		</div>
 
 		<ul class="actions">
-			<li class="watch"><a href="/videos/<?= $item["id"] ?>/video/512x288.<?= $item["video"] ?>">Watch movie</a></li>
+			<li class="watch"><a href="/videos/<?= $item["id"] ?>/video/512x288.<?= $video["format"] ?>">Watch movie</a></li>
 		</ul>
 	</div>
 
-	<div class="video item_id:<?= $item["item_id"] ?><?= $item["screendump"] ? (" screendump:".$item["screendump"]) : "" ?>"></div>
+	<div class="video item_id:<?= $item["id"] ?><?= $screendump ? (" screendump:".$screendump["format"]) : "" ?>"></div>
 
 	<ul class="actions">
 		<? if(isset($_SERVER["HTTP_REFERER"]) && strpos($_SERVER["HTTP_REFERER"], $_SERVER["HTTP_HOST"])) { ?>

@@ -11,7 +11,7 @@ $text_items = $IC->getItems(array("itemtype" => "text", "status" => 1, "tags" =>
 			$text = $text_items[$random];
 			$text = $IC->extendItem($text);
 
-			print $text["text"]; ?>
+			print $text["html"]; ?>
 
 			<div class="contact">
 				<h2>Contact</h2>

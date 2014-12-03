@@ -6,29 +6,19 @@ if(isset($read_access) && $read_access) {
 
 include_once($_SERVER["FRAMEWORK_PATH"]."/config/init.php");
 
+
 $action = $page->actions();
-$IC = new Item();
+$IC = new Items();
 $itemtype = "video";
 
 
 $page->bodyClass("video");
 $page->pageTitle("Supersonic - View movie");
 
-// list
-// view - check for id
-if(isset($action[0])) {
 
-	$page->header();
-	$page->template("video/view.php");
-	$page->footer();
-
-}
-else {
-
-	$page->header();
-	$page->template("404.php");
-	$page->footer();
-
-}
+$page->page(array(
+	"templates" => "video/view.php"
+));
+exit();
 
 ?>

@@ -3,7 +3,7 @@ global $action;
 global $IC;
 global $itemtype;
 
-$item = $IC->getCompleteItem(array("sindex" => $action[0]));
+$item = $IC->getItem(array("sindex" => $action[0], "extend" => array("mediae" => true)));
 ?>
 <div class="scene">
 
@@ -13,14 +13,15 @@ $item = $IC->getCompleteItem(array("sindex" => $action[0]));
 
 		<?php
 			if($item) {
+				$media = $IC->sliceMedia($item, "main");
 //				$item = array_merge($item, $IC->TypeObject($item["itemtype"])->get($item["id"]));
 		?>
-		<div class="profile" style="background-image: url(/images/<?= $item["id"] ?>/232x270.<?= $item["files"] ?>);">
+		<div class="profile" style="background-image: url(/images/<?= $item["id"] ?>/main/232x270.<?= $media["format"] ?>);">
 
 			<h1><?= $item["name"] ?></h1>
 			<div class="role"><?= $item["title"] ?></div>
 			<div class="email"><a href="mailto:<?= $item["email"] ?>"><?= $item["email"] ?></a></div>
-			<div class="description"><?= $item["description"] ?></div>
+			<div class="description"><?= $item["html"] ?></div>
 
 		</div>
 			

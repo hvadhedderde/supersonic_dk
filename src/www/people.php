@@ -6,36 +6,26 @@ if(isset($read_access) && $read_access) {
 
 include_once($_SERVER["FRAMEWORK_PATH"]."/config/init.php");
 
+
 $action = $page->actions();
-$IC = new Item();
+$IC = new Items();
 $itemtype = "person";
 
 
 $page->bodyClass("people");
 $page->pageTitle("Supersonic People");
 
-// list
-if(!$action) {
+if(is_array($action) && count($action)) {
 
-	$page->header();
-	$page->template("people/list.php");
-	$page->footer();
-
+	$page->page(array(
+		"templates" => "people/view.php"
+	));
+	exit();
 }
-// view - check for id
-else if(isset($action[0])) {
 
-	$page->header();
-	$page->template("people/view.php");
-	$page->footer();
-
-}
-else {
-
-	$page->header();
-	$page->template("404.php");
-	$page->footer();
-
-}
+$page->page(array(
+	"templates" => "people/list.php"
+));
+exit();
 
 ?>

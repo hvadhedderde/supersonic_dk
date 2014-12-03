@@ -6,35 +6,30 @@ if(isset($read_access) && $read_access) {
 
 include_once($_SERVER["FRAMEWORK_PATH"]."/config/init.php");
 
+
 $action = $page->actions();
-$IC = new Item();
+$IC = new Items();
 
 
 $page->bodyClass("commercial");
 $page->pageTitle("Supersonic Commercials");
 
-// list
-if(!$action) {
 
-	$page->header();
-	$page->template("commercials/list.php");
-	$page->footer();
+// if(is_array($action) && count($action)) {
+//
+// 	if(count($action) == 1) {
+//
+// 		$page->page(array(
+// 			"templates" => "video/view.php"
+// 		));
+// 		exit();
+// 	}
+//
+// }
 
-}
-// view - check for id
-else if(isset($action[0])) {
-
-	$page->header();
-	$page->template("video/view.php");
-	$page->footer();
-
-}
-else {
-
-	$page->header();
-	$page->template("404.php");
-	$page->footer();
-
-}
+$page->page(array(
+	"templates" => "commercials/list.php"
+));
+exit();
 
 ?>

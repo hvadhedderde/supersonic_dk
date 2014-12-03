@@ -1,0 +1,27 @@
+#content .scene {}
+
+/* NEWS LIST */
+#content .newsEdit div.media.main form.upload input[type=file] {height: 153px;}
+#content .newsEdit div.media.main form.upload label {margin-top: 64px;}
+#content .newsEdit div.media.main img {height: 173px;}
+
+
+/* AUDIO LIST */
+#content .audioList ul.items > li {padding-left: 80px;}
+#content .audioList ul.items > li .audio {position: absolute; top: 16px; left: 30px; width: 50px; height: 50px; background: transparent url(/janitor/img/bg_bn_play_medium.png) no-repeat 0px 0px;}
+#content .audioList ul.items > li.playing .audio {background-position: 0px -100px;}
+
+
+/* PERSON LIST */
+#content .personList ul.items > li.image {padding-left: 100px;}
+
+
+/* NAVIGATION */
+body.news #navigation .news a,
+body.audio #navigation .audio a,
+body.video #navigation .video a,
+body.person #navigation .person a,
+body.text #navigation .text a,
+body.tags #navigation .tags a {padding-left: 35px; color: #ffffff;}
+
+

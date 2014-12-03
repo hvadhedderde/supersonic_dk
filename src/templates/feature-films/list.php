@@ -1,7 +1,7 @@
 <?php
-$IC = new Item();
+$IC = new Items();
 
-$items = $IC->getItems(array("status" => 1, "itemtype" => "video", "tags" => "category:Feature films"));
+$items = $IC->getItems(array("status" => 1, "itemtype" => "video", "tags" => "category:Feature films", "extend" => array("mediae" => true)));
 ?>
 <div class="scene i:posters">
 	<div class="films">
@@ -10,10 +10,10 @@ $items = $IC->getItems(array("status" => 1, "itemtype" => "video", "tags" => "ca
 		<ul class="posters">
 <?			if($items): ?>
 <?				foreach($items as $item):
-					$item = $IC->extendItem($item); ?>
-<?
-					if(file_exists(PRIVATE_FILE_PATH."/".$item["id"]."/poster/".$item["poster"])) {
-						$image = "/images/".$item["id"]."/poster/240x.".$item["poster"];
+					$media = $IC->sliceMedia($item, "poster");
+
+					if($media && file_exists(PRIVATE_FILE_PATH."/".$item["id"]."/poster/".$media["format"])) {
+						$image = "/images/".$item["id"]."/poster/240x.".$media["format"];
 					}
 					else {
 						$image = "/images/0/missing/240x320.png";
