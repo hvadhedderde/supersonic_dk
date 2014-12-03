@@ -17,7 +17,7 @@ $item = $IC->getItem(array("sindex" => $action[0], "extend" => array("tags" => t
 		<img src="/images/<?= $item["id"] ?>/200x90.<?= $item["mediae"]["main"]["format"] ?>" alt="<?= $item["name"] ?>" />
 
 		<div class="articlebody" itemprop="articleBody">
-			<?= $item["text"] ?>
+			<?= $item["html"] ?>
 		</div>
 
 	</div>
