@@ -3,7 +3,6 @@
 /* NEWS LIST */
 #content .newsEdit div.media.main form.upload input[type=file] {height: 153px;}
 #content .newsEdit div.media.main form.upload label {margin-top: 64px;}
-#content .newsEdit div.media.main img {height: 173px;}
 
 
 /* AUDIO LIST */
@@ -13,7 +12,9 @@
 
 
 /* PERSON LIST */
-#content .personList ul.items > li.image {padding-left: 100px;}
+#content .personEdit ul.items > li.image {padding-left: 100px;}
+#content .personEdit div.media.main form.upload input[type=file] {height: 437px;}
+#content .personEdit div.media.main form.upload label {margin-top: 64px;}
 
 
 /* NAVIGATION */

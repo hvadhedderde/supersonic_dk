@@ -1,7 +1,7 @@
 <?php
 global $IC;
 
-$text_items = $IC->getItems(array("itemtype" => "text", "status" => 1, "tags" => "page:People"));
+$text_items = $IC->getItems(array("itemtype" => "text", "status" => 1, "tags" => "page:Tour"));
 ?>
 <div class="scene i:tour">
 

@@ -3,7 +3,7 @@
 
 
 #content h1 {font-size: 24px; line-height: 1em; padding: 0 50px 15px; text-transform: uppercase;}
-#content h2 {font-size: 20px; line-height: 1em; padding: 0 50px 20px;}
+#content h2 {font-size: 20px; line-height: 1em; padding: 0 50px 10px;}
 #content h3 {font-size: 16px; line-height: 1em; padding: 0 50px 15px;}
 #content h4 {font-size: 14px; line-height: 1em; padding: 0 50px 15px;}
 #content h5 {font-size: 14px; line-height: 1em; padding: 0 50px 15px;}
@@ -71,15 +71,17 @@
 .news #content .scene div.news li:hover {background-color: #414141;}
 .news #content .scene div.news h2 {font-size: 24px; padding-left: 215px; text-transform: uppercase;}
 .news #content .scene div.news .info {padding: 10px 15px 5px 215px;}
-.news #content .scene div.news .published {font-size: 11px; text-transform: uppercase;}
+.news #content .scene div.news .info dt,
+.news #content .scene div.news .info dd.hardlink {display: none;}
+.news #content .scene div.news .published_at {font-size: 11px; text-transform: uppercase;}
 .news #content .scene div.news img {position: absolute; left: 0px; top: 0px;}
-.news #content .scene div.news .text {padding: 10px 15px 15px 215px; height: auto; position: static; width: auto; background: none;}
-.news #content .scene div.news .text p {font-size: 14px;}
-.news #content .scene div.news .text dl {font-size: 0;}
-.news #content .scene div.news .text dt {display: inline-block; vertical-align: top; width: 140px;}
-.news #content .scene div.news .text dd {display: inline-block; vertical-align: top; width: 470px; padding: 0 0 5px;}
-.news #content .scene div.news .text .actions {position: static; padding: 0;}
-.news #content .scene div.news .text .actions li {height: auto; font-size: 14px; text-transform: uppercase; background: transparent url(/img/gx_next.png) no-repeat 0 3px; padding: 0 0 0 20px;}
+.news #content .scene div.news .articlebody {padding: 10px 15px 15px 215px; height: auto; position: static; width: auto; background: none;}
+.news #content .scene div.news .articlebody p {font-size: 14px;}
+.news #content .scene div.news .articlebody dl {font-size: 0;}
+.news #content .scene div.news .articlebody dt {display: none;}
+.news #content .scene div.news .articlebody dd {display: inline-block; vertical-align: top; width: 470px; padding: 0 0 5px;}
+.news #content .scene div.news .articlebody .actions {position: static; padding: 0;}
+.news #content .scene div.news .articlebody .actions li {height: auto; font-size: 14px; text-transform: uppercase; background: transparent url(/img/gx_next.png) no-repeat 0 3px; padding: 0 0 0 20px;}
 
 
 /* POSTERS */
@@ -208,7 +210,7 @@
 
 /* TOUR */
 .tour #content .scene {background: transparent url(/img/bg_tile.png) repeat top left;}
-.tour #content .scene .text .actions {position: static; padding-top: 20px;}
+.tour #content .scene .text .actions {position: static; padding: 20px 0 12px; list-style: none;}
 .tour #content .scene .text .actions li {font-size: 14px; text-transform: uppercase; background: transparent url(/img/gx_next.png) no-repeat 0 3px; padding: 0 0 0 20px; margin-bottom: 20px; cursor: pointer;}
 .tour #content .scene .text .actions li.selected {margin-left: 20px;}
 .tour #content .scene .text .actions li.selected a {font-weight: bold;}
