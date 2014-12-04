@@ -8,7 +8,7 @@ $items_jingles = $IC->getItems(array("itemtype" => "audio", "status" => 1, "tags
 <div class="scene i:audio">
 
 <?		if($text_items) { ?>
-		<div class="text">
+		<div class="text articlebody">
 		<?	$random = rand(0, count($text_items)-1);
 			$text = $text_items[$random];
 			$text = $IC->extendItem($text);

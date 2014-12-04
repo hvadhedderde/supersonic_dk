@@ -21,7 +21,7 @@ $item = $IC->getItem(array("sindex" => $action[0], "extend" => array("mediae" =>
 			<h1><?= $item["name"] ?></h1>
 			<div class="role"><?= $item["title"] ?></div>
 			<div class="email"><a href="mailto:<?= $item["email"] ?>"><?= $item["email"] ?></a></div>
-			<div class="description"><?= $item["html"] ?></div>
+			<div class="articlebody"><?= $item["html"] ?></div>
 
 		</div>
 			
