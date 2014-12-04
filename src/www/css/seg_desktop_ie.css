@@ -82,15 +82,6 @@ input, textarea {outline: none;}
 #content dt {font-size: 12px; font-weight: bold;}
 #content dd {font-size: 14px; padding: 0 0 10px; text-transform: uppercase;}
 #content .scene .text {position: absolute; top: 0px; left: 0px; width: 280px; height: 435px; padding: 40px 50px 5px; background: #4d6d00;}
-#content .scene .text h1, 
-#content .scene .text h2, 
-#content .scene .text h3, 
-#content .scene .text h4, 
-#content .scene .text h5, 
-#content .scene .text p,
-#content .scene .text ul,
-#content .scene .text dl {padding-left: 0; padding-right: 0;}
-#content .scene .text a {text-decoration: underline;}
 #content .scene .actions {position: absolute; left: 0; bottom: 30px;}
 #content .scene .actions li.back {font-size: 14px; text-transform: uppercase; background: transparent url(/img/gx_back.png) no-repeat 0 2px; padding: 0 0 0 20px;}
 #content .scene .articlebody h1 {font-size: 24px; padding: 0 0 15px; text-transform: uppercase;}
@@ -102,6 +93,7 @@ input, textarea {outline: none;}
 #content .scene .articlebody ul {padding: 0 15px 12px; list-style: disc;}
 #content .scene .articlebody ol {padding: 0 15px 12px; list-style: decimal;}
 #content .scene .articlebody li {display: list-item; padding-bottom: 3px;}
+#content .scene .articlebody a {text-decoration: underline;}
 .front #content .scene .videoplayer {}
 .front #content .scene video {width: 960px; height: 480px;}
 .news #content .scene {background: transparent url(/img/bg_tile.png) repeat top left;}
@@ -188,7 +180,7 @@ input, textarea {outline: none;}
 .people #content .scene div.columns {font-size: 0; padding: 0;}
 .people #content .scene div.column {display: inline-block; vertical-align: top; width: 140px; padding: 0;}
 .people #content .scene div.group h2 {text-transform: uppercase; font-size: 14px; padding: 0 0 7px;}
-.people #content .scene div.group ul {padding: 0 0 25px;}
+.people #content .scene div.group ul {padding: 0 0 25px; list-style: none;}
 .people #content .scene div.group ul li a {text-decoration: none;}
 .people #content .scene div.group ul li.selected a {font-weight: bold; padding-left: 10px;}
 .people #content .scene div.people div.person {padding: 0 50px;}
@@ -197,16 +189,12 @@ input, textarea {outline: none;}
 .people #content .scene div.people div.person .role {padding: 0 0 20px; font-size: 13px;}
 .people #content .scene div.people div.person .email {padding: 0 0 20px; font-size: 13px;}
 .people #content .scene div.people div.person .email a {font-size: 13px; text-decoration: none;}
-.people #content .scene div.people div.person .description {padding: 0;}
-.people #content .scene div.people div.person .description p {padding-left: 0; padding-right: 0;}
 .people #content .scene div.person {padding: 80px 0 0 380px; font-size: 0;}
 .people #content .scene div.profile {padding: 0 50px 0 302px; height: 270px; width: 228px; background-position: 50px 0; background-repeat: no-repeat;}
 .people #content .scene div.person h1 {text-transform: uppercase; padding: 0 0 5px; font-size: 16px;}
 .people #content .scene div.person .role {padding: 0 0 20px; font-size: 13px;}
 .people #content .scene div.person .email {padding: 0 0 20px; font-size: 13px;}
 .people #content .scene div.person .email a {font-size: 13px;}
-.people #content .scene div.person .description {padding: 0;}
-.people #content .scene div.person .description p {padding-left: 0; padding-right: 0;}
 .tour #content .scene {background: transparent url(/img/bg_tile.png) repeat top left;}
 .tour #content .scene .text .actions {position: static; padding-top: 20px;}
 .tour #content .scene .text .actions li {font-size: 14px; text-transform: uppercase; background: transparent url(/img/gx_next.png) no-repeat 0 3px; padding: 0 0 0 20px; margin-bottom: 20px; cursor: pointer;}
