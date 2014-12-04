@@ -4730,15 +4730,17 @@ Util.audioPlayer = function(node) {
 		player.stop = function() {}
 	}
 	player.correctSource = function(src) {
+		var param = src.match(/\?[^$]+/) ? src.match(/(\?[^$]+)/)[1] : "";
+		src = src.replace(/\?[^$]+/, "");
 		src = src.replace(/.mp3|.ogg|.wav/, "");
 		if(this.audio.canPlayType("audio/mpeg")) {
-			return src+".mp3";
+			return src+".mp3"+param;
 		}
 		else if(this.audio.canPlayType("audio/ogg")) {
-			return src+".ogg";
+			return src+".ogg"+param;
 		}
 		else {
-			return src+".wav";
+			return src+".wav"+param;
 		}
 	}
 	return player;
@@ -5065,22 +5067,23 @@ Util.videoPlayer = function(_options) {
 		player = u.videoPlayerFallback(player);
 	}
 	player.correctSource = function(src) {
+		var param = src.match(/\?[^$]+/) ? src.match(/(\?[^$]+)/)[1] : "";
 		src = src.replace(/\?[^$]+/, "");
 		src = src.replace(/\.m4v|\.mp4|\.webm|\.ogv|\.3gp|\.mov/, "");
 		if(this.flash) {
-			return src+".mp4";
+			return src+".mp4"+param;
 		}
 		else if(this.video.canPlayType("video/mp4")) {
-			return src+".mp4";
+			return src+".mp4"+param;
 		}
 		else if(this.video.canPlayType("video/ogg")) {
-			return src+".ogv";
+			return src+".ogv"+param;
 		}
 		else if(this.video.canPlayType("video/3gpp")) {
-			return src+".3gp";
+			return src+".3gp"+param;
 		}
 		else {
-			return src+".mov";
+			return src+".mov"+param;
 		}
 	}
 	player.setControls = function() {
@@ -5877,13 +5880,49 @@ u.e.addOnloadEvent = function(action) {
 		u.e.addEvent(window, "load", window["_Onload_" + id]);
 	}
 }
-u.e.addResizeEvent = function(node, action) {
+u.e.addWindowResizeEvent = function(node, action) {
+	var id = u.randomString();
+	u.ac(node, id);
+	eval('window["_Onresize_' + id + '"] = function() {var node = u.qs(".'+id+'"); node._Onresize_'+id+' = '+action+'; node._Onresize_'+id+'();}');
+	u.e.addEvent(window, "resize", window["_Onresize_" + id]);
+	return id;
 }
-u.e.removeResizeEvent = function(node, action) {
+u.e.removeWindowResizeEvent = function(node, id) {
+	u.rc(node, id);
+	u.e.removeEvent(window, "resize", window["_Onresize_" + id]);
 }
-u.e.addScrollEvent = function(node, action) {
+u.e.addWindowScrollEvent = function(node, action) {
+	var id = u.randomString();
+	u.ac(node, id);
+	eval('window["_Onscroll_' + id + '"] = function() {var node = u.qs(".'+id+'"); node._Onscroll_'+id+' = '+action+'; node._Onscroll_'+id+'();}');
+	u.e.addEvent(window, "scroll", window["_Onscroll_" + id]);
+	return id;
 }
-u.e.removeScrollEvent = function(node, action) {
+u.e.removeWindowScrollEvent = function(node, id) {
+	u.rc(node, id);
+	u.e.removeEvent(window, "scroll", window["_Onscroll_" + id]);
+}
+u.e.addWindowMoveEvent = function(node, action) {
+	var id = u.randomString();
+	u.ac(node, id);
+	eval('window["_Onmove_' + id + '"] = function(event) {var node = u.qs(".'+id+'"); node._Onmove_'+id+' = '+action+'; node._Onmove_'+id+'(event);}');
+	u.e.addMoveEvent(window, window["_Onmove_" + id]);
+	return id;
+}
+u.e.removeWindowMoveEvent = function(node, id) {
+	u.rc(node, id);
+	u.e.removeMoveEvent(window, window["_Onmove_" + id]);
+}
+u.e.addWindowEndEvent = function(node, action) {
+	var id = u.randomString();
+	u.ac(node, id);
+	eval('window["_Onend_' + id + '"] = function(event) {var node = u.qs(".'+id+'"); node._Onend_'+id+' = '+action+'; node._Onend_'+id+'(event);}');
+	u.e.addEndEvent(window, window["_Onend_" + id]);
+	return id;
+}
+u.e.removeWindowEndEvent = function(node, id) {
+	u.rc(node, id);
+	u.e.removeEndEvent(window, window["_Onend_" + id]);
 }
 
 
@@ -5947,8 +5986,7 @@ Util.Objects["newslist"] = new function() {
 				if(u.hc(this, "selected")) {
 					u.rc(this, "selected");
 					this.transitioned = function() {
-						this.transitioned = null;
-						this.removeChild(u.qs(".text", this));
+						this.removeChild(u.qs(".articlebody", this));
 					}
 					u.a.transition(this, "all 0.4s ease-in");
 					u.a.setHeight(this, this._start_height);
@@ -5956,7 +5994,7 @@ Util.Objects["newslist"] = new function() {
 				else {
 					u.ac(this, "selected");
 					this.response = function(response) {
-						var text = this.appendChild(u.qs(".text", response));
+						var text = this.appendChild(u.qs(".articlebody", response));
 						u.a.transition(this, "all 0.4s ease-in");
 						u.a.setHeight(this, this._start_height + text.offsetHeight);
 					}

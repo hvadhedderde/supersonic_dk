@@ -14,7 +14,7 @@ $item_id = $item["id"];
 
 	<div class="item i:defaultEdit item_id:<?= $item_id ?>">
 		<h2>Video details</h2>
-		<?= $model->formStart("/janitor/admin/items/update/".$item_id, array("class" => "labelstyle:inject")) ?>
+		<?= $model->formStart("update/".$item_id, array("class" => "labelstyle:inject")) ?>
 
 			<fieldset>
 				<?= $model->input("published_at", array("value" => $item["published_at"])) ?>

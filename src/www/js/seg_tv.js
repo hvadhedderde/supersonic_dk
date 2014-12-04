@@ -4730,15 +4730,17 @@ Util.audioPlayer = function(node) {
 		player.stop = function() {}
 	}
 	player.correctSource = function(src) {
+		var param = src.match(/\?[^$]+/) ? src.match(/(\?[^$]+)/)[1] : "";
+		src = src.replace(/\?[^$]+/, "");
 		src = src.replace(/.mp3|.ogg|.wav/, "");
 		if(this.audio.canPlayType("audio/mpeg")) {
-			return src+".mp3";
+			return src+".mp3"+param;
 		}
 		else if(this.audio.canPlayType("audio/ogg")) {
-			return src+".ogg";
+			return src+".ogg"+param;
 		}
 		else {
-			return src+".wav";
+			return src+".wav"+param;
 		}
 	}
 	return player;
@@ -5065,22 +5067,23 @@ Util.videoPlayer = function(_options) {
 		player = u.videoPlayerFallback(player);
 	}
 	player.correctSource = function(src) {
+		var param = src.match(/\?[^$]+/) ? src.match(/(\?[^$]+)/)[1] : "";
 		src = src.replace(/\?[^$]+/, "");
 		src = src.replace(/\.m4v|\.mp4|\.webm|\.ogv|\.3gp|\.mov/, "");
 		if(this.flash) {
-			return src+".mp4";
+			return src+".mp4"+param;
 		}
 		else if(this.video.canPlayType("video/mp4")) {
-			return src+".mp4";
+			return src+".mp4"+param;
 		}
 		else if(this.video.canPlayType("video/ogg")) {
-			return src+".ogv";
+			return src+".ogv"+param;
 		}
 		else if(this.video.canPlayType("video/3gpp")) {
-			return src+".3gp";
+			return src+".3gp"+param;
 		}
 		else {
-			return src+".mov";
+			return src+".mov"+param;
 		}
 	}
 	player.setControls = function() {
@@ -5338,8 +5341,7 @@ Util.Objects["newslist"] = new function() {
 				if(u.hc(this, "selected")) {
 					u.rc(this, "selected");
 					this.transitioned = function() {
-						this.transitioned = null;
-						this.removeChild(u.qs(".text", this));
+						this.removeChild(u.qs(".articlebody", this));
 					}
 					u.a.transition(this, "all 0.4s ease-in");
 					u.a.setHeight(this, this._start_height);
@@ -5347,7 +5349,7 @@ Util.Objects["newslist"] = new function() {
 				else {
 					u.ac(this, "selected");
 					this.response = function(response) {
-						var text = this.appendChild(u.qs(".text", response));
+						var text = this.appendChild(u.qs(".articlebody", response));
 						u.a.transition(this, "all 0.4s ease-in");
 						u.a.setHeight(this, this._start_height + text.offsetHeight);
 					}

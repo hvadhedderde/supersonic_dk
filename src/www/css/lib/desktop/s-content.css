@@ -56,6 +56,15 @@
 #content .scene .actions li.back {font-size: 14px; text-transform: uppercase; background: transparent url(/img/gx_back.png) no-repeat 0 2px; padding: 0 0 0 20px;}
 
 
+#content .scene .articlebody h1 {font-size: 24px; padding: 0 0 15px; text-transform: uppercase;}
+#content .scene .articlebody h2 {font-size: 20px; padding: 0 0 20px;}
+#content .scene .articlebody h3 {font-size: 15px; padding: 0 0 3px; font-weight: bold;}
+#content .scene .articlebody h4 {font-size: 14px; padding: 0 0 15px;}
+#content .scene .articlebody h5 {font-size: 14px; padding: 0 0 15px;}
+#content .scene .articlebody p {font-size: 12px; padding: 0 0 15px;}
+#content .scene .articlebody ul {padding: 0 15px 12px; list-style: disc;}
+#content .scene .articlebody ol {padding: 0 15px 12px; list-style: decimal;}
+#content .scene .articlebody li {display: list-item; padding-bottom: 3px;}
 
 /* FRONT */
 .front #content .scene .videoplayer {}
