@@ -57,6 +57,9 @@
 #content .scene .articlebody ol {padding: 0 15px 12px; list-style: decimal;}
 #content .scene .articlebody li {display: list-item; padding-bottom: 3px;}
 #content .scene .articlebody a {text-decoration: underline;}
+#content .scene .articlebody strong {font-weight: bold;}
+#content .scene .articlebody em {font-style: italic;}
+
 
 /* FRONT */
 .front #content .scene .videoplayer {}
@@ -80,9 +83,9 @@
 .news #content .scene div.news .articlebody dl {font-size: 0;}
 .news #content .scene div.news .articlebody dt {display: none;}
 .news #content .scene div.news .articlebody dd {display: inline-block; vertical-align: top; width: 470px; padding: 0 0 5px;}
-.news #content .scene div.news .articlebody .actions {position: static; padding: 0;}
-.news #content .scene div.news .articlebody .actions li {height: auto; font-size: 14px; text-transform: uppercase; background: transparent url(/img/gx_next.png) no-repeat 0 3px; padding: 0 0 0 20px;}
-
+.news #content .scene div.news .articlebody > ul {position: static; padding: 0;}
+.news #content .scene div.news .articlebody > ul li {height: auto; background: transparent; margin: 0;}
+.news #content .scene div.news .articlebody > ul li a {text-decoration: none; display: block; font-size: 14px; text-transform: uppercase; background: transparent url(/img/gx_next.png) no-repeat 0 3px; padding: 0 0 0 20px;}
 
 /* POSTERS */
 #content .scene ul.posters {font-size: 0; padding: 0 0 0 0px;}

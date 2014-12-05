@@ -31,6 +31,10 @@ Util.Objects["newslist"] = new function() {
 
 					this.response = function(response) {
 						var text = this.appendChild(u.qs(".articlebody", response));
+
+						this.transitioned = function() {
+							u.a.transition(this, "none");
+						}
 						u.a.transition(this, "all 0.4s ease-in");
 						u.a.setHeight(this, this._start_height + text.offsetHeight);
 					}

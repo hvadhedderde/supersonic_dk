@@ -94,6 +94,8 @@ input, textarea {outline: none;}
 #content .scene .articlebody ol {padding: 0 15px 12px; list-style: decimal;}
 #content .scene .articlebody li {display: list-item; padding-bottom: 3px;}
 #content .scene .articlebody a {text-decoration: underline;}
+#content .scene .articlebody strong {font-weight: bold;}
+#content .scene .articlebody em {font-style: italic;}
 .front #content .scene .videoplayer {}
 .front #content .scene video {width: 960px; height: 480px;}
 .news #content .scene {background: transparent url(/img/bg_tile.png) repeat top left;}
@@ -112,8 +114,9 @@ input, textarea {outline: none;}
 .news #content .scene div.news .articlebody dl {font-size: 0;}
 .news #content .scene div.news .articlebody dt {display: none;}
 .news #content .scene div.news .articlebody dd {display: inline-block; vertical-align: top; width: 470px; padding: 0 0 5px;}
-.news #content .scene div.news .articlebody .actions {position: static; padding: 0;}
-.news #content .scene div.news .articlebody .actions li {height: auto; font-size: 14px; text-transform: uppercase; background: transparent url(/img/gx_next.png) no-repeat 0 3px; padding: 0 0 0 20px;}
+.news #content .scene div.news .articlebody > ul {position: static; padding: 0;}
+.news #content .scene div.news .articlebody > ul li {height: auto; background: transparent; margin: 0;}
+.news #content .scene div.news .articlebody > ul li a {text-decoration: none; display: block; font-size: 14px; text-transform: uppercase; background: transparent url(/img/gx_next.png) no-repeat 0 3px; padding: 0 0 0 20px;}
 #content .scene ul.posters {font-size: 0; padding: 0 0 0 0px;}
 #content .scene ul.posters li {width: 240px; height: 320px; padding: 0; margin: 10px 20px 20px 50px; display: inline-block; vertical-align: top; background-color: transparent; background-position: 0 0; background-repeat: no-repeat; cursor: pointer;}
 #content .scene ul.posters li h2 {text-indent: -9999px; overflow: hidden; height: 320px; background: transparent url(/img/bg_bn_play_medium.png) no-repeat center center;}
