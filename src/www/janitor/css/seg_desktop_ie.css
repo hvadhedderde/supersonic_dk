@@ -657,16 +657,21 @@ body #selection_options ul.actions a.button:hover {background-color: #313942;}
 
 
 
+/*s-form-desktop_ie.css*/
+#content .field.files input[type="file"] {font-size: 130px;}
+
+
 
 /*s-content.css*/
 #content .scene {}
 #content .newsEdit div.media.main form.upload input[type=file] {height: 153px;}
 #content .newsEdit div.media.main form.upload label {margin-top: 64px;}
-#content .newsEdit div.media.main img {height: 173px;}
 #content .audioList ul.items > li {padding-left: 80px;}
 #content .audioList ul.items > li .audio {position: absolute; top: 16px; left: 30px; width: 50px; height: 50px; background: transparent url(/janitor/img/bg_bn_play_medium.png) no-repeat 0px 0px;}
 #content .audioList ul.items > li.playing .audio {background-position: 0px -100px;}
-#content .personList ul.items > li.image {padding-left: 100px;}
+#content .personEdit ul.items > li.image {padding-left: 100px;}
+#content .personEdit div.media.main form.upload input[type=file] {height: 437px;}
+#content .personEdit div.media.main form.upload label {margin-top: 64px;}
 body.news #navigation .news a,
 body.audio #navigation .audio a,
 body.video #navigation .video a,
