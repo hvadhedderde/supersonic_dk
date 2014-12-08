@@ -8,11 +8,9 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	<meta name="keywords" content="" />
 	<meta name="description" content="<?= $this->pageDescription() ?>" />
-	<meta name="viewport" content="initial-scale=1" />
+	<meta name="viewport" content="initial-scale=1, user-scalable=no" />
 	<meta name="apple-mobile-web-app-capable" content="yes" />
 	<meta name="apple-mobile-web-app-status-bar-style" content="black" />
-	<meta name="MSSmartTagsPreventParsing" content="true" />
-	<meta http-equiv="imagetoolbar" content="no" />
 <? if(session()->value("dev")) { ?>
 	<link type="text/css" rel="stylesheet" media="all" href="/janitor/css/lib/seg_<?= $this->segment() ?>_include.css" />
 	<script type="text/javascript" src="/janitor/js/lib/seg_<?= $this->segment() ?>_include.js"></script>
@@ -29,6 +27,11 @@
 	<div id="header">
 		<ul class="servicenavigation">
 			<li class="keynav front"><a href="/janitor"><?= SITE_NAME ?></a></li>
+<?			if(session()->value("user_id") && session()->value("user_group_id") > 1): ?>
+			<li class="keynav user nofollow"><a href="?logoff=true">Logoff</a></li>
+<?			else: ?>
+			<li class="keynav user nofollow"><a href="/login">Login</a></li>
+<?			endif; ?>
 		</ul>
 	</div>
 
