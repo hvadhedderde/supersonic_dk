@@ -2,13 +2,14 @@
 
 	<div id="navigation">
 		<ul>
-			<li class="news"><a href="/janitor/news/list">News</a></li>
-			<li class="audio"><a href="/janitor/audio/list">Audio</a></li>
-			<li class="video"><a href="/janitor/video/list">Video</a></li>
-			<li class="text"><a href="/janitor/text/list">Page texts</a></li>
-			<li class="person"><a href="/janitor/person/list">People</a></li>
-			<li class="tags"><a href="/janitor/admin/tag/list">Tags</a></li>
-			<li class="user"><a href="/janitor/admin/user/list">Users</a></li>
+			<?= $HTML->link("News", "/janitor/admin/news/list", array("wrapper" => "li.news")) ?>
+			<?= $HTML->link("Audio", "/janitor/admin/audio/list", array("wrapper" => "li.audio")) ?>
+			<?= $HTML->link("Video", "/janitor/admin/video/list", array("wrapper" => "li.video")) ?>
+			<?= $HTML->link("Page texts", "/janitor/admin/text/list", array("wrapper" => "li.text")) ?>
+			<?= $HTML->link("People", "/janitor/admin/person/list", array("wrapper" => "li.person")) ?>
+
+			<?= $HTML->link("Tags", "/janitor/admin/tag/list", array("wrapper" => "li.tags")) ?>
+			<?= $HTML->link("Users", "/janitor/admin/user/list", array("wrapper" => "li.user")) ?>
 		</ul>
 	</div>
 

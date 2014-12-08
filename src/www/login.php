@@ -15,6 +15,7 @@ $page->pageTitle("Login");
 
 
 $page->page(array(
+	"type" => "janitor",
 	"templates" => "pages/login.php"
 ));
 
