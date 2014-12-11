@@ -28,7 +28,7 @@ $items = $IC->getItems(array("itemtype" => "audio", "status" => 1, "tags" => "ca
 						<ul class="audio">
 <?					}
 					$media = $IC->sliceMedia($item, "main"); ?>
-					<li class=""><a href="/audios/<?= $item["id"] ?>/main/128.<?= $media["format"] ?>"><?= $item["name"] ?></a></li>
+					<li class=""><a href="/audios/<?= $item["id"] ?>/main/128.mp3" rel="nofollow"><?= $item["name"] ?></a></li>
 <?				endforeach; ?>
 <?			endif; ?>
 			</ul>

@@ -5,6 +5,7 @@ global $itemtype;
 
 $item = $IC->getItem(array("sindex" => $action[0], "extend" => array("mediae" => true)));
 $video = $IC->sliceMedia($item, "video");
+print_r($video);
 $screendump = $IC->sliceMedia($item, "screendump");
 ?>
 <div class="scene i:video">
@@ -21,7 +22,7 @@ $screendump = $IC->sliceMedia($item, "screendump");
 		</div>
 
 		<ul class="actions">
-			<li class="watch"><a href="/videos/<?= $item["id"] ?>/video/512x288.<?= $video["format"] ?>">Watch movie</a></li>
+			<li class="watch"><a href="/videos/<?= $item["id"] ?>/video/512x288.mp4" rel="nofollow">Watch movie</a></li>
 		</ul>
 	</div>
 

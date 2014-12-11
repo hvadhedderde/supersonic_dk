@@ -25,7 +25,7 @@ $items_jingles = $IC->getItems(array("itemtype" => "audio", "status" => 1, "tags
 <?			if($items_tunes) {
 				foreach($items_tunes as $item) {
 					$item = $IC->extendItem($item); ?>
-				<li class=""><a href="/audios/<?= $item["id"] ?>/main/128.mp3"><?= $item["name"] ?></a></li>
+				<li class=""><a href="/audios/<?= $item["id"] ?>/main/128.mp3" rel="nofollow"><?= $item["name"] ?></a></li>
 <?			} ?>
 <?		} ?>
 			</ul>
@@ -37,7 +37,7 @@ $items_jingles = $IC->getItems(array("itemtype" => "audio", "status" => 1, "tags
 <?			if($items_jingles) {
 				foreach($items_jingles as $item) {
 					$item = $IC->extendItem($item); ?>
-				<li class=""><a href="/audios/<?= $item["id"] ?>/main/128.mp3"><?= $item["name"] ?></a></li>
+				<li class=""><a href="/audios/<?= $item["id"] ?>/main/128.mp3" rel="nofollow"><?= $item["name"] ?></a></li>
 <?			} ?>
 <?		} ?>
 			</ul>
