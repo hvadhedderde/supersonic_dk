@@ -20,9 +20,11 @@ $screendump = $IC->sliceMedia($item, "screendump");
 			<?= $item["html"] ?>
 		</div>
 
+<?		if($video): ?>
 		<ul class="actions">
 			<li class="watch"><a href="/videos/<?= $item["id"] ?>/video/512x288.mp4" rel="nofollow">Watch movie</a></li>
 		</ul>
+<?		endif; ?>
 	</div>
 
 	<div class="video item_id:<?= $item["id"] ?><?= $screendump ? (" screendump:".$screendump["format"]) : "" ?>"></div>
