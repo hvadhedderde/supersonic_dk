@@ -5,7 +5,6 @@ global $itemtype;
 
 $item = $IC->getItem(array("sindex" => $action[0], "extend" => array("mediae" => true)));
 $video = $IC->sliceMedia($item, "video");
-print_r($video);
 $screendump = $IC->sliceMedia($item, "screendump");
 ?>
 <div class="scene i:video">
