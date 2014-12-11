@@ -27,7 +27,9 @@ $screendump = $IC->sliceMedia($item, "screendump");
 <?		endif; ?>
 	</div>
 
+<?	if($video): ?>
 	<div class="video item_id:<?= $item["id"] ?><?= $screendump ? (" screendump:".$screendump["format"]) : "" ?>"></div>
+<?	endif; ?>
 
 	<ul class="actions">
 		<? if(isset($_SERVER["HTTP_REFERER"]) && strpos($_SERVER["HTTP_REFERER"], $_SERVER["HTTP_HOST"])) { ?>
