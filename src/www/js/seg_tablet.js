@@ -3135,95 +3135,97 @@ Util.Objects["newslist"] = new function() {
 Util.Objects["video"] = new function() {
 	this.init = function(scene) {
 		var video = u.qs(".video", scene);
-		scene._item_id = u.cv(video, "item_id");
-		scene._screendump = u.cv(video, "screendump");
-		var page = u.qs("#page");
-		if(!page.videoplayer) {
-			page.videoplayer = u.videoPlayer();
-		}
-		if(!page.videoplayer._controls) {
-			page.videoplayer._controls = u.ae(page.videoplayer, "div", {"class":"controls"});
-			u.e.click(page.videoplayer._controls);
-			page.videoplayer._controls.clicked = function(event) {
-				if(u.hc(this.parentNode, "active")) {
-					if(u.hc(this.parentNode, "playing")) {
-						this.parentNode.pause();
+		if(video) {
+			scene._item_id = u.cv(video, "item_id");
+			scene._screendump = u.cv(video, "screendump");
+			var page = u.qs("#page");
+			if(!page.videoplayer) {
+				page.videoplayer = u.videoPlayer();
+			}
+			if(!page.videoplayer._controls) {
+				page.videoplayer._controls = u.ae(page.videoplayer, "div", {"class":"controls"});
+				u.e.click(page.videoplayer._controls);
+				page.videoplayer._controls.clicked = function(event) {
+					if(u.hc(this.parentNode, "active")) {
+						if(u.hc(this.parentNode, "playing")) {
+							this.parentNode.pause();
+						}
+						else {
+							u.stats.event(this.parentNode, "play video", location.href);
+							this.parentNode.play();
+						}
 					}
 					else {
-						u.stats.event(this.parentNode, "play video", location.href);
-						this.parentNode.play();
-					}
-				}
-				else {
-					var src = u.qs(".watch a").href;
-					this.parentNode.loadAndPlay(src);
-					u.ac(this.parentNode, "active");
-					if(u.e.event_pref == "touch") {
-						page.videoplayer.video.controls = true;
-					}
-					if(u.e.event_pref == "mouse") {
-						page.videoplayer._controls.onmousemove = function() {
-							u.t.resetTimer(this.t_hide);
-							u.a.transition(this, "all 0.3s ease-in");
-							u.a.setOpacity(this, 1);
-							this.t_hide = u.t.setTimer(this, this.onmouseout, 800);
-						}
-						page.videoplayer._controls.onmouseout = function() {
-							u.a.transition(this, "all 0.3s ease-in");
-							u.a.setOpacity(this, 0);
-						}
-						this.t_hide = u.t.setTimer(this, this.onmouseout, 500);
-					}
-					page.videoplayer.ended = function() {
-						this.ended = null;
-						this.stop();
-						u.rc(this, "active");
-						u.a.transition(this._controls, "all 0.3s ease-in");
-						u.a.setOpacity(this._controls, 1);
-						if(u.qs("#page").fullscreen) {
-							u.qs("#page").fullscreen.clicked();
+						var src = u.qs(".watch a").href;
+						this.parentNode.loadAndPlay(src);
+						u.ac(this.parentNode, "active");
+						if(u.e.event_pref == "touch") {
+							page.videoplayer.video.controls = true;
 						}
 						if(u.e.event_pref == "mouse") {
-							this._controls.onmouseover = null;
-							this._controls.onmouseout = null;
-						}
-					}
-				}
-			}
-			if(u.e.event_pref == "mouse") {
-				page.videoplayer._controls._zoom = u.ae(page.videoplayer._controls, "div", {"class":"zoom"});
-				page.videoplayer._controls._zoom.page = page;
-				u.e.click(page.videoplayer._controls._zoom);
-				page.videoplayer._controls._zoom.clicked = function(event) {
-					this.page.transitioned = function(event) {
-						this._scrolled_to = u.scrollY();
-						u.as(this, "display", "none");
-						this.fullscreen = u.ae(document.body, "div", {"id":"fullscreen", "html":"<div><h1>Shhhh!</h1><p>Fullscreen audio</p></div>"});
-						this.fullscreen.page = this;
-						u.e.click(this.fullscreen);
-						this.fullscreen.clicked = function(event) {
-							u.as(this, "display", "none");
-							this.page.transitioned = function() {
-								if(this.fullscreen.parentNode) {
-									this.fullscreen.parentNode.removeChild(this.fullscreen);
-								}
-								u.a.transition(this, "none");
-								this.transitioned = null;
-								this.fullscreen = null;
+							page.videoplayer._controls.onmousemove = function() {
+								u.t.resetTimer(this.t_hide);
+								u.a.transition(this, "all 0.3s ease-in");
+								u.a.setOpacity(this, 1);
+								this.t_hide = u.t.setTimer(this, this.onmouseout, 800);
 							}
-							u.as(this.page, "display", "block");
-							window.scrollTo(0, this.page._scrolled_to);
-							u.a.setOpacity(this.page, 1);
+							page.videoplayer._controls.onmouseout = function() {
+								u.a.transition(this, "all 0.3s ease-in");
+								u.a.setOpacity(this, 0);
+							}
+							this.t_hide = u.t.setTimer(this, this.onmouseout, 500);
+						}
+						page.videoplayer.ended = function() {
+							this.ended = null;
+							this.stop();
+							u.rc(this, "active");
+							u.a.transition(this._controls, "all 0.3s ease-in");
+							u.a.setOpacity(this._controls, 1);
+							if(u.qs("#page").fullscreen) {
+								u.qs("#page").fullscreen.clicked();
+							}
+							if(u.e.event_pref == "mouse") {
+								this._controls.onmouseover = null;
+								this._controls.onmouseout = null;
+							}
 						}
 					}
-					u.a.transition(this.page, "all 0.5s ease-in");
-					u.a.setOpacity(this.page, 0);
+				}
+				if(u.e.event_pref == "mouse") {
+					page.videoplayer._controls._zoom = u.ae(page.videoplayer._controls, "div", {"class":"zoom"});
+					page.videoplayer._controls._zoom.page = page;
+					u.e.click(page.videoplayer._controls._zoom);
+					page.videoplayer._controls._zoom.clicked = function(event) {
+						this.page.transitioned = function(event) {
+							this._scrolled_to = u.scrollY();
+							u.as(this, "display", "none");
+							this.fullscreen = u.ae(document.body, "div", {"id":"fullscreen", "html":"<div><h1>Shhhh!</h1><p>Fullscreen audio</p></div>"});
+							this.fullscreen.page = this;
+							u.e.click(this.fullscreen);
+							this.fullscreen.clicked = function(event) {
+								u.as(this, "display", "none");
+								this.page.transitioned = function() {
+									if(this.fullscreen.parentNode) {
+										this.fullscreen.parentNode.removeChild(this.fullscreen);
+									}
+									u.a.transition(this, "none");
+									this.transitioned = null;
+									this.fullscreen = null;
+								}
+								u.as(this.page, "display", "block");
+								window.scrollTo(0, this.page._scrolled_to);
+								u.a.setOpacity(this.page, 1);
+							}
+						}
+						u.a.transition(this.page, "all 0.5s ease-in");
+						u.a.setOpacity(this.page, 0);
+					}
 				}
 			}
-		}
-		u.ae(video, page.videoplayer);
-		if(scene._screendump) {
-			u.as(page.videoplayer, "backgroundImage", "url(/images/"+scene._item_id+"/screendump/512x288."+scene._screendump+")");
+			u.ae(video, page.videoplayer);
+			if(scene._screendump) {
+				u.as(page.videoplayer, "backgroundImage", "url(/images/"+scene._item_id+"/screendump/512x288."+scene._screendump+")");
+			}
 		}
 	}
 }
