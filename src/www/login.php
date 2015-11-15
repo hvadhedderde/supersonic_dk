@@ -8,6 +8,7 @@ include_once($_SERVER["FRAMEWORK_PATH"]."/config/init.php");
 
 
 $action = $page->actions();
+$model = new User();
 
 
 $page->bodyClass("login");
