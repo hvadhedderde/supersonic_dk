@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="<?= $this->language() ?>">
 <head>
-	<!-- (c) & (p) hvadhedderde.dk 2011, 2012, 2013, 2014 //-->
+	<!-- (c) & (p) think.dk + supersonic CPH, 2006-2016 //-->
 	<!-- All material protected by copyrightlaws, as if you didnt know //-->
 	<!-- Released on CPAL-License https://github.com/kaestel/supersonic_dk/blob/master/LICENSE-CPAL.md //-->
 	<title><?= $this->pageTitle() ?></title>
